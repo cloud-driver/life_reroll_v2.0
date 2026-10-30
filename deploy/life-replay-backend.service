@@ -1,0 +1,19 @@
+[Unit]
+Description=Life Reroll Backend
+Wants=network-online.target
+After=network-online.target
+[Service]
+Type=simple
+User=life-replay
+Group=life-replay
+WorkingDirectory=/opt/life-replay/current/backend
+EnvironmentFile=/etc/life-replay.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/life-replay/current/backend/.venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 18081 --workers 1 --limit-concurrency 32 --backlog 64 --timeout-keep-alive 3 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0077
+[Install]
+WantedBy=multi-user.target

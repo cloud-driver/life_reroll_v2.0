@@ -1,0 +1,10 @@
+{
+  "host": "smtp.mail.me.com",
+  "port": 587,
+  "username": "YOUR_ICLOUD_SMTP_USERNAME",
+  "password": "YOUR_APP_SPECIFIC_PASSWORD",
+  "from_email": "YOUR_VERIFIED_SENDER_ADDRESS",
+  "from_name": "知與科技 · Life Reroll",
+  "tls": "starttls",
+  "otp_secret": "REPLACE_WITH_AT_LEAST_32_RANDOM_CHARACTERS"
+}

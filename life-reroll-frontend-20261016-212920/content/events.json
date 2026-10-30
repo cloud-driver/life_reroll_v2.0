@@ -1,0 +1,2917 @@
+[
+  {
+    "id": "CH01",
+    "source": "uploaded_workbook",
+    "kind": "MARKET",
+    "title": "強人工智慧泡沫破裂",
+    "description": "全球科技巨頭財報爆雷，AI技術發展陷入瓶頸，引發市場恐慌性拋售，重演當年網路泡沫慘況。",
+    "condition": {
+      "field": "industry",
+      "op": "==",
+      "value": "科技業"
+    },
+    "source_impact": "股票資產 -40% / 收入減半",
+    "source_mitigation": "緊急預備金",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": -700
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH02",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "新型超級病毒封城",
+    "description": "未知高傳染力病毒肆虐全球，各國無預警宣布嚴格封城，實體經濟瞬間停擺。",
+    "condition": {
+      "field": "industry",
+      "op": "in",
+      "value": [
+        "餐飲業",
+        "零售與服務業",
+        "運輸物流業"
+      ]
+    },
+    "source_impact": "存款 -20萬 / 收入暫停",
+    "source_mitigation": "緊急預備金",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH03",
+    "source": "uploaded_workbook",
+    "kind": "MARKET",
+    "title": "元宇宙虛擬地產崩盤",
+    "description": "曾經炒作上天的虛擬土地無人問津，幣圈信仰崩塌，虛擬資產價值瞬間歸零。（本遊戲未提供該項持有資產；只呈現市場或生活決策，不直接扣除不存在的資產。）",
+    "condition": {},
+    "source_impact": "高風險資產 -80%",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH04",
+    "source": "uploaded_workbook",
+    "kind": "MARKET",
+    "title": "新興市場主權債務違約",
+    "description": "數個新興國家宣布無法償還外債，引發連鎖效應與匯率貶值，全球熱錢大撤退。（本遊戲未提供該項持有資產；只呈現市場或生活決策，不直接扣除不存在的資產。）",
+    "condition": {},
+    "source_impact": "基金資產 -30%",
+    "source_mitigation": "分散投資組合",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH05",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "零碳排法案能源衝擊",
+    "description": "全球強制實行嚴格碳稅與禁採化石燃料，導致能源價格翻倍，惡性通膨再起。",
+    "condition": {},
+    "source_impact": "每月生活費 +30%",
+    "source_mitigation": "緊急預備金",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -1500000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH06",
+    "source": "uploaded_workbook",
+    "kind": "MARKET",
+    "title": "去中心化交易所遭駭",
+    "description": "全球前三大加密貨幣交易所遭駭客攻擊並宣布破產，用戶資產全數被凍結。（本遊戲未提供該項持有資產；只呈現市場或生活決策，不直接扣除不存在的資產。）",
+    "condition": {},
+    "source_impact": "虛擬貨幣資產 -100%",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH07",
+    "source": "uploaded_workbook",
+    "kind": "CAREER",
+    "title": "專案大獲成功",
+    "description": "你主導的核心專案為公司帶來巨額營收，深獲高層賞識，獲得破格晉升。",
+    "condition": {},
+    "source_impact": "年薪 +20%",
+    "source_mitigation": "無",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 1200,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH08",
+    "source": "uploaded_workbook",
+    "kind": "CAREER",
+    "title": "公司結構重組",
+    "description": "所屬部門因大環境不佳遭到整併，你不幸被列入裁員名單，被迫重新找尋出路。",
+    "condition": {
+      "field": "industry",
+      "op": "!=",
+      "value": "軍公教"
+    },
+    "source_impact": "存款 -3個月開銷",
+    "source_mitigation": "緊急預備金",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -1500000,
+      "quality_delta": 0,
+      "salary_change_bps": -4000,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH09",
+    "source": "uploaded_workbook",
+    "kind": "CAREER",
+    "title": "獵頭挖角",
+    "description": "競爭對手看中你的專業能力，透過獵頭開出極具吸引力的條件邀你跳槽。",
+    "condition": {
+      "field": "annual_income",
+      "op": ">=",
+      "value": 800000
+    },
+    "source_impact": "年薪 +30%",
+    "source_mitigation": "無",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 1600,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH10",
+    "source": "uploaded_workbook",
+    "kind": "CAREER",
+    "title": "無薪加班過勞",
+    "description": "為了趕年底大案子，連續兩個月日夜顛倒且無加班費，身體免疫力大幅下降。",
+    "condition": {
+      "field": "occupation",
+      "op": "in",
+      "value": [
+        "軟體工程師",
+        "系統分析師",
+        "護理師"
+      ]
+    },
+    "source_impact": "醫療支出 +2萬",
+    "source_mitigation": "醫療實支實付",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -2000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH11",
+    "source": "uploaded_workbook",
+    "kind": "CAREER",
+    "title": "副業爆紅",
+    "description": "閒暇時經營的自媒體帳號突然產出爆款影片，獲得大量業配與流量分潤。",
+    "condition": {
+      "field": "age",
+      "op": "<=",
+      "value": 28
+    },
+    "source_impact": "存款 +50萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH12",
+    "source": "uploaded_workbook",
+    "kind": "CAREER",
+    "title": "考取關鍵證照",
+    "description": "利用下班時間苦讀，終於取得業界含金量極高的國際證照，身價水漲船高。",
+    "condition": {
+      "field": "industry",
+      "op": "in",
+      "value": [
+        "金融業",
+        "醫療業",
+        "科技業"
+      ]
+    },
+    "source_impact": "年薪 +30%",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 1200,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH13",
+    "source": "uploaded_workbook",
+    "kind": "MARKET",
+    "title": "央行無限QE",
+    "description": "為刺激經濟，全球央行聯手印鈔，熱錢湧入股市，大盤指數屢創新高。",
+    "condition": {},
+    "source_impact": "股票資產 +40%",
+    "source_mitigation": "無",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 500
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH14",
+    "source": "uploaded_workbook",
+    "kind": "MARKET",
+    "title": "全球央行聯合升息",
+    "description": "通膨失控迫使各國猛烈升息，資金抽離資本市場，進入漫長的熊市週期。",
+    "condition": {},
+    "source_impact": "股票資產 -30%",
+    "source_mitigation": "無",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": -500
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH15",
+    "source": "uploaded_workbook",
+    "kind": "CAREER",
+    "title": "打房政策推出",
+    "description": "政府祭出嚴格的選擇性信用管制與囤房稅，房地產交易量急凍，房價出現修正。",
+    "condition": {
+      "field": "occupation",
+      "op": "==",
+      "value": "房仲業務"
+    },
+    "source_impact": "房產價值 -15% / 年薪 -50%",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -1500000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH16",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "朋友邀約合夥",
+    "description": "多年好友邀請你入股他新開的連鎖手搖飲店，前景看似一片光明。",
+    "condition": {},
+    "source_impact": "存款 -50萬;現金流 +1萬/月",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH17",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "殺豬盤交友詐騙",
+    "description": "在交友軟體上遇到看似完美的對象，被話術誘騙投資未上市的虛擬貨幣。",
+    "condition": {},
+    "source_impact": "存款 -80萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH18",
+    "source": "uploaded_workbook",
+    "kind": "MARKET",
+    "title": "存股發放豐厚股息",
+    "description": "多年來堅持定期定額買進的優質高股息ETF，今年宣布配發創新高的現金股利。（本遊戲未提供該項持有資產；只呈現市場或生活決策，不直接扣除不存在的資產。）",
+    "condition": {},
+    "source_impact": "存款 +15萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH19",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "通膨巨獸來襲",
+    "description": "原物料價格連年飆漲，便當與民生物資價格翻倍，薪水完全跟不上物價上漲的速度。",
+    "condition": {},
+    "source_impact": "每月生活費 +20%",
+    "source_mitigation": "抗通膨資產",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -1500000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH20",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "交通違規檢舉達人",
+    "description": "因為不熟悉路況連續跨越雙白線與違規停車，遭後方車輛行車紀錄器連續檢舉。",
+    "condition": {
+      "field": "commute_mode",
+      "op": "in",
+      "value": [
+        "機車",
+        "汽車"
+      ]
+    },
+    "source_impact": "存款 -1.2萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -1200000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH21",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "中統一發票大獎",
+    "description": "順手整理皮夾裡的發票，沒想到幸運對中了特獎，獲得一筆意外之財。",
+    "condition": {},
+    "source_impact": "存款 +20萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH22",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "冷氣無預警罷工",
+    "description": "盛夏時節家裡的老舊冷氣壓縮機突然燒毀，必須緊急更換全新的變頻冷氣。",
+    "condition": {},
+    "source_impact": "存款 -4萬",
+    "source_mitigation": "緊急預備金",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -4000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH23",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "行車糾紛小擦撞",
+    "description": "通勤路上為了閃避野狗，不慎與旁邊的車輛發生輕微擦撞，需要賠償烤漆費用。",
+    "condition": {},
+    "source_impact": "存款 -1.5萬",
+    "source_mitigation": "任意險",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -1500000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH24",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "長輩慷慨贈與",
+    "description": "過年期間，許久不見的富裕長輩包了一個超級大紅包給你，當作買房基金。",
+    "condition": {},
+    "source_impact": "存款 +30萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "CH25",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "家居風水大漏財",
+    "description": "輕信網路大師的改運影片，買了一堆昂貴的水晶與風水擺件，結果完全沒用。",
+    "condition": {},
+    "source_impact": "存款 -6萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH26",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "最新款手機遺失",
+    "description": "才剛買不到一個月的頂規旗艦手機，在搭乘計程車時不慎遺落在後座找不回來。",
+    "condition": {},
+    "source_impact": "存款 -4萬",
+    "source_mitigation": "緊急預備金",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -4000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH27",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "摯友借錢不還",
+    "description": "最信任的朋友以家人生病為由向你借了一大筆錢，隨後卻人間蒸發聯絡不上。",
+    "condition": {},
+    "source_impact": "存款 -20萬",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH28",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "紅色炸彈連環爆",
+    "description": "這個月竟然有五個好朋友同時舉辦婚禮，為了面子只能包出大額禮金。",
+    "condition": {},
+    "source_impact": "存款 -3萬",
+    "source_mitigation": "緊急預備金",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -3000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH29",
+    "source": "uploaded_workbook",
+    "kind": "TRAVEL",
+    "title": "搶到廉航機票",
+    "description": "半夜守在電腦前，幸運搶到一折的飛日本促銷機票，決定好好犒賞自己一趟。",
+    "condition": {},
+    "source_impact": "存款 -2萬;(壓力值 -50)",
+    "source_mitigation": "無",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -2000000,
+      "quality_delta": 8,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "CH30",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "忘記取消訂閱",
+    "description": "赫然發現好幾個已經沒在用的串流平台與軟體，竟然默默自動扣款了整整兩年。",
+    "condition": {},
+    "source_impact": "存款 -5000",
+    "source_mitigation": "理財記帳習慣",
+    "major": false,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -1500000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA01",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "家族基因的詛咒",
+    "description": "在例行健檢中發現大腸有惡性腫瘤，因家族有癌症病史，醫師建議立即停工進行長期化療。",
+    "condition": {
+      "field": "family_history",
+      "op": "==",
+      "value": "癌症"
+    },
+    "source_impact": "存款 -80萬;年薪 -50%",
+    "source_mitigation": "癌症險 / 重大疾病險",
+    "major": true,
+    "critical": true,
+    "effect": {
+      "cash_delta_minor": -80000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA02",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "無聲的殺手",
+    "description": "熬夜加班時突然胸痛倒地，經診斷為急性心肌梗塞，緊急裝設心臟支架才撿回一命。",
+    "condition": {
+      "field": "family_history",
+      "op": "==",
+      "value": "心血管疾病"
+    },
+    "source_impact": "存款 -50萬;(壓力值 +30)",
+    "source_mitigation": "重大傷病險 / 醫療實支實付",
+    "major": true,
+    "critical": true,
+    "effect": {
+      "cash_delta_minor": -50000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA03",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "甜蜜的沉重",
+    "description": "長期忽視血糖問題，引發嚴重的糖尿病視網膜病變，需要長期注射昂貴藥物控制。",
+    "condition": {
+      "field": "family_history",
+      "op": "==",
+      "value": "糖尿病"
+    },
+    "source_impact": "每月醫療費 +1.5萬",
+    "source_mitigation": "醫療實支實付",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA04",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "記憶的橡皮擦",
+    "description": "父母開始出現嚴重健忘與走失行為，確診為阿茲海默症，必須聘請全職看護照料。",
+    "condition": {
+      "field": "family_history",
+      "op": "==",
+      "value": "失智症"
+    },
+    "source_impact": "每月照護費 +3.5萬",
+    "source_mitigation": "長照險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "LONG_TERM_CARE",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA05",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "突來的硬塊",
+    "description": "洗澡時意外摸到不明硬塊，經切片檢查確診為乳癌/肺腺癌，標靶藥物費用極度高昂。",
+    "condition": {},
+    "source_impact": "存款 -150萬",
+    "source_mitigation": "癌症險 / 醫療實支實付",
+    "major": true,
+    "critical": true,
+    "effect": {
+      "cash_delta_minor": -80000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA06",
+    "source": "uploaded_workbook",
+    "kind": "ACCIDENT",
+    "title": "肉包鐵的代價",
+    "description": "下雨天騎車視線不良，為閃避違停卡車發生嚴重摔車，導致右腿粉碎性骨折需打鋼釘。",
+    "condition": {
+      "field": "commute_mode",
+      "op": "==",
+      "value": "機車"
+    },
+    "source_impact": "存款 -25萬;停工三個月",
+    "source_mitigation": "意外險 / 意外實支實付",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "ACCIDENT",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA07",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "死亡盲區",
+    "description": "在路口遭轉彎的大型砂石車捲入內輪差，幸運生還但導致下半身永久性癱瘓。",
+    "condition": {
+      "field": "commute_mode",
+      "op": "==",
+      "value": "機車"
+    },
+    "source_impact": "喪失工作能力;每月照護費 +4萬",
+    "source_mitigation": "失能險 / 意外險",
+    "major": true,
+    "critical": true,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA08",
+    "source": "uploaded_workbook",
+    "kind": "ACCIDENT",
+    "title": "雨天打滑",
+    "description": "騎車經過濕滑的斑馬線標線時慘遭滑爐，造成全身多處嚴重擦挫傷與牙齒斷裂。",
+    "condition": {
+      "field": "commute_mode",
+      "op": "==",
+      "value": "機車"
+    },
+    "source_impact": "存款 -8萬",
+    "source_mitigation": "意外險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -8000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "ACCIDENT",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA09",
+    "source": "uploaded_workbook",
+    "kind": "ACCIDENT",
+    "title": "連環追撞",
+    "description": "高速公路上未保持安全距離，追撞前方的進口豪華轎車，對方要求鉅額的維修賠償。",
+    "condition": {
+      "field": "commute_mode",
+      "op": "==",
+      "value": "汽車"
+    },
+    "source_impact": "存款 -120萬",
+    "source_mitigation": "第三人責任險 / 超額責任險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA10",
+    "source": "uploaded_workbook",
+    "kind": "ACCIDENT",
+    "title": "疲勞駕駛的瞬間",
+    "description": "下班開車精神不濟打瞌睡，自撞分隔島導致車頭全毀，自己也受到嚴重腦震盪。",
+    "condition": {
+      "field": "commute_mode",
+      "op": "==",
+      "value": "汽車"
+    },
+    "source_impact": "存款 -80萬",
+    "source_mitigation": "車體險 / 意外實支實付",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA11",
+    "source": "uploaded_workbook",
+    "kind": "ACCIDENT",
+    "title": "無妄之災",
+    "description": "搭乘的公車司機為了閃避行人急煞，導致你在車內重摔，造成手臂骨折與輕微腦震盪。",
+    "condition": {
+      "field": "commute_mode",
+      "op": "==",
+      "value": "大眾運輸"
+    },
+    "source_impact": "存款 -5萬",
+    "source_mitigation": "意外實支實付",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -5000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "ACCIDENT",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA12",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "迎接新生命",
+    "description": "家中新添成員，面臨購物與照顧安排；可以選擇規模，不假定玩家的性別與生育情況。",
+    "condition": {},
+    "source_impact": "存款 -30萬;每月開銷 +3萬",
+    "source_mitigation": "緊急預備金",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 3,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA13",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "高齡產婦的挑戰",
+    "description": "因高齡懷孕引發嚴重的妊娠毒血症，必須提前剖腹產，且嬰兒需長時間住進加護保溫箱。",
+    "condition": {},
+    "source_impact": "存款 -40萬",
+    "source_mitigation": "醫療實支實付",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA15",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "步入禮堂",
+    "description": "考慮和伴侶舉辦婚禮；可以依可支配資金選擇形式，關係本身不由花費決定。",
+    "condition": {},
+    "source_impact": "存款 -100萬",
+    "source_mitigation": "緊急預備金",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -12000000,
+      "quality_delta": 3,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA17",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "過勞的抗議",
+    "description": "長期高壓爆肝工作，在無預警下爆發猛爆性肝炎，甚至需要進行肝臟移植手術才能保命。",
+    "condition": {
+      "field": "industry",
+      "op": "==",
+      "value": "科技業"
+    },
+    "source_impact": "存款 -300萬;年薪歸零",
+    "source_mitigation": "重大傷病險 / 醫療實支實付",
+    "major": true,
+    "critical": true,
+    "effect": {
+      "cash_delta_minor": -80000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA18",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "看不見的創傷",
+    "description": "面臨職場與家庭雙重壓力，確診重度憂鬱症，完全失去動力無法出門正常工作。",
+    "condition": {},
+    "source_impact": "年薪歸零;存款每月 -3萬",
+    "source_mitigation": "緊急預備金",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA19",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "洗腎人生",
+    "description": "因長期的不良飲食習慣，導致慢性腎衰竭末期，每週必須花費三天時間到診所洗腎。",
+    "condition": {},
+    "source_impact": "年薪 -40%",
+    "source_mitigation": "重大傷病險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA20",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "脊椎的悲鳴",
+    "description": "長期久坐電腦前姿勢不良，引發嚴重的椎間盤突出壓迫神經，痛到無法行走必須開刀微創手術。",
+    "condition": {},
+    "source_impact": "存款 -20萬",
+    "source_mitigation": "醫療實支實付",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA21",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "地動山搖",
+    "description": "半夜發生百年一遇的大地震，導致剛買的房屋結構受損被貼上紅單，面臨漫長的重建之路。（本遊戲未提供該項持有資產；只呈現市場或生活決策，不直接扣除不存在的資產。）",
+    "condition": {},
+    "source_impact": "存款 -300萬",
+    "source_mitigation": "住宅地震基本險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "FA22",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "無情惡火",
+    "description": "樓下鄰居因電線走火引發大火，濃煙與火勢波及你的住家，辛苦積攢的裝潢與家具付之一炬。（本遊戲未提供該項持有資產；只呈現市場或生活決策，不直接扣除不存在的資產。）",
+    "condition": {},
+    "source_impact": "存款 -250萬",
+    "source_mitigation": "住宅火災保險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "FA23",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "極端氣候強降雨",
+    "description": "突如其來的致災性暴雨導致市區大淹水，停在地下室的愛車慘遭滅頂報廢。（本遊戲未提供該項持有資產；只呈現市場或生活決策，不直接扣除不存在的資產。）",
+    "condition": {
+      "field": "commute_mode",
+      "op": "==",
+      "value": "汽車"
+    },
+    "source_impact": "存款 -100萬",
+    "source_mitigation": "汽車颱風洪水險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "FA24",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "土石流警戒",
+    "description": "極端氣候引發山區土石流，將鄉下的老家無情掩埋，必須緊急出資安置無家可歸的年邁父母。",
+    "condition": {},
+    "source_impact": "存款 -150萬",
+    "source_mitigation": "緊急預備金",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA25",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "意外滑倒",
+    "description": "在浴室洗澡時不慎滑倒重擊頭部，導致顱內出血，緊急送醫進行開顱手術與漫長復健。",
+    "condition": {},
+    "source_impact": "存款 -60萬",
+    "source_mitigation": "意外險 / 醫療實支實付",
+    "major": true,
+    "critical": true,
+    "effect": {
+      "cash_delta_minor": -60000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA26",
+    "source": "uploaded_workbook",
+    "kind": "HEALTH",
+    "title": "飛來橫禍",
+    "description": "走在路上好端端的，卻遭老舊大樓掉落的水泥塊與招牌砸中，導致半身不遂終身仰賴輪椅。",
+    "condition": {},
+    "source_impact": "喪失工作能力;每月照護費 +5萬",
+    "source_mitigation": "失能險 / 意外險",
+    "major": true,
+    "critical": true,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": 0,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": "MEDICAL",
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA27",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "孤獨老去",
+    "description": "想規劃退休居所；先估算預算與照護需求，再決定生活方式。",
+    "condition": {},
+    "source_impact": "存款 -500萬",
+    "source_mitigation": "退休金規劃 / 年金險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": 0,
+      "quality_delta": 3,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 9000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 11000
+      }
+    ]
+  },
+  {
+    "id": "FA28",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "家庭支柱倒下",
+    "description": "身為家庭主要經濟來源的配偶因突發意外身故，留下年幼的孩子與沉重的千萬房貸。",
+    "condition": {},
+    "source_impact": "房貸餘額千萬需獨自承擔",
+    "source_mitigation": "定期壽險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA29",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "罕見疾病",
+    "description": "免疫系統崩潰，確診罕見的自體免疫疾病，健保不給付，需長期自費施打昂貴的生物製劑。",
+    "condition": {},
+    "source_impact": "每月醫療費 +6萬",
+    "source_mitigation": "重大傷病險",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -6000000,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "FA30",
+    "source": "uploaded_workbook",
+    "kind": "LIFE",
+    "title": "出國染疫",
+    "description": "在國外偏鄉旅遊時感染當地的未知傳染病，因當地醫療資源匱乏，必須花費鉅資搭乘醫療專機返國。",
+    "condition": {},
+    "source_impact": "存款 -200萬",
+    "source_mitigation": "旅平險(含海外突發疾病)",
+    "major": true,
+    "critical": false,
+    "effect": {
+      "cash_delta_minor": -18000000,
+      "quality_delta": -1,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "insurance_category": null,
+    "choices": [
+      {
+        "id": "BALANCED",
+        "label": "謹慎處理",
+        "effect_multiplier_bps": 10000
+      },
+      {
+        "id": "PREPARED",
+        "label": "優先維持預備金與生活品質",
+        "effect_multiplier_bps": 7000
+      },
+      {
+        "id": "EXPANDED",
+        "label": "擴大支出或積極應對",
+        "effect_multiplier_bps": 14000
+      }
+    ]
+  },
+  {
+    "id": "TR01",
+    "source": "new_quality_of_life",
+    "kind": "TRAVEL",
+    "title": "周末小旅行",
+    "description": "安排兩天一夜的近郊旅行，重新調整工作與生活的節奏。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -900000,
+      "quality_delta": 5,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "TR02",
+    "source": "new_quality_of_life",
+    "kind": "TRAVEL",
+    "title": "家族同遊",
+    "description": "和家人一起旅行，預算內留下回憶，也需考量原本的生活支出。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -3600000,
+      "quality_delta": 8,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "TR03",
+    "source": "new_quality_of_life",
+    "kind": "TRAVEL",
+    "title": "出國深度旅行",
+    "description": "多年夢想的旅程成行，選擇符合緊急預備金的花費。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": true,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -7500000,
+      "quality_delta": 11,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "TR04",
+    "source": "new_quality_of_life",
+    "kind": "TRAVEL",
+    "title": "退休慢旅",
+    "description": "退休後安排分段旅行，保留醫療與照護資金。",
+    "condition": {
+      "field": "age",
+      "op": ">=",
+      "value": 60
+    },
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": true,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -4500000,
+      "quality_delta": 7,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF01",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "朋友聚餐",
+    "description": "和朋友一起吃飯交流，控制預算也享受生活。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -240000,
+      "quality_delta": 2,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF02",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "進修與閱讀",
+    "description": "參加實作課程或買書，短期支出換取技能與滿足感。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -1200000,
+      "quality_delta": 4,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF03",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "家庭慶生",
+    "description": "為家人籌辦小型慶祝，衡量當月的自由支配額度。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -650000,
+      "quality_delta": 4,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF04",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "健身與興趣",
+    "description": "購買運動課程或興趣材料，支持長期生活品質。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -950000,
+      "quality_delta": 5,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF05",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "陪伴長輩",
+    "description": "安排陪同出遊和無障礙交通，有支出也有陪伴的價值。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -1250000,
+      "quality_delta": 5,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF06",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "居家改造",
+    "description": "在現有住處改善照明、收納和安全，避免勉強一次花光預備金。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -2300000,
+      "quality_delta": 5,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF07",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "公益捐助",
+    "description": "支持在意的公益計畫，先評估自己本月的收支。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -500000,
+      "quality_delta": 4,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF08",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "節慶返鄉",
+    "description": "春節返鄉與親友相聚，交通與住宿也要編列預算。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -800000,
+      "quality_delta": 4,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "CR01",
+    "source": "new_quality_of_life",
+    "kind": "CAREER",
+    "title": "技能獲認可",
+    "description": "在工作中完成重要的培訓，未來有機會加薪。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -650000,
+      "quality_delta": 3,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "CR02",
+    "source": "new_quality_of_life",
+    "kind": "CAREER",
+    "title": "短期休息",
+    "description": "安排一段合理的休息時間，有減少收入的可能，也讓生活品質回升。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -1300000,
+      "quality_delta": 9,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "CR03",
+    "source": "new_quality_of_life",
+    "kind": "CAREER",
+    "title": "轉換職涯跑道",
+    "description": "取得另一家公司面試機會，可保留收入與技能再換工作。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -1800000,
+      "quality_delta": 5,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "CR04",
+    "source": "new_quality_of_life",
+    "kind": "CAREER",
+    "title": "轉職空窗期",
+    "description": "工作結束後有一段尋職空窗，預備金能降低壓力。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -2200000,
+      "quality_delta": 3,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF09",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "搬到更適合的住處",
+    "description": "通勤和生活品質改進，搬遷需支付一次性費用。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": true,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -3800000,
+      "quality_delta": 6,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  },
+  {
+    "id": "LF10",
+    "source": "new_quality_of_life",
+    "kind": "LIFE",
+    "title": "修繕舊物",
+    "description": "維修常用家具和設備，是可規劃的必要支出。",
+    "condition": {},
+    "source_impact": "玩家選擇後才支出",
+    "source_mitigation": "這是有意義的生活支出，不應推薦理賠。",
+    "major": false,
+    "critical": false,
+    "insurance_category": null,
+    "effect": {
+      "cash_delta_minor": -700000,
+      "quality_delta": 2,
+      "salary_change_bps": 0,
+      "monthly_cost_delta_minor": 0,
+      "market_shock_bps": 0
+    },
+    "choices": [
+      {
+        "id": "SKIP",
+        "label": "暫緩安排",
+        "effect_multiplier_bps": 0
+      },
+      {
+        "id": "BALANCED",
+        "label": "量力而為",
+        "effect_multiplier_bps": 6000
+      },
+      {
+        "id": "FULL",
+        "label": "完整體驗",
+        "effect_multiplier_bps": 10000
+      }
+    ]
+  }
+]

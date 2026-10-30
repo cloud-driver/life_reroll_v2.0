@@ -1,0 +1,34 @@
+.tutorial-coach { flex: none; min-width: 0; padding: 18px 24px 20px; background: #eaf1e8; border-top: 1px solid #c3d2c0; color: #36564f; }
+.tutorial-coach-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tutorial-coach-top > span { font-size: .75rem; color: #607e68; }
+.play-shell .tutorial-coach-top button { min-height: 32px; padding: 4px 8px; font-size: .75rem; }
+.tutorial-copy h3 { font-size: 1.05rem; font-weight: 600; margin: 6px 0; line-height: 1.5; }
+.tutorial-copy p { font-size: .875rem; line-height: 1.75; margin: 0 0 14px; max-width: 65ch; overflow-wrap: anywhere; }
+.tutorial-coach-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.tutorial-coach-actions button { min-height: 42px; min-width: 100px; }
+.game-dialog-with-guide > .game-dialog-body { min-height: 72px; }
+.game-dialog-with-guide > header button { font-size: .75rem; }
+.game-dialog-coach { width: min(400px, calc(100vw - 32px)); margin: auto 24px 24px auto; border-color: #9db49d; }
+.game-dialog-coach .tutorial-coach { border: 0; }
+.game-dialog-coach::backdrop { background: #203b3426; backdrop-filter: none; }
+.tutorial-highlight { outline: 3px solid #98b58b; outline-offset: -4px; border-radius: 10px; }
+.tutorial-launch { padding: 18px; margin: 0 0 22px; background: #eaf1ed; border: 1px solid #cadbd2; border-radius: 12px; display: grid; gap: 14px; }
+.tutorial-launch h3 { margin: 0; font-size: 1rem; }
+.tutorial-launch p { margin: 6px 0 0; font-size: .85rem; line-height: 1.7; color: #617d76; }
+.tutorial-launch button { justify-self: start; }
+.game-dialog-page { display: flow-root; min-width: 0; }
+@media(max-width:700px) {
+ .tutorial-coach { padding: 14px 18px 18px; }
+ .tutorial-copy h3 { font-size: 1rem; }
+ .tutorial-copy p { font-size: .8rem; margin-bottom: 12px; }
+ .tutorial-coach-actions button { min-width: 0; flex: 1; }
+ .game-dialog-coach { margin: auto 12px 12px; width: calc(100vw - 24px); }
+ .tutorial-launch { padding: 16px; }
+ .tutorial-launch button { width: 100%; }
+}
+@media(max-height:600px) {
+ .tutorial-coach { padding: 10px 16px 12px; }
+ .tutorial-copy h3 { margin: 2px 0; }
+ .tutorial-copy p { margin-bottom: 8px; line-height: 1.6; }
+ .game-dialog-with-guide > header { padding-block: 8px; }
+}

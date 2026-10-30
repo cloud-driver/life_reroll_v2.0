@@ -1,0 +1,222 @@
+[
+  {
+    "id": "CH10",
+    "title": "無薪加班過勞",
+    "department": "一般門診",
+    "service": "過勞檢查與門診",
+    "description": "工作告一段落，先把身體照顧好。這裡整理本次門診與檢查的支出。",
+    "fee_label": "門診與檢查費",
+    "mixed_cost": false,
+    "expected_cost_minor": 2000000,
+    "insurance_category": null
+  },
+  {
+    "id": "FA01",
+    "title": "家族基因的詛咒",
+    "department": "腫瘤照護",
+    "service": "腸道腫瘤治療",
+    "description": "本次療程與住院支出已整理完成，可以查看已支付與尚未支付的部分。",
+    "fee_label": "檢查與療程費",
+    "mixed_cost": false,
+    "expected_cost_minor": 80000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA02",
+    "title": "無聲的殺手",
+    "department": "急診與手術",
+    "service": "心血管急救與住院",
+    "description": "急救處置後，接待人員協助整理本次手術與住院費用。",
+    "fee_label": "急救、手術與住院費",
+    "mixed_cost": false,
+    "expected_cost_minor": 50000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA03",
+    "title": "甜蜜的沉重",
+    "department": "慢性病回診",
+    "service": "眼科治療與追蹤",
+    "description": "這次回診的治療與藥物支出已列入事件帳目。",
+    "fee_label": "回診與藥物費",
+    "mixed_cost": false,
+    "expected_cost_minor": 6000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA04",
+    "title": "記憶的橡皮擦",
+    "department": "照護諮詢",
+    "service": "長輩照護安排",
+    "description": "照護窗口協助整理長輩的照顧安排。本次事件支出也包含院外照護，不全是醫療費。",
+    "fee_label": "本次照護事件支出",
+    "mixed_cost": true,
+    "expected_cost_minor": 6000000,
+    "insurance_category": "LONG_TERM_CARE"
+  },
+  {
+    "id": "FA05",
+    "title": "突來的硬塊",
+    "department": "腫瘤照護",
+    "service": "腫瘤檢查與療程",
+    "description": "療程與藥物支出已整理完成，這裡可以確認費用及既有保障的處理進度。",
+    "fee_label": "檢查與療程費",
+    "mixed_cost": false,
+    "expected_cost_minor": 80000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA06",
+    "title": "肉包鐵的代價",
+    "department": "急診與手術",
+    "service": "骨折手術與住院",
+    "description": "事故後的手術與住院支出已完成登錄。若有符合事件的保障，會沿用原本的理賠紀錄。",
+    "fee_label": "手術與住院費",
+    "mixed_cost": false,
+    "expected_cost_minor": 18000000,
+    "insurance_category": "ACCIDENT"
+  },
+  {
+    "id": "FA07",
+    "title": "死亡盲區",
+    "department": "復健與照護",
+    "service": "事故後復健安排",
+    "description": "復健與照護窗口協助整理本次事故支出。事件金額可能包含生活照護，不全是醫療費。",
+    "fee_label": "本次復健照護事件支出",
+    "mixed_cost": true,
+    "expected_cost_minor": 6000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA08",
+    "title": "雨天打滑",
+    "department": "急診與手術",
+    "service": "外傷與牙科處置",
+    "description": "本次外傷與牙科處置的費用已登錄，可以在這裡確認付款狀態。",
+    "fee_label": "外傷與牙科處置費",
+    "mixed_cost": false,
+    "expected_cost_minor": 8000000,
+    "insurance_category": "ACCIDENT"
+  },
+  {
+    "id": "FA10",
+    "title": "疲勞駕駛的瞬間",
+    "department": "急診與手術",
+    "service": "事故後檢查",
+    "description": "本事件同時包含車損與就醫支出。下方顯示事件合計，不將車損當成醫療理賠費用。",
+    "fee_label": "事故合併支出（含車損）",
+    "mixed_cost": true,
+    "expected_cost_minor": 18000000,
+    "insurance_category": null
+  },
+  {
+    "id": "FA11",
+    "title": "無妄之災",
+    "department": "急診與手術",
+    "service": "骨折與外傷檢查",
+    "description": "事故後的檢查與處置已完成，接待人員協助核對事件費用。",
+    "fee_label": "檢查與外傷處置費",
+    "mixed_cost": false,
+    "expected_cost_minor": 5000000,
+    "insurance_category": "ACCIDENT"
+  },
+  {
+    "id": "FA13",
+    "title": "高齡產婦的挑戰",
+    "department": "產科與新生兒",
+    "service": "產科住院與新生兒照護",
+    "description": "整理本次家庭事件中的住院及新生兒照護支出；不另增加一筆掛號費。",
+    "fee_label": "本次產科照護事件支出",
+    "mixed_cost": true,
+    "expected_cost_minor": 18000000,
+    "insurance_category": null
+  },
+  {
+    "id": "FA17",
+    "title": "過勞的抗議",
+    "department": "急診與手術",
+    "service": "肝臟急救與住院",
+    "description": "本次重大處置與住院費用已整理完成，尚未支付的部分可在此處繳納。",
+    "fee_label": "急救、手術與住院費",
+    "mixed_cost": false,
+    "expected_cost_minor": 80000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA18",
+    "title": "看不見的創傷",
+    "department": "心理門診",
+    "service": "身心門診與持續照護",
+    "description": "接待窗口協助核對本次身心門診及照護支出，不增加額外操作或方案選擇。",
+    "fee_label": "本次身心照護事件支出",
+    "mixed_cost": true,
+    "expected_cost_minor": 6000000,
+    "insurance_category": null
+  },
+  {
+    "id": "FA19",
+    "title": "洗腎人生",
+    "department": "慢性病回診",
+    "service": "腎臟治療與定期回診",
+    "description": "本次事件記錄的治療與回診支出已整理；不按點擊次數重複收費。",
+    "fee_label": "本次治療與回診費",
+    "mixed_cost": false,
+    "expected_cost_minor": 6000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA20",
+    "title": "脊椎的悲鳴",
+    "department": "急診與手術",
+    "service": "脊椎手術與復健",
+    "description": "這裡核對本次事件的手術與恢復期支出，不另增一筆復健帳單。",
+    "fee_label": "本次手術與復健費",
+    "mixed_cost": false,
+    "expected_cost_minor": 18000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA25",
+    "title": "意外滑倒",
+    "department": "急診與手術",
+    "service": "頭部外傷手術與復健",
+    "description": "本次急救、住院及復健費用已登錄，付款與理賠紀錄分開顯示。",
+    "fee_label": "急救、住院與復健費",
+    "mixed_cost": false,
+    "expected_cost_minor": 60000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA26",
+    "title": "飛來橫禍",
+    "department": "復健與照護",
+    "service": "外傷後復健與照護",
+    "description": "這裡整理事故後的復健與生活照護支出；照護費不全部視為醫療費。",
+    "fee_label": "本次復健照護事件支出",
+    "mixed_cost": true,
+    "expected_cost_minor": 6000000,
+    "insurance_category": "MEDICAL"
+  },
+  {
+    "id": "FA29",
+    "title": "罕見疾病",
+    "department": "慢性病回診",
+    "service": "罕見疾病用藥與追蹤",
+    "description": "核對本次遊戲事件中的自費藥物與追蹤費用，金額以事件帳目為準。",
+    "fee_label": "本次藥物與追蹤費",
+    "mixed_cost": false,
+    "expected_cost_minor": 6000000,
+    "insurance_category": null
+  },
+  {
+    "id": "FA30",
+    "title": "出國染疫",
+    "department": "醫療轉送",
+    "service": "返國轉送與後續就醫",
+    "description": "本事件合計包含交通轉送與就醫支出；不將全部費用直接視為可理賠醫療費。",
+    "fee_label": "轉送與就醫合併支出",
+    "mixed_cost": true,
+    "expected_cost_minor": 18000000,
+    "insurance_category": null
+  }
+]

@@ -1,0 +1,266 @@
+{
+  "events": {
+    "CH01": {
+      "src": "/events/ch01.webp",
+      "alt": "強人工智慧泡沫破裂的事件情境"
+    },
+    "CH02": {
+      "src": "/events/ch02.webp",
+      "alt": "新型超級病毒封城的事件情境"
+    },
+    "CH03": {
+      "src": "/events/ch03.webp",
+      "alt": "元宇宙虛擬地產崩盤的事件情境"
+    },
+    "CH04": {
+      "src": "/events/ch04.webp",
+      "alt": "新興市場主權債務違約的事件情境"
+    },
+    "CH05": {
+      "src": "/events/ch05.webp",
+      "alt": "零碳排法案能源衝擊的事件情境"
+    },
+    "CH06": {
+      "src": "/events/ch06.webp",
+      "alt": "去中心化交易所遭駭的事件情境"
+    },
+    "CH07": {
+      "src": "/events/ch07.webp",
+      "alt": "專案大獲成功的事件情境"
+    },
+    "CH08": {
+      "src": "/events/ch08.webp",
+      "alt": "公司結構重組的事件情境"
+    },
+    "CH09": {
+      "src": "/events/ch09.webp",
+      "alt": "獵頭挖角的事件情境"
+    },
+    "CH10": {
+      "src": "/events/ch10.webp",
+      "alt": "無薪加班過勞的事件情境"
+    },
+    "CH11": {
+      "src": "/events/ch11.webp",
+      "alt": "副業爆紅的事件情境"
+    },
+    "CH12": {
+      "src": "/events/ch12.webp",
+      "alt": "考取關鍵證照的事件情境"
+    },
+    "CH13": {
+      "src": "/events/ch13.webp",
+      "alt": "央行無限QE的事件情境"
+    },
+    "CH14": {
+      "src": "/events/ch14.webp",
+      "alt": "全球央行聯合升息的事件情境"
+    },
+    "CH15": {
+      "src": "/events/ch15.webp",
+      "alt": "打房政策推出的事件情境"
+    },
+    "CH16": {
+      "src": "/events/ch16.webp",
+      "alt": "朋友邀約合夥的事件情境"
+    },
+    "CH17": {
+      "src": "/events/ch17.webp",
+      "alt": "殺豬盤交友詐騙的事件情境"
+    },
+    "CH18": {
+      "src": "/events/ch18.webp",
+      "alt": "存股發放豐厚股息的事件情境"
+    },
+    "CH19": {
+      "src": "/events/ch19.webp",
+      "alt": "通膨巨獸來襲的事件情境"
+    },
+    "CH20": {
+      "src": "/events/ch20.webp",
+      "alt": "交通違規檢舉達人的事件情境"
+    },
+    "CH21": {
+      "src": "/events/ch21.webp",
+      "alt": "中統一發票大獎的事件情境"
+    },
+    "CH22": {
+      "src": "/events/ch22.webp",
+      "alt": "冷氣無預警罷工的事件情境"
+    },
+    "CH23": {
+      "src": "/events/ch23.webp",
+      "alt": "行車糾紛小擦撞的事件情境"
+    },
+    "CH24": {
+      "src": "/events/ch24.webp",
+      "alt": "長輩慷慨贈與的事件情境"
+    },
+    "CH25": {
+      "src": "/events/ch25.webp",
+      "alt": "家居風水大漏財的事件情境"
+    },
+    "CH26": {
+      "src": "/events/ch26.webp",
+      "alt": "最新款手機遺失的事件情境"
+    },
+    "CH27": {
+      "src": "/events/ch27.webp",
+      "alt": "摯友借錢不還的事件情境"
+    },
+    "CH28": {
+      "src": "/events/ch28.webp",
+      "alt": "紅色炸彈連環爆的事件情境"
+    },
+    "CH29": {
+      "src": "/events/ch29.webp",
+      "alt": "搶到廉航機票的事件情境"
+    },
+    "CH30": {
+      "src": "/events/ch30.webp",
+      "alt": "忘記取消訂閱的事件情境"
+    },
+    "FA01": {
+      "src": "/events/fa01.webp",
+      "alt": "家族基因的詛咒的事件情境"
+    },
+    "FA02": {
+      "src": "/events/fa02.webp",
+      "alt": "無聲的殺手的事件情境"
+    },
+    "FA03": {
+      "src": "/events/fa03.webp",
+      "alt": "甜蜜的沉重的事件情境"
+    },
+    "FA04": {
+      "src": "/events/fa04.webp",
+      "alt": "記憶的橡皮擦的事件情境"
+    },
+    "FA05": {
+      "src": "/events/fa05.webp",
+      "alt": "突來的硬塊的事件情境"
+    },
+    "FA06": {
+      "src": "/events/fa06.webp",
+      "alt": "肉包鐵的代價的事件情境"
+    },
+    "FA07": {
+      "src": "/events/fa07.webp",
+      "alt": "死亡盲區的事件情境"
+    },
+    "FA08": {
+      "src": "/events/fa08.webp",
+      "alt": "雨天打滑的事件情境"
+    },
+    "FA09": {
+      "src": "/events/fa09.webp",
+      "alt": "連環追撞的事件情境"
+    },
+    "FA10": {
+      "src": "/events/fa10.webp",
+      "alt": "疲勞駕駛的瞬間的事件情境"
+    },
+    "FA11": {
+      "src": "/events/fa11.webp",
+      "alt": "無妄之災的事件情境"
+    },
+    "FA12": {
+      "src": "/events/fa12.webp",
+      "alt": "迎接新生命的事件情境"
+    },
+    "FA13": {
+      "src": "/events/fa13.webp",
+      "alt": "高齡產婦的挑戰的事件情境"
+    },
+    "FA15": {
+      "src": "/events/fa15.webp",
+      "alt": "步入禮堂的事件情境"
+    },
+    "FA17": {
+      "src": "/events/fa17.webp",
+      "alt": "過勞的抗議的事件情境"
+    },
+    "FA18": {
+      "src": "/events/fa18.webp",
+      "alt": "看不見的創傷的事件情境"
+    },
+    "FA19": {
+      "src": "/events/fa19.webp",
+      "alt": "洗腎人生的事件情境"
+    },
+    "FA20": {
+      "src": "/events/fa20.webp",
+      "alt": "脊椎的悲鳴的事件情境"
+    },
+    "FA21": {
+      "src": "/events/fa21.webp",
+      "alt": "地動山搖的事件情境"
+    },
+    "FA22": {
+      "src": "/events/fa22.webp",
+      "alt": "無情惡火的事件情境"
+    },
+    "FA23": {
+      "src": "/events/fa23.webp",
+      "alt": "極端氣候強降雨的事件情境"
+    },
+    "FA24": {
+      "src": "/events/fa24.webp",
+      "alt": "土石流警戒的事件情境"
+    },
+    "FA25": {
+      "src": "/events/fa25.webp",
+      "alt": "意外滑倒的事件情境"
+    },
+    "FA26": {
+      "src": "/events/fa26.webp",
+      "alt": "飛來橫禍的事件情境"
+    },
+    "FA27": {
+      "src": "/events/fa27.webp",
+      "alt": "孤獨老去的事件情境"
+    },
+    "FA28": {
+      "src": "/events/fa28.webp",
+      "alt": "家庭支柱倒下的事件情境"
+    },
+    "FA29": {
+      "src": "/events/fa29.webp",
+      "alt": "罕見疾病的事件情境"
+    },
+    "FA30": {
+      "src": "/events/fa30.webp",
+      "alt": "出國染疫的事件情境"
+    }
+  },
+  "kinds": {
+    "CAREER": {
+      "src": "/scene-work.webp",
+      "alt": "職涯事件場景"
+    },
+    "FAMILY": {
+      "src": "/scene-leisure.webp",
+      "alt": "家庭生活場景"
+    },
+    "HEALTH": {
+      "src": "/scene-hospital.webp",
+      "alt": "醫療事件場景"
+    },
+    "ACCIDENT": {
+      "src": "/scene-hospital.webp",
+      "alt": "醫療救助場景"
+    },
+    "MARKET": {
+      "src": "/scene-finance.webp",
+      "alt": "金融市場場景"
+    },
+    "POLICY": {
+      "src": "/scene-finance.webp",
+      "alt": "保障服務場景"
+    },
+    "EXPENSE": {
+      "src": "/scene-leisure.webp",
+      "alt": "生活支出場景"
+    }
+  }
+}

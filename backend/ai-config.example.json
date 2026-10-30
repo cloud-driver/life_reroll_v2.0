@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "training_enabled": false,
+  "base_url": "http://127.0.0.1:8081/api/v1",
+  "fallback_urls": [],
+  "timeout_seconds": 600
+}

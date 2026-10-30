@@ -1,0 +1,542 @@
+{
+  "assets": [
+    {
+      "source": "car-ne.png",
+      "output": "car-ne.webp",
+      "before": 94736,
+      "after": 61084,
+      "width": 330,
+      "height": 230
+    },
+    {
+      "source": "car-nw.png",
+      "output": "car-nw.webp",
+      "before": 94196,
+      "after": 60586,
+      "width": 330,
+      "height": 230
+    },
+    {
+      "source": "car-se.png",
+      "output": "car-se.webp",
+      "before": 100854,
+      "after": 63318,
+      "width": 330,
+      "height": 230
+    },
+    {
+      "source": "car-sw.png",
+      "output": "car-sw.webp",
+      "before": 99205,
+      "after": 62614,
+      "width": 330,
+      "height": 230
+    },
+    {
+      "source": "events/ch01.jpg",
+      "output": "events/ch01.webp",
+      "before": 3279929,
+      "after": 345926,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch02.jpg",
+      "output": "events/ch02.webp",
+      "before": 2993981,
+      "after": 280416,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch03.jpg",
+      "output": "events/ch03.webp",
+      "before": 3050490,
+      "after": 287430,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch04.jpg",
+      "output": "events/ch04.webp",
+      "before": 3173979,
+      "after": 314608,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch05.jpg",
+      "output": "events/ch05.webp",
+      "before": 3262668,
+      "after": 343932,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch06.jpg",
+      "output": "events/ch06.webp",
+      "before": 3089872,
+      "after": 307412,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch07.jpg",
+      "output": "events/ch07.webp",
+      "before": 2930666,
+      "after": 261230,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch08.jpg",
+      "output": "events/ch08.webp",
+      "before": 2966079,
+      "after": 247740,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch09.jpg",
+      "output": "events/ch09.webp",
+      "before": 3276415,
+      "after": 255446,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch10.jpg",
+      "output": "events/ch10.webp",
+      "before": 2970191,
+      "after": 206184,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch11.jpg",
+      "output": "events/ch11.webp",
+      "before": 2973264,
+      "after": 279642,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch12.jpg",
+      "output": "events/ch12.webp",
+      "before": 2752848,
+      "after": 237446,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch13.jpg",
+      "output": "events/ch13.webp",
+      "before": 3073063,
+      "after": 298250,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch14.jpg",
+      "output": "events/ch14.webp",
+      "before": 3088592,
+      "after": 299934,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch15.jpg",
+      "output": "events/ch15.webp",
+      "before": 2812331,
+      "after": 237512,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch16.jpg",
+      "output": "events/ch16.webp",
+      "before": 2906541,
+      "after": 262034,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch17.jpg",
+      "output": "events/ch17.webp",
+      "before": 2745317,
+      "after": 224530,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch18.jpg",
+      "output": "events/ch18.webp",
+      "before": 2849067,
+      "after": 257450,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch19.jpg",
+      "output": "events/ch19.webp",
+      "before": 2793691,
+      "after": 190700,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch20.jpg",
+      "output": "events/ch20.webp",
+      "before": 3115679,
+      "after": 244544,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch21.jpg",
+      "output": "events/ch21.webp",
+      "before": 3097561,
+      "after": 239146,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch22.jpg",
+      "output": "events/ch22.webp",
+      "before": 3071690,
+      "after": 229638,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch23.jpg",
+      "output": "events/ch23.webp",
+      "before": 2789127,
+      "after": 180100,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch24.jpg",
+      "output": "events/ch24.webp",
+      "before": 3018063,
+      "after": 223644,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch25.jpg",
+      "output": "events/ch25.webp",
+      "before": 2949459,
+      "after": 198620,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch26.jpg",
+      "output": "events/ch26.webp",
+      "before": 2779648,
+      "after": 159066,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch27.jpg",
+      "output": "events/ch27.webp",
+      "before": 2742503,
+      "after": 151202,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch28.jpg",
+      "output": "events/ch28.webp",
+      "before": 3234698,
+      "after": 246514,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch29.jpg",
+      "output": "events/ch29.webp",
+      "before": 2832518,
+      "after": 158326,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/ch30.jpg",
+      "output": "events/ch30.webp",
+      "before": 3210786,
+      "after": 234314,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa01.jpg",
+      "output": "events/fa01.webp",
+      "before": 2797721,
+      "after": 139436,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa02.jpg",
+      "output": "events/fa02.webp",
+      "before": 2927710,
+      "after": 159476,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa03.jpg",
+      "output": "events/fa03.webp",
+      "before": 2821421,
+      "after": 128288,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa04.jpg",
+      "output": "events/fa04.webp",
+      "before": 3034129,
+      "after": 164640,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa05.jpg",
+      "output": "events/fa05.webp",
+      "before": 3072617,
+      "after": 233296,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa06.jpg",
+      "output": "events/fa06.webp",
+      "before": 3037602,
+      "after": 242792,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa07.jpg",
+      "output": "events/fa07.webp",
+      "before": 2552973,
+      "after": 142458,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa08.jpg",
+      "output": "events/fa08.webp",
+      "before": 2467352,
+      "after": 145372,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa09.jpg",
+      "output": "events/fa09.webp",
+      "before": 3028036,
+      "after": 218900,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa10.jpg",
+      "output": "events/fa10.webp",
+      "before": 2508279,
+      "after": 120448,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa11.jpg",
+      "output": "events/fa11.webp",
+      "before": 2957960,
+      "after": 213574,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa12.jpg",
+      "output": "events/fa12.webp",
+      "before": 2805302,
+      "after": 174996,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa13.jpg",
+      "output": "events/fa13.webp",
+      "before": 2896424,
+      "after": 204658,
+      "width": 1440,
+      "height": 804
+    },
+    {
+      "source": "events/fa14.jpg",
+      "output": "events/fa14.webp",
+      "before": 3149201,
+      "after": 250322,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa15.jpg",
+      "output": "events/fa15.webp",
+      "before": 3350062,
+      "after": 256488,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa16.jpg",
+      "output": "events/fa16.webp",
+      "before": 3394488,
+      "after": 271150,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa17.jpg",
+      "output": "events/fa17.webp",
+      "before": 2621913,
+      "after": 168998,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa18.jpg",
+      "output": "events/fa18.webp",
+      "before": 3545463,
+      "after": 269542,
+      "width": 1440,
+      "height": 804
+    },
+    {
+      "source": "events/fa19.jpg",
+      "output": "events/fa19.webp",
+      "before": 2924034,
+      "after": 203660,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa20.jpg",
+      "output": "events/fa20.webp",
+      "before": 2968767,
+      "after": 206914,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa21.jpg",
+      "output": "events/fa21.webp",
+      "before": 3374421,
+      "after": 281374,
+      "width": 1440,
+      "height": 960
+    },
+    {
+      "source": "events/fa22.jpg",
+      "output": "events/fa22.webp",
+      "before": 3031278,
+      "after": 205746,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa23.jpg",
+      "output": "events/fa23.webp",
+      "before": 2559693,
+      "after": 143636,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa24.jpg",
+      "output": "events/fa24.webp",
+      "before": 2790504,
+      "after": 170212,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa25.jpg",
+      "output": "events/fa25.webp",
+      "before": 3033418,
+      "after": 218102,
+      "width": 1440,
+      "height": 804
+    },
+    {
+      "source": "events/fa26.jpg",
+      "output": "events/fa26.webp",
+      "before": 2911905,
+      "after": 209124,
+      "width": 1440,
+      "height": 804
+    },
+    {
+      "source": "events/fa27.jpg",
+      "output": "events/fa27.webp",
+      "before": 3218383,
+      "after": 249316,
+      "width": 1440,
+      "height": 804
+    },
+    {
+      "source": "events/fa28.jpg",
+      "output": "events/fa28.webp",
+      "before": 3436894,
+      "after": 284956,
+      "width": 1440,
+      "height": 804
+    },
+    {
+      "source": "events/fa29.jpg",
+      "output": "events/fa29.webp",
+      "before": 2756510,
+      "after": 178408,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "events/fa30.jpg",
+      "output": "events/fa30.webp",
+      "before": 2862531,
+      "after": 179116,
+      "width": 1440,
+      "height": 785
+    },
+    {
+      "source": "life-reroll-city-panorama.png",
+      "output": "life-reroll-city-panorama.webp",
+      "before": 3378240,
+      "after": 493516,
+      "width": 2120,
+      "height": 742
+    },
+    {
+      "source": "life-reroll-city.png",
+      "output": "life-reroll-city.webp",
+      "before": 3820414,
+      "after": 406296,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "source": "scene-home.png",
+      "output": "scene-home.webp",
+      "before": 2137588,
+      "after": 196490,
+      "width": 1672,
+      "height": 941
+    }
+  ],
+  "before_bytes": 188392940,
+  "after_bytes": 14782238
+}

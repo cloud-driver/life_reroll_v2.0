@@ -1,0 +1,76 @@
+/* Shared modal placement: every institution and dashboard opens at center. */
+.game-dialog{position:fixed;inset:0;margin:auto;animation:institution-modal-in .3s cubic-bezier(.22,1,.36,1) both}
+.game-dialog-compact{width:min(620px,94vw)}
+.game-dialog::backdrop{background:#182c326b;backdrop-filter:blur(6px);animation:institution-fade-in .25s ease both}
+.game-dialog:has(.finance-reception,.finance-conversation){width:min(1120px,94vw);background:#f6f5ee;border-color:#a7b8af}
+.game-dialog:has(.finance-reception,.finance-conversation)>.game-dialog-body{padding:0}
+.game-dialog:has(.finance-reception,.finance-conversation)>.game-dialog-body>.dialog-content>.play-banner{margin:16px}
+.finance-reception,.finance-conversation{--finance-accent:#547c83;--finance-gold:#beac7c;display:grid;grid-template-columns:.9fr 1.1fr;min-height:530px;animation:institution-content-in .4s ease both}
+.sector-life{--finance-accent:#8c7857;--finance-gold:#c7b88b}
+.finance-lobby-scene,.finance-advisor{position:relative;isolation:isolate;overflow:hidden;background:#233e47;color:#f4f1e6;min-width:0}
+.finance-lobby-scene>img,.finance-advisor>img{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
+.finance-lobby-scene:after,.finance-advisor:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#142b3766,#172f3be8)}
+.finance-lobby-scene{display:flex;flex-direction:column;justify-content:center;padding:38px}
+.finance-lobby-copy .eyebrow{color:#d2c7a6;font-size:.62rem}
+.finance-lobby-copy h2{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:400;line-height:1.5;letter-spacing:.04em;margin:24px 0}
+.finance-lobby-copy p{font-size:.9rem;line-height:2;color:#dce5df}
+.finance-location{position:absolute;bottom:28px;left:38px;border-left:2px solid #c4b483;padding-left:12px;font-size:.7rem;letter-spacing:.12em;color:#d8dfd5}
+.finance-lobby-services{padding:30px;display:flex;flex-direction:column;justify-content:center;gap:14px;min-width:0}
+.finance-lobby-intro .eyebrow{color:#8b967f;font-size:.65rem}
+.finance-lobby-intro h3{font-size:1.4rem;font-weight:500;letter-spacing:.04em;margin:6px 0}
+.finance-lobby-intro p{font-size:.8rem;color:#889084;margin:0 0 10px}
+.play-shell button.finance-sector-card{position:relative;display:flex;align-items:center;gap:18px;min-height:132px;width:100%;padding:24px 20px;background:#fffef7;border:1px solid #d6dbce;border-radius:5px;color:#43636a;text-align:left;box-shadow:0 5px 16px #263b2d05;transition:transform .22s,border-color .22s,box-shadow .22s}
+.play-shell button.finance-sector-card:hover:not(:disabled){transform:translateY(-3px);background:#fffef7;border-color:#8da8a3;box-shadow:0 8px 22px #263b2d12}
+.play-shell button.finance-sector-card.sector-life{color:#8c7857}
+.finance-sector-card>svg{flex:none}
+.finance-sector-number{position:absolute;top:8px;right:12px;font-size:.6rem;color:#9ca68e;letter-spacing:.12em}
+.finance-sector-text{flex:1;display:grid;gap:6px}
+.finance-sector-text small{font-size:.55rem;letter-spacing:.13em;color:#919a8a}
+.finance-sector-text strong{font-size:1.1rem;font-weight:500;letter-spacing:.03em}
+.finance-sector-text>span{font-size:.74rem;line-height:1.7;color:#7c887b}
+.finance-lobby-balance{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #dce0d3;margin-top:8px;padding-top:18px;font-size:.78rem;color:#7a897c}
+.finance-lobby-balance strong{font-size:1.1rem;font-weight:500;font-variant-numeric:tabular-nums;color:#426763}
+.finance-lobby-balance small{font-size:.7rem}
+.finance-simulation-note{margin:0;font-size:.68rem;color:#92998c}
+.finance-conversation{grid-template-columns:340px minmax(0,1fr);min-height:580px}
+.finance-advisor{padding:26px;display:flex;flex-direction:column;justify-content:space-between}
+.finance-advisor>img{filter:blur(3px);transform:scale(1.04);opacity:.55}
+.finance-advisor:after{background:linear-gradient(160deg,#1a394470,#132c36f5)}
+.sector-life .finance-advisor:after{background:linear-gradient(160deg,#524b3b70,#252d30f5)}
+.finance-advisor-top{display:grid;gap:8px;color:#c9cfbd;font-size:.65rem;letter-spacing:.08em}
+.finance-advisor-top .eyebrow{font-size:.6rem;letter-spacing:.13em}
+.finance-advisor-emblem{position:relative;display:grid;place-items:center;align-self:center;width:156px;height:156px;margin:36px 0;color:var(--finance-gold);border:1px solid #c4b88c33;border-radius:50%}
+.finance-advisor-emblem>span{position:absolute;inset:16px;border:1px solid #c4b88c66;transform:rotate(45deg)}
+.finance-advisor-emblem:after{content:'◆';position:absolute;bottom:-7px;font-size:10px;color:var(--finance-gold);background:#293e43;padding:0 7px}
+.finance-dialogue{border-top:1px solid #d0c59b55;padding-top:24px;animation:institution-content-in .55s ease .1s both}
+.finance-speaker{display:inline-block;border-left:2px solid var(--finance-gold);padding-left:10px;font-size:.75rem;color:#d4c6a2;letter-spacing:.09em}
+.finance-dialogue h2{font-size:1.55rem;font-weight:400;letter-spacing:.05em;margin:12px 0}
+.finance-dialogue h2:focus{outline:none}
+.finance-dialogue p{color:#e0e5db;font-size:.92rem;line-height:1.9;min-height:3.8em;margin:0}
+.finance-dialogue small{display:block;color:#a9b9b4;font-size:.72rem;line-height:1.8}
+.finance-dialogue-rule{display:block;font-size:8px;color:var(--finance-gold);margin:14px 0}
+.finance-service-body{padding:22px 28px;min-width:0;background:#f6f5ee}
+.finance-service-body>.play-card{background:none;border:0;box-shadow:none;padding:10px 0 0}
+.play-shell button.finance-back{padding:4px 0 12px;color:#7b8b7c;font-size:.75rem}
+.finance-service-body .play-section-title h2{font-size:1.35rem;font-weight:500;margin-top:4px}
+.finance-service-body .play-section-title p{font-size:.76rem;color:#8b9384}
+.finance-service-body .play-form-grid{gap:8px 16px}
+.finance-service-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:18px 0 22px}
+.play-shell .finance-service-options button{justify-content:flex-start;text-align:left;border-radius:4px;font-size:.76rem;padding:11px 12px;border-color:#d4dcce;background:#fdfcf5;color:#6c7d70;transition:background .18s,border-color .18s}
+.play-shell .finance-service-options button>span{font-size:.6rem;color:#929d88;letter-spacing:.06em}
+.play-shell .finance-service-options button.selected{background:#e3eade;border-color:#7f9c87;color:#365d4a;box-shadow:inset 3px 0 #678c72}
+.play-shell .sector-life .finance-service-options button.selected{background:#eee9da;border-color:#b7a67c;color:#78633e;box-shadow:inset 3px 0 #af9865}
+.play-shell .finance-service-options button:hover:not(:disabled){background:#edf0e4;border-color:#9eaf97}
+.finance-service-body .play-form-grid label{font-size:.78rem;color:#687d70}
+.finance-service-body input,.finance-service-body select{background:#fffef9;border-color:#d1d9cb;border-radius:5px;font-size:.85rem}
+.finance-service-body .play-actions button{font-size:.78rem;border-radius:5px}
+.finance-service-body .quote-panel{border-radius:8px;background:#eaf0e3}
+.workspace-scene.minimal-destination>div{background:linear-gradient(180deg,#1b343b0a,#1939409c);color:#fff;text-shadow:0 2px 14px #16303666}
+.workspace-scene.minimal-destination h2{letter-spacing:.08em;font-weight:400;font-size:clamp(1.8rem,3vw,2.6rem)}
+.workspace-scene.minimal-destination button{min-width:190px;border-radius:4px;background:#f4f3e9ee;color:#354e50;border:1px solid #d9d4b8;text-shadow:none;padding:13px 24px;box-shadow:0 8px 24px #19303633}
+.workspace-scene.minimal-destination button:hover:not(:disabled){background:#fffdf1;color:#243f42}
+@keyframes institution-modal-in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes institution-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes institution-content-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:760px){.finance-reception{grid-template-columns:1fr;min-height:0}.finance-lobby-scene{min-height:220px;padding:24px}.finance-lobby-copy h2{font-size:1.8rem;margin:12px 0}.finance-lobby-copy h2 br{display:none}.finance-lobby-copy p{font-size:.8rem;margin-bottom:24px}.finance-location{left:24px;bottom:16px}.finance-lobby-services{padding:22px}.finance-conversation{grid-template-columns:1fr;min-height:0}.finance-advisor{padding:22px;min-height:240px}.finance-advisor-emblem{position:absolute;right:26px;top:30px;width:100px;height:100px;opacity:.2;z-index:-1}.finance-advisor-emblem svg{width:45px}.finance-dialogue{margin-top:22px;padding-top:16px}.finance-dialogue h2{font-size:1.3rem}.finance-dialogue p{min-height:0}.finance-dialogue-rule{margin:10px 0}.finance-service-body{padding:18px}.finance-sector-text strong{font-size:1rem}}
+@media(prefers-reduced-motion:reduce){.game-dialog,.game-dialog::backdrop,.finance-reception,.finance-conversation,.finance-dialogue{animation:none}.play-shell button.finance-sector-card{transition:none}.play-shell button.finance-sector-card:hover:not(:disabled){transform:none}}

@@ -1,0 +1,5192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "帳號識別"
+        },
+        "email": {
+          "type": "string",
+          "description": "已正規化信箱"
+        },
+        "email_verified": {
+          "type": "boolean",
+          "description": "是否完成信箱驗證"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "PLAYER 或 CONTENT_ADMIN；後端授權仍獨立驗證"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "2 至 30 字"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "建立時間"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "email_verified",
+        "roles",
+        "display_name",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/User"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "未登入為 null"
+        },
+        "csrf_token": {
+          "type": "string",
+          "description": "所有非 GET 請求使用"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "登入到期時間"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "目前裝置登入識別"
+        }
+      },
+      "required": [
+        "user",
+        "csrf_token",
+        "expires_at",
+        "session_id"
+      ],
+      "additionalProperties": false
+    },
+    "DeviceSession": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "登入識別"
+        },
+        "device_label": {
+          "type": "string",
+          "description": "去識別裝置摘要"
+        },
+        "last_seen_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "最後活動時間"
+        },
+        "is_current": {
+          "type": "boolean",
+          "description": "目前裝置"
+        }
+      },
+      "required": [
+        "id",
+        "device_label",
+        "last_seen_at",
+        "is_current"
+      ],
+      "additionalProperties": false
+    },
+    "Settings": {
+      "type": "object",
+      "properties": {
+        "locale": {
+          "type": "string",
+          "description": "v1 僅 zh-TW"
+        },
+        "sound_enabled": {
+          "type": "boolean",
+          "description": "是否播放音效"
+        },
+        "reduced_motion": {
+          "type": "boolean",
+          "description": "減少動畫"
+        },
+        "text_scale": {
+          "type": "number",
+          "description": "1 至 1.5"
+        },
+        "tutorial_completed": {
+          "type": "boolean",
+          "description": "首次操作教學是否完成"
+        }
+      },
+      "required": [
+        "locale",
+        "sound_enabled",
+        "reduced_motion",
+        "text_scale",
+        "tutorial_completed"
+      ],
+      "additionalProperties": false
+    },
+    "Bootstrap": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "type": "string",
+          "description": "1.0"
+        },
+        "content_version": {
+          "type": "string",
+          "description": "最新內容版本"
+        },
+        "maintenance": {
+          "type": "boolean",
+          "description": "維護期間可讀不可開新操作"
+        },
+        "notice": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "可顯示訊息"
+        },
+        "terms_version": {
+          "type": "string",
+          "description": "使用條款版本"
+        },
+        "privacy_version": {
+          "type": "string",
+          "description": "隱私說明版本"
+        },
+        "max_runs": {
+          "type": "integer",
+          "description": "固定 3"
+        },
+        "stock_count": {
+          "type": "integer",
+          "description": "固定 5"
+        },
+        "email_verification_required": {
+          "type": "boolean",
+          "description": "是否須驗證信箱才可建立人生；舊服務缺省視為需要"
+        }
+      },
+      "required": [
+        "api_version",
+        "content_version",
+        "maintenance",
+        "notice",
+        "terms_version",
+        "privacy_version",
+        "max_runs",
+        "stock_count"
+      ],
+      "additionalProperties": false
+    },
+    "Campaign": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "遊戲識別"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "GENERATING",
+            "ACTIVE",
+            "AWAITING_REBIRTH",
+            "REBIRTH_GENERATING",
+            "COMPLETED"
+          ],
+          "description": "整場狀態"
+        },
+        "current_run_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "生成中可能為 null"
+        },
+        "run_count": {
+          "type": "integer",
+          "description": "0 至 3；僅成功建立才增加"
+        },
+        "rebirths_remaining": {
+          "type": "integer",
+          "description": "0 至 2"
+        },
+        "ruleset_version": {
+          "type": "string",
+          "description": "整場固定版本"
+        },
+        "content_version": {
+          "type": "string",
+          "description": "整場固定版本"
+        },
+        "version": {
+          "type": "integer",
+          "description": "Campaign 自己的並行版本"
+        },
+        "job_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "生成或回饋工作"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "建立時間"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "current_run_id",
+        "run_count",
+        "rebirths_remaining",
+        "ruleset_version",
+        "content_version",
+        "version",
+        "job_id",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "Character": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "人設識別"
+        },
+        "name": {
+          "type": "string",
+          "description": "虛構姓名"
+        },
+        "birth_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "計算精確年齡"
+        },
+        "starting_age": {
+          "type": "integer",
+          "description": "25 至 30"
+        },
+        "occupation": {
+          "type": "string",
+          "description": "目前職業"
+        },
+        "employment_status": {
+          "type": "string",
+          "enum": [
+            "EMPLOYED",
+            "UNEMPLOYED",
+            "RETIRED"
+          ],
+          "description": "職涯狀態"
+        },
+        "monthly_salary_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "稅後模擬薪資"
+        },
+        "household": {
+          "$ref": "#/$defs/Household",
+          "description": "家庭與扶養狀態"
+        },
+        "health_tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "已公開病史標籤"
+        },
+        "background": {
+          "type": "string",
+          "description": "簡短背景"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "birth_date",
+        "starting_age",
+        "occupation",
+        "employment_status",
+        "monthly_salary_minor",
+        "household",
+        "health_tags",
+        "background"
+      ],
+      "additionalProperties": false
+    },
+    "Household": {
+      "type": "object",
+      "properties": {
+        "marital_status": {
+          "type": "string",
+          "enum": [
+            "SINGLE",
+            "MARRIED",
+            "DIVORCED",
+            "WIDOWED"
+          ],
+          "description": "婚姻狀態"
+        },
+        "dependents": {
+          "type": "integer",
+          "description": "扶養人數"
+        },
+        "monthly_support_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "每月扶養費"
+        },
+        "beneficiary_label": {
+          "type": "string",
+          "description": "給付物件的教學顯示名稱"
+        }
+      },
+      "required": [
+        "marital_status",
+        "dependents",
+        "monthly_support_minor",
+        "beneficiary_label"
+      ],
+      "additionalProperties": false
+    },
+    "Balances": {
+      "type": "object",
+      "properties": {
+        "cash_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "可立即支付現金"
+        },
+        "savings_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "可立即轉出的活存"
+        },
+        "term_principal_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "定存本金"
+        },
+        "stocks_market_value_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "股票市值"
+        },
+        "policy_cash_value_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "已選商品若無解約金則為 0"
+        },
+        "receivables_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "已核准且確定的應收款"
+        },
+        "liabilities_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "借款與已到期未付帳款"
+        },
+        "net_worth_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "所有列示資產加總減負債"
+        },
+        "immediate_liquidity_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "現金加可立即動用活存"
+        },
+        "negative_since": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "連續負資產起算日"
+        },
+        "negative_years": {
+          "type": "integer",
+          "description": "已完整連續負值年數 0 至 7"
+        }
+      },
+      "required": [
+        "cash_minor",
+        "savings_minor",
+        "term_principal_minor",
+        "stocks_market_value_minor",
+        "policy_cash_value_minor",
+        "receivables_minor",
+        "liabilities_minor",
+        "net_worth_minor",
+        "immediate_liquidity_minor",
+        "negative_since",
+        "negative_years"
+      ],
+      "additionalProperties": false
+    },
+    "ActionAvailability": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "穩定操作程式碼如 ROLL 或 STOCK_SELL"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "是否可執行"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "不可用原因"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "白話原因"
+        }
+      },
+      "required": [
+        "action",
+        "enabled",
+        "reason_code",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "RunState": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "輪次識別"
+        },
+        "campaign_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "所屬遊戲"
+        },
+        "run_index": {
+          "type": "integer",
+          "description": "1 至 3"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "INITIAL_ALLOCATION",
+            "EXPLORING",
+            "ADVANCING",
+            "EVENT_PENDING",
+            "FUNDING",
+            "EVENT_RESULT",
+            "TURN_REVIEW",
+            "ENDED"
+          ],
+          "description": "輪次狀態"
+        },
+        "version": {
+          "type": "integer",
+          "description": "每次權威狀態變更加 1"
+        },
+        "sim_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "遊戲日期，離線不前進"
+        },
+        "age": {
+          "type": "integer",
+          "description": "已滿歲數"
+        },
+        "character": {
+          "$ref": "#/$defs/Character",
+          "description": "人設與已知狀態"
+        },
+        "balances": {
+          "$ref": "#/$defs/Balances",
+          "description": "資產摘要"
+        },
+        "scene_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "邏輯場景"
+        },
+        "lifestyle": {
+          "type": "string",
+          "enum": [
+            "BASIC",
+            "BALANCED",
+            "COMFORT"
+          ],
+          "description": "生活支出方案"
+        },
+        "advance_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "未完成骰子行程"
+        },
+        "pending_event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "目前阻斷事件"
+        },
+        "event_stack": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "被暫停事件由底至頂排列；最後一筆為目前事件"
+        },
+        "end_reason": {
+          "type": "string",
+          "enum": [
+            "AGE_COMPLETED",
+            "NEGATIVE_NET_WORTH_7Y",
+            "UNFUNDED_CRITICAL_CARE",
+            "NONE"
+          ],
+          "description": "結束原因"
+        },
+        "allowed_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ActionAvailability"
+          },
+          "description": "所有可見按鈕能力"
+        },
+        "quality": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "長期生活品質指數；與保障及淨資產一起納入評價"
+        },
+        "saved_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "最後權威存檔時間"
+        },
+        "ruleset_version": {
+          "type": "string",
+          "description": "規則版本"
+        },
+        "daily_phase": {
+          "type": "string",
+          "enum": [
+            "HOME_READY",
+            "WORK_REQUIRED",
+            "WORKING",
+            "FREE_TIME",
+            "RETURN_HOME"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "campaign_id",
+        "run_index",
+        "status",
+        "version",
+        "sim_date",
+        "age",
+        "character",
+        "balances",
+        "scene_id",
+        "lifestyle",
+        "advance_id",
+        "pending_event_id",
+        "event_stack",
+        "end_reason",
+        "allowed_actions",
+        "saved_at",
+        "ruleset_version"
+      ],
+      "additionalProperties": false
+    },
+    "Job": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "工作識別"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "LIFE_PLAN",
+            "REBIRTH_PLAN",
+            "FINAL_REPORT",
+            "REPORT_EXPORT",
+            "ACCOUNT_ERASURE"
+          ],
+          "description": "型別"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "QUEUED",
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED"
+          ],
+          "description": "執行狀態"
+        },
+        "progress_percent": {
+          "type": "integer",
+          "description": "0 至 100，僅體驗提示"
+        },
+        "stage": {
+          "type": "string",
+          "description": "目前步驟"
+        },
+        "result_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "完成後可讀資源"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "失敗原因"
+        },
+        "retryable": {
+          "type": "boolean",
+          "description": "是否允許重試"
+        },
+        "attempt": {
+          "type": "integer",
+          "description": "嘗試次數"
+        },
+        "poll_after_ms": {
+          "type": "integer",
+          "description": "建議輪詢間隔"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "status",
+        "progress_percent",
+        "stage",
+        "result_ref",
+        "error_code",
+        "retryable",
+        "attempt",
+        "poll_after_ms"
+      ],
+      "additionalProperties": false
+    },
+    "ResourceRef": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "campaign run event advance transaction claim policy loan term_deposit report export 或 deletion"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "識別"
+        },
+        "href": {
+          "type": "string",
+          "description": "同源 API 路徑"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "href"
+      ],
+      "additionalProperties": false
+    },
+    "AsyncReceipt": {
+      "type": "object",
+      "properties": {
+        "job": {
+          "$ref": "#/$defs/Job",
+          "description": "非同步工作"
+        },
+        "campaign": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Campaign"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "若此次建立或更新整場遊戲則提供"
+        },
+        "run_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "若此次更新輪次則提供"
+        }
+      },
+      "required": [
+        "job",
+        "campaign",
+        "run_version"
+      ],
+      "additionalProperties": false
+    },
+    "MutationReceipt": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "此次操作識別"
+        },
+        "run": {
+          "$ref": "#/$defs/RunState",
+          "description": "操作後完整快照"
+        },
+        "resource": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "事件 理賠 交易 或行程"
+        },
+        "notices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "需顯示的重要結果"
+        }
+      },
+      "required": [
+        "operation_id",
+        "run",
+        "resource",
+        "notices"
+      ],
+      "additionalProperties": false
+    },
+    "SaveReceipt": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "輪次"
+        },
+        "version": {
+          "type": "integer",
+          "description": "儲存的版本"
+        },
+        "saved_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "儲存時間"
+        },
+        "resume_route": {
+          "type": "string",
+          "description": "建議開啟的前端相對路由"
+        },
+        "scene_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "重連落點"
+        }
+      },
+      "required": [
+        "run_id",
+        "version",
+        "saved_at",
+        "resume_route",
+        "scene_id"
+      ],
+      "additionalProperties": false
+    },
+    "Scene": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "場景識別"
+        },
+        "name": {
+          "type": "string",
+          "description": "街道 家 金融大樓 醫院"
+        },
+        "asset_key": {
+          "type": "string",
+          "description": "版本化前端場景資源"
+        },
+        "connections": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "可前往場景"
+        },
+        "interactions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "可互動程式碼"
+        },
+        "entry_spawn": {
+          "type": "string",
+          "description": "重新進場的位置程式碼"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "asset_key",
+        "connections",
+        "interactions",
+        "entry_spawn"
+      ],
+      "additionalProperties": false
+    },
+    "Advance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "行程識別"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "輪次"
+        },
+        "roll_value": {
+          "type": "integer",
+          "description": "後端固定結果 1 至 6"
+        },
+        "from_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "起點"
+        },
+        "target_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "原定抵達日期；建立後不可改"
+        },
+        "current_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "目前日期"
+        },
+        "remaining_days": {
+          "type": "integer",
+          "description": "到原定目標剩餘日數，最小 0"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PROCESSING",
+            "PAUSED_EVENT",
+            "PAUSED_FUNDING",
+            "AWAITING_REVIEW",
+            "COMPLETED",
+            "TERMINATED"
+          ],
+          "description": "行程狀態"
+        },
+        "blocking_event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "阻斷事件"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PeriodSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "抵達後提供摘要"
+        },
+        "opening_snapshot": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssetSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "closing_snapshot": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AssetSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "run_id",
+        "roll_value",
+        "from_date",
+        "target_date",
+        "current_date",
+        "remaining_days",
+        "status",
+        "blocking_event_id",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "PeriodSummary": {
+      "type": "object",
+      "properties": {
+        "from_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "起日"
+        },
+        "to_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "迄日"
+        },
+        "income_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "不含本金轉帳或借款本金"
+        },
+        "expense_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "不含買入資產本金或還本金"
+        },
+        "premium_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "支出中的保費子集合"
+        },
+        "claims_paid_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "收入中的理賠子集合"
+        },
+        "net_worth_change_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "包括未實現損益"
+        },
+        "event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "期間已發生事件"
+        }
+      },
+      "required": [
+        "from_date",
+        "to_date",
+        "income_minor",
+        "expense_minor",
+        "premium_minor",
+        "claims_paid_minor",
+        "net_worth_change_minor",
+        "event_ids"
+      ],
+      "additionalProperties": false
+    },
+    "Choice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "選項識別"
+        },
+        "label": {
+          "type": "string",
+          "description": "白話選項"
+        },
+        "description": {
+          "type": "string",
+          "description": "決策前可知道的資訊"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "是否可選"
+        },
+        "disabled_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "原因"
+        },
+        "requires_confirmation": {
+          "type": "boolean",
+          "description": "不可逆或有重大代價時為 true"
+        },
+        "estimated_cash_cost_minor": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": -9000000000000,
+              "maximum": 9000000000000
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "已知成本，未知為 null"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "description",
+        "enabled",
+        "disabled_reason",
+        "requires_confirmation",
+        "estimated_cash_cost_minor"
+      ],
+      "additionalProperties": false
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "事件例項"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "CAREER",
+            "FAMILY",
+            "HEALTH",
+            "ACCIDENT",
+            "MARKET",
+            "POLICY",
+            "EXPENSE"
+          ],
+          "description": "分類"
+        },
+        "title": {
+          "type": "string",
+          "description": "標題"
+        },
+        "narrative": {
+          "type": "string",
+          "description": "故事"
+        },
+        "occurred_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "事件日期"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "FUNDING",
+            "RESOLVED",
+            "ACKNOWLEDGED"
+          ],
+          "description": "事件狀態"
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Choice"
+          },
+          "description": "目前合法選項"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "description": "事件自動產生的遊戲證明"
+        },
+        "is_rebirth_anchor": {
+          "type": "boolean",
+          "description": "此次為保留的重生事件"
+        },
+        "learning_topic_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "相關短教學"
+        },
+        "outcome": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EventOutcome"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "未決策為 null"
+        },
+        "visual_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "balance_before_minor": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "balance_after_minor": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hospital_visit": {
+          "$ref": "#/$defs/HospitalVisit"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "narrative",
+        "occurred_on",
+        "status",
+        "choices",
+        "evidence",
+        "is_rebirth_anchor",
+        "learning_topic_ids",
+        "outcome"
+      ],
+      "additionalProperties": false
+    },
+    "EventOutcome": {
+      "type": "object",
+      "properties": {
+        "choice_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "玩家已選選項"
+        },
+        "summary": {
+          "type": "string",
+          "description": "白話結果"
+        },
+        "ledger_entry_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "追溯金流"
+        },
+        "claim_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "關聯理賠"
+        },
+        "learning_message": {
+          "type": "string",
+          "description": "此事件的一項知識"
+        },
+        "is_terminal": {
+          "type": "boolean",
+          "description": "是否造成本輪結束"
+        },
+        "cash_delta_minor": {
+          "type": "integer"
+        },
+        "quality_delta": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "choice_id",
+        "summary",
+        "ledger_entry_ids",
+        "claim_ids",
+        "learning_message",
+        "is_terminal"
+      ],
+      "additionalProperties": false
+    },
+    "Funding": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "事件"
+        },
+        "required_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "本次需付總額"
+        },
+        "paid_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "已支付額度"
+        },
+        "remaining_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "尚需支付"
+        },
+        "available_now_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "現在可付金額"
+        },
+        "deadline": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "遊戲日期期限"
+        },
+        "can_pay": {
+          "type": "boolean",
+          "description": "是否足夠支付"
+        },
+        "can_wait": {
+          "type": "boolean",
+          "description": "是否可推進至下一個確定入帳或期限"
+        },
+        "next_wait_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "下一次等待終點"
+        },
+        "can_confirm_failure": {
+          "type": "boolean",
+          "description": "所有可行籌資均不足時才 true"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FundingOption"
+          },
+          "description": "提款 解約 賣股 借款 理賠等"
+        }
+      },
+      "required": [
+        "event_id",
+        "required_minor",
+        "paid_minor",
+        "remaining_minor",
+        "available_now_minor",
+        "deadline",
+        "can_pay",
+        "can_wait",
+        "next_wait_until",
+        "can_confirm_failure",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "FundingOption": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "description": "財務操作程式碼或 CLAIM"
+        },
+        "resource_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "對應存款 股票 保單 或借款商品"
+        },
+        "available_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "可取得的上限"
+        },
+        "available_on": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "可入帳日期"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "是否可用"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "不可用原因"
+        }
+      },
+      "required": [
+        "kind",
+        "resource_id",
+        "available_minor",
+        "available_on",
+        "enabled",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "Stock": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "股票識別"
+        },
+        "name": {
+          "type": "string",
+          "description": "虛構名稱"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ],
+          "description": "相對波動程度，非保本承諾"
+        },
+        "price_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "目前每股價格"
+        },
+        "as_of": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "報價遊戲日期"
+        },
+        "description": {
+          "type": "string",
+          "description": "簡短產業介紹"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "risk_level",
+        "price_minor",
+        "as_of",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "PricePoint": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "報價日期"
+        },
+        "price_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "每股價格"
+        }
+      },
+      "required": [
+        "date",
+        "price_minor"
+      ],
+      "additionalProperties": false
+    },
+    "Holding": {
+      "type": "object",
+      "properties": {
+        "stock_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "股票"
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "整股，不支援融資放空"
+        },
+        "cost_basis_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "總成本"
+        },
+        "market_value_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "總市值"
+        },
+        "unrealized_pnl_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "未實現損益"
+        }
+      },
+      "required": [
+        "stock_id",
+        "quantity",
+        "cost_basis_minor",
+        "market_value_minor",
+        "unrealized_pnl_minor"
+      ],
+      "additionalProperties": false
+    },
+    "DepositProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "商品"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "SAVINGS",
+            "TERM"
+          ],
+          "description": "型別"
+        },
+        "name": {
+          "type": "string",
+          "description": "名稱"
+        },
+        "annual_rate_bps": {
+          "type": "integer",
+          "description": "年利率基點，100 表示百分之一"
+        },
+        "term_months": {
+          "type": "integer",
+          "description": "活存為 0"
+        },
+        "minimum_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "最低額度"
+        },
+        "early_exit_rule": {
+          "type": "string",
+          "description": "提前解約計息方式"
+        },
+        "is_simulated": {
+          "type": "boolean",
+          "description": "固定 true"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "annual_rate_bps",
+        "term_months",
+        "minimum_minor",
+        "early_exit_rule",
+        "is_simulated"
+      ],
+      "additionalProperties": false
+    },
+    "TermDeposit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "定存識別"
+        },
+        "product_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "商品"
+        },
+        "principal_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "本金"
+        },
+        "opened_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "起日"
+        },
+        "matures_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "到期日"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "MATURED",
+            "CLOSED"
+          ],
+          "description": "狀態"
+        },
+        "auto_renew": {
+          "type": "boolean",
+          "description": "是否自動續存"
+        }
+      },
+      "required": [
+        "id",
+        "product_id",
+        "principal_minor",
+        "opened_on",
+        "matures_on",
+        "status",
+        "auto_renew"
+      ],
+      "additionalProperties": false
+    },
+    "LoanProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "商品"
+        },
+        "name": {
+          "type": "string",
+          "description": "名稱"
+        },
+        "annual_rate_bps": {
+          "type": "integer",
+          "description": "年利率"
+        },
+        "max_term_months": {
+          "type": "integer",
+          "description": "期限上限"
+        },
+        "max_principal_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "總上限"
+        },
+        "eligibility_summary": {
+          "type": "string",
+          "description": "收入 債務 或確定應收理賠限制"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "annual_rate_bps",
+        "max_term_months",
+        "max_principal_minor",
+        "eligibility_summary"
+      ],
+      "additionalProperties": false
+    },
+    "Loan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "借款識別"
+        },
+        "product_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "商品"
+        },
+        "outstanding_principal_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "剩餘本金"
+        },
+        "accrued_interest_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "應付未付利息"
+        },
+        "next_due_on": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "下一期"
+        },
+        "next_due_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "下一期應繳"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "DELINQUENT",
+            "PAID"
+          ],
+          "description": "狀態"
+        }
+      },
+      "required": [
+        "id",
+        "product_id",
+        "outstanding_principal_minor",
+        "accrued_interest_minor",
+        "next_due_on",
+        "next_due_minor",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "Portfolio": {
+      "type": "object",
+      "properties": {
+        "balances": {
+          "$ref": "#/$defs/Balances",
+          "description": "資產摘要"
+        },
+        "holdings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Holding"
+          },
+          "description": "股票"
+        },
+        "term_deposits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TermDeposit"
+          },
+          "description": "定存"
+        },
+        "loans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Loan"
+          },
+          "description": "借款"
+        },
+        "monthly_salary_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "薪資"
+        },
+        "monthly_living_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "生活費"
+        },
+        "monthly_support_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "扶養費"
+        },
+        "annual_premium_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "目前年度約定保費"
+        },
+        "as_of": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "遊戲日期"
+        },
+        "run_version": {
+          "type": "integer",
+          "description": "快照版本"
+        }
+      },
+      "required": [
+        "balances",
+        "holdings",
+        "term_deposits",
+        "loans",
+        "monthly_salary_minor",
+        "monthly_living_minor",
+        "monthly_support_minor",
+        "annual_premium_minor",
+        "as_of",
+        "run_version"
+      ],
+      "additionalProperties": false
+    },
+    "LedgerEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "記帳識別"
+        },
+        "sim_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "遊戲日期"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "SALARY",
+            "LIVING",
+            "SUPPORT",
+            "PREMIUM",
+            "CLAIM",
+            "INTEREST",
+            "DIVIDEND",
+            "REALIZED_PNL",
+            "TRANSFER",
+            "PRINCIPAL",
+            "MEDICAL",
+            "OTHER"
+          ],
+          "description": "分類"
+        },
+        "cashflow_class": {
+          "type": "string",
+          "enum": [
+            "INCOME",
+            "EXPENSE",
+            "INTERNAL",
+            "NONE"
+          ],
+          "description": "報告現金流分類；應收認列為 NONE，給付入帳才為 INCOME"
+        },
+        "amount_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "正收入或流入，負支出或流出"
+        },
+        "account": {
+          "type": "string",
+          "description": "現金 活存 定存 股票 負債 應收等子帳"
+        },
+        "counter_account": {
+          "type": "string",
+          "description": "對應子帳，轉帳不得重複算收益"
+        },
+        "event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "相關事件"
+        },
+        "transaction_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "相關交易"
+        },
+        "description": {
+          "type": "string",
+          "description": "可讀說明"
+        }
+      },
+      "required": [
+        "id",
+        "sim_date",
+        "category",
+        "cashflow_class",
+        "amount_minor",
+        "account",
+        "counter_account",
+        "event_id",
+        "transaction_id",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "Quote": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "確認單識別"
+        },
+        "action": {
+          "type": "string",
+          "description": "財務操作程式碼"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "輪次"
+        },
+        "run_version": {
+          "type": "integer",
+          "description": "繫結狀態版本"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "現實時間五分鐘有效"
+        },
+        "cash_delta_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "執行對現金的影響"
+        },
+        "fees_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "費用"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/QuoteEffect"
+          },
+          "description": "逐項帳戶變動與入帳日期，前端不解析 summary 文字"
+        },
+        "coverage_changes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "新增或終止保障的明確說明"
+        },
+        "effective_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "遊戲生效日期"
+        },
+        "summary": {
+          "type": "string",
+          "description": "完整可讀條件"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "不可逆或風險提示"
+        },
+        "eligible": {
+          "type": "boolean",
+          "description": "是否可執行"
+        },
+        "denial_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "拒絕原因"
+        },
+        "related_resource_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "保單 定存 股票 等"
+        },
+        "product_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "商品版本"
+        }
+      },
+      "required": [
+        "id",
+        "action",
+        "run_id",
+        "run_version",
+        "expires_at",
+        "cash_delta_minor",
+        "fees_minor",
+        "effects",
+        "coverage_changes",
+        "effective_on",
+        "summary",
+        "warnings",
+        "eligible",
+        "denial_reasons",
+        "related_resource_id",
+        "product_version"
+      ],
+      "additionalProperties": false
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "交易識別"
+        },
+        "quote_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "確認單"
+        },
+        "action": {
+          "type": "string",
+          "description": "操作程式碼"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "COMPLETED"
+          ],
+          "description": "交易原子執行成功才建立"
+        },
+        "ledger_entry_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "對應帳目"
+        },
+        "result_resource": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "新保單 借款 或定存"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "真實操作時間"
+        }
+      },
+      "required": [
+        "id",
+        "quote_id",
+        "action",
+        "status",
+        "ledger_entry_ids",
+        "result_resource",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "InsuranceProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "商品識別"
+        },
+        "version": {
+          "type": "string",
+          "description": "商品版本"
+        },
+        "name": {
+          "type": "string",
+          "description": "展示名"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "MEDICAL",
+            "ACCIDENT",
+            "CRITICAL_ILLNESS",
+            "LIFE",
+            "LONG_TERM_CARE"
+          ],
+          "description": "保障分類"
+        },
+        "source_mode": {
+          "type": "string",
+          "enum": [
+            "SIMULATED",
+            "OFFICIAL_ADAPTED"
+          ],
+          "description": "模擬或依官方資料轉譯"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "官方依據"
+        },
+        "source_checked_on": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "核對日期"
+        },
+        "plain_summary": {
+          "type": "string",
+          "description": "保什麼及主要不保什麼"
+        },
+        "eligibility_summary": {
+          "type": "string",
+          "description": "年齡與遊戲健康條件"
+        },
+        "coverage_options_minor": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9000000000000,
+            "maximum": 9000000000000
+          },
+          "description": "可選保額"
+        },
+        "premium_period_options_months": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "可選繳費週期，例如 1 或 12"
+        },
+        "waiting_days": {
+          "type": "integer",
+          "description": "等待期"
+        },
+        "benefits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BenefitRule"
+          },
+          "description": "給付條件"
+        },
+        "premium_rule_summary": {
+          "type": "string",
+          "description": "計費方式；實際金額取 quote"
+        },
+        "claim_payment_delay_days": {
+          "type": "integer",
+          "description": "遊戲入帳延遲"
+        },
+        "renewal_summary": {
+          "type": "string",
+          "description": "續保及期滿"
+        },
+        "surrender_summary": {
+          "type": "string",
+          "description": "解約與價值"
+        },
+        "simulation_differences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "與真實條款的簡化差異"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "可投保"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "name",
+        "category",
+        "source_mode",
+        "source_url",
+        "source_checked_on",
+        "plain_summary",
+        "eligibility_summary",
+        "coverage_options_minor",
+        "premium_period_options_months",
+        "waiting_days",
+        "benefits",
+        "premium_rule_summary",
+        "claim_payment_delay_days",
+        "renewal_summary",
+        "surrender_summary",
+        "simulation_differences",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "BenefitRule": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "穩定保障程式碼"
+        },
+        "trigger_summary": {
+          "type": "string",
+          "description": "符合什麼條件"
+        },
+        "payout_type": {
+          "type": "string",
+          "enum": [
+            "FIXED",
+            "REIMBURSEMENT",
+            "PER_DAY",
+            "DEATH"
+          ],
+          "description": "給付方式"
+        },
+        "waiting_days": {
+          "type": "integer",
+          "description": "該給付專案實際等待日數"
+        },
+        "limit_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "該方案給付上限"
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "排除情況"
+        },
+        "coordination_rule": {
+          "type": "string",
+          "description": "多保單如何合併計算"
+        }
+      },
+      "required": [
+        "code",
+        "trigger_summary",
+        "payout_type",
+        "waiting_days",
+        "limit_minor",
+        "exclusions",
+        "coordination_rule"
+      ],
+      "additionalProperties": false
+    },
+    "Policy": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "保單"
+        },
+        "product_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "商品"
+        },
+        "product_version": {
+          "type": "string",
+          "description": "投保時版本"
+        },
+        "coverage_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "保額"
+        },
+        "premium_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "每期保費"
+        },
+        "premium_period_months": {
+          "type": "integer",
+          "description": "繳費週期"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "WAITING",
+            "ACTIVE",
+            "GRACE",
+            "LAPSED",
+            "EXPIRED",
+            "SURRENDERED"
+          ],
+          "description": "狀態"
+        },
+        "issued_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "承保日"
+        },
+        "coverage_from": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "保障起日"
+        },
+        "coverage_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "終止日"
+        },
+        "next_premium_on": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "下次繳費日"
+        },
+        "cash_value_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "可計入資產的價值"
+        },
+        "beneficiary_label": {
+          "type": "string",
+          "description": "受益人"
+        },
+        "auto_pay": {
+          "type": "boolean",
+          "description": "是否自動繳費"
+        },
+        "reinstatement_available": {
+          "type": "boolean",
+          "description": "能否申請復效"
+        }
+      },
+      "required": [
+        "id",
+        "product_id",
+        "product_version",
+        "coverage_minor",
+        "premium_minor",
+        "premium_period_months",
+        "status",
+        "issued_on",
+        "coverage_from",
+        "coverage_until",
+        "next_premium_on",
+        "cash_value_minor",
+        "beneficiary_label",
+        "auto_pay",
+        "reinstatement_available"
+      ],
+      "additionalProperties": false
+    },
+    "Claim": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "理賠識別"
+        },
+        "policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "保單"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "事件"
+        },
+        "benefit_code": {
+          "type": "string",
+          "description": "保障專案"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "SUBMITTED",
+            "NEEDS_INFO",
+            "APPROVED",
+            "REJECTED",
+            "PAID"
+          ],
+          "description": "狀態"
+        },
+        "approved_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "核准額度"
+        },
+        "recipient": {
+          "type": "string",
+          "enum": [
+            "PLAYER",
+            "ESTATE"
+          ],
+          "description": "玩家或身故後家屬／遺產帳"
+        },
+        "paid_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "已入帳額度"
+        },
+        "payable_on": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "遊戲入帳日"
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "核准或拒絕依據"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "白話說明"
+        },
+        "required_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "遊戲內證據，不上傳真實病歷"
+        },
+        "ledger_entry_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "應收與入帳記錄"
+        }
+      },
+      "required": [
+        "id",
+        "policy_id",
+        "event_id",
+        "benefit_code",
+        "status",
+        "approved_minor",
+        "recipient",
+        "paid_minor",
+        "payable_on",
+        "reason_codes",
+        "explanation",
+        "required_evidence_ids",
+        "ledger_entry_ids"
+      ],
+      "additionalProperties": false
+    },
+    "ClaimAssessment": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "事件"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ClaimAssessmentItem"
+          },
+          "description": "依保單與保障專案拆分"
+        }
+      },
+      "required": [
+        "event_id",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "ClaimAssessmentItem": {
+      "type": "object",
+      "properties": {
+        "policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "保單"
+        },
+        "benefit_code": {
+          "type": "string",
+          "description": "保障專案"
+        },
+        "eligible": {
+          "type": "boolean",
+          "description": "初步符合"
+        },
+        "estimated_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "預估給付"
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "原因"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "已有的遊戲內證據"
+        }
+      },
+      "required": [
+        "policy_id",
+        "benefit_code",
+        "eligible",
+        "estimated_minor",
+        "reason_codes",
+        "evidence_ids"
+      ],
+      "additionalProperties": false
+    },
+    "CoverageReview": {
+      "type": "object",
+      "properties": {
+        "as_of": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "時點"
+        },
+        "needs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CoverageNeed"
+          },
+          "description": "保障需求與缺口"
+        },
+        "annual_premium_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "保費總額"
+        },
+        "premium_burden_ratio": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "年收入為零時 null"
+        },
+        "liquidity_months": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "必要支出為零時 null"
+        }
+      },
+      "required": [
+        "as_of",
+        "needs",
+        "annual_premium_minor",
+        "premium_burden_ratio",
+        "liquidity_months"
+      ],
+      "additionalProperties": false
+    },
+    "CoverageNeed": {
+      "type": "object",
+      "properties": {
+        "topic": {
+          "type": "string",
+          "description": "醫療 家庭責任 收入中斷等"
+        },
+        "estimated_need_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "模擬需求"
+        },
+        "covered_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "適用保障"
+        },
+        "gap_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "缺口，下限 0"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "白話推導"
+        }
+      },
+      "required": [
+        "topic",
+        "estimated_need_minor",
+        "covered_minor",
+        "gap_minor",
+        "explanation"
+      ],
+      "additionalProperties": false
+    },
+    "TimelineItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "節點"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "遊戲日期"
+        },
+        "title": {
+          "type": "string",
+          "description": "事件或年度摘要"
+        },
+        "event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "事件"
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "可重生的準備節點"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "EVENT",
+            "YEAR",
+            "START",
+            "END",
+            "REMEMBERED_ANCHOR"
+          ],
+          "description": "型別"
+        }
+      },
+      "required": [
+        "id",
+        "date",
+        "title",
+        "event_id",
+        "snapshot_id",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "RebirthPoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "重生選項"
+        },
+        "source_run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "來源輪"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "準備時點快照"
+        },
+        "restore_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "恢復日期"
+        },
+        "restore_age": {
+          "type": "integer",
+          "description": "恢復年齡"
+        },
+        "anchor_event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "保留事件；選起點時可為 null"
+        },
+        "anchor_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "保留事件日期"
+        },
+        "anchor_title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "上一輪事件"
+        },
+        "preparation_days": {
+          "type": "integer",
+          "description": "可準備天數"
+        },
+        "balance_preview": {
+          "$ref": "#/$defs/Balances",
+          "description": "當時資產"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "如原有病史仍在"
+        }
+      },
+      "required": [
+        "id",
+        "source_run_id",
+        "snapshot_id",
+        "restore_date",
+        "restore_age",
+        "anchor_event_id",
+        "anchor_date",
+        "anchor_title",
+        "preparation_days",
+        "balance_preview",
+        "warnings"
+      ],
+      "additionalProperties": false
+    },
+    "RebirthPreview": {
+      "type": "object",
+      "properties": {
+        "point": {
+          "$ref": "#/$defs/RebirthPoint",
+          "description": "選定準備節點"
+        },
+        "preserved_facts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "保留的角色 家庭 病史 保單等"
+        },
+        "rerolled_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "其他可重生的未來範圍"
+        },
+        "rebirths_after_commit": {
+          "type": "integer",
+          "description": "成功建立下一輪後剩餘次數"
+        },
+        "campaign_version": {
+          "type": "integer",
+          "description": "提交時比對"
+        }
+      },
+      "required": [
+        "point",
+        "preserved_facts",
+        "rerolled_scope",
+        "rebirths_after_commit",
+        "campaign_version"
+      ],
+      "additionalProperties": false
+    },
+    "RunReport": {
+      "type": "object",
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "輪次"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "READY"
+          ],
+          "description": "帳目報告同步產生"
+        },
+        "from_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "本輪起點"
+        },
+        "to_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "終點"
+        },
+        "ending_reason": {
+          "type": "string",
+          "description": "結局"
+        },
+        "opening_net_worth_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "期初資產"
+        },
+        "ending_net_worth_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "期末資產"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReportCategory"
+          },
+          "description": "收入 支出 保障等"
+        },
+        "coverage_effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CoverageEffect"
+          },
+          "description": "保險實際作用"
+        },
+        "estate_benefits_approved_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "身故後已核准家屬給付，不能回頭用於生前籌資"
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ScoreDimension"
+          },
+          "description": "多維回饋"
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TimelineItem"
+          },
+          "description": "重大事件"
+        },
+        "inherited_prefix_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "重生前繼承歷史終點，避免跨輪重複比較"
+        }
+      },
+      "required": [
+        "run_id",
+        "status",
+        "from_date",
+        "to_date",
+        "ending_reason",
+        "opening_net_worth_minor",
+        "ending_net_worth_minor",
+        "categories",
+        "coverage_effects",
+        "estate_benefits_approved_minor",
+        "dimensions",
+        "timeline",
+        "inherited_prefix_until"
+      ],
+      "additionalProperties": false
+    },
+    "ReportCategory": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "分類"
+        },
+        "label": {
+          "type": "string",
+          "description": "名稱"
+        },
+        "amount_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "金額"
+        },
+        "entry_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "追溯帳目，可另查 ledger"
+        }
+      },
+      "required": [
+        "code",
+        "label",
+        "amount_minor",
+        "entry_ids"
+      ],
+      "additionalProperties": false
+    },
+    "CoverageEffect": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "事件"
+        },
+        "gross_cost_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "總支出"
+        },
+        "reimbursement_paid_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "已支付的費用補償"
+        },
+        "fixed_benefits_paid_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "定額現金給付"
+        },
+        "claims_pending_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "未入帳核准款"
+        },
+        "out_of_pocket_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "自行負擔，不低於零"
+        },
+        "premiums_to_date_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "累計保費"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "保障作用及成本"
+        }
+      },
+      "required": [
+        "event_id",
+        "gross_cost_minor",
+        "reimbursement_paid_minor",
+        "fixed_benefits_paid_minor",
+        "claims_pending_minor",
+        "out_of_pocket_minor",
+        "premiums_to_date_minor",
+        "explanation"
+      ],
+      "additionalProperties": false
+    },
+    "ScoreDimension": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "LIQUIDITY",
+            "COVERAGE",
+            "PREMIUM_AFFORDABILITY",
+            "DEBT_RESILIENCE",
+            "LIFE_QUALITY"
+          ],
+          "description": "維度"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "0 至 100 或 null"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "規則型判讀"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "決策 事件 或帳目"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ],
+          "description": "證據充足程度"
+        }
+      },
+      "required": [
+        "code",
+        "score",
+        "explanation",
+        "evidence_ids",
+        "confidence"
+      ],
+      "additionalProperties": false
+    },
+    "FinalReport": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "報告"
+        },
+        "campaign_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "遊戲"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "GENERATING",
+            "READY",
+            "FALLBACK",
+            "FAILED"
+          ],
+          "description": "狀態"
+        },
+        "job_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "工作"
+        },
+        "run_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "三輪"
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FeedbackItem"
+          },
+          "description": "做得好的地方"
+        },
+        "improvements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FeedbackItem"
+          },
+          "description": "可以改進"
+        },
+        "comparison_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "運氣 差異與比較限制"
+        },
+        "learning_topics": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "延伸教學"
+        },
+        "generated_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "完成時間"
+        },
+        "ruleset_version": {
+          "type": "string",
+          "description": "規則版本"
+        }
+      },
+      "required": [
+        "id",
+        "campaign_id",
+        "status",
+        "job_id",
+        "run_ids",
+        "strengths",
+        "improvements",
+        "comparison_notes",
+        "learning_topics",
+        "generated_at",
+        "ruleset_version"
+      ],
+      "additionalProperties": false
+    },
+    "FeedbackItem": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "標題"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "白話說明"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "引用既有記錄"
+        },
+        "alternative_action": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "當時實際可採取的替代選擇"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "不保證替代選擇一定更賺"
+        }
+      },
+      "required": [
+        "title",
+        "explanation",
+        "evidence_ids",
+        "alternative_action",
+        "uncertainty"
+      ],
+      "additionalProperties": false
+    },
+    "Lesson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "主題"
+        },
+        "title": {
+          "type": "string",
+          "description": "標題"
+        },
+        "short_text": {
+          "type": "string",
+          "description": "一至三句白話"
+        },
+        "detail_text": {
+          "type": "string",
+          "description": "可展開說明"
+        },
+        "source_urls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "來源"
+        },
+        "related_product_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "延伸瞭解的商品"
+        },
+        "version": {
+          "type": "string",
+          "description": "內容版本"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "short_text",
+        "detail_text",
+        "source_urls",
+        "related_product_ids",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "Export": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "匯出工作產物"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "READY",
+            "FAILED"
+          ],
+          "description": "狀態"
+        },
+        "download_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "本人短效連結"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "連結到期"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "PDF"
+          ],
+          "description": "格式"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "download_url",
+        "expires_at",
+        "format"
+      ],
+      "additionalProperties": false
+    },
+    "Notice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "訊息"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "SYSTEM",
+            "LEARNING",
+            "REPORT_READY"
+          ],
+          "description": "分類"
+        },
+        "text": {
+          "type": "string",
+          "description": "文字"
+        },
+        "read_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "已讀時間"
+        },
+        "resource": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResourceRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "可前往的資源"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "text",
+        "read_at",
+        "resource"
+      ],
+      "additionalProperties": false
+    },
+    "ContentRelease": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "內容發行識別"
+        },
+        "version": {
+          "type": "string",
+          "description": "版本"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "DRAFT",
+            "VALIDATED",
+            "PUBLISHED",
+            "RETIRED"
+          ],
+          "description": "狀態"
+        },
+        "persona_count": {
+          "type": "integer",
+          "description": "人設數"
+        },
+        "stock_count": {
+          "type": "integer",
+          "description": "必須為 5"
+        },
+        "product_count": {
+          "type": "integer",
+          "description": "保險商品數"
+        },
+        "validation_errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "發行前檢查結果"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "建立時間"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "status",
+        "persona_count",
+        "stock_count",
+        "product_count",
+        "validation_errors",
+        "created_at"
+      ],
+      "additionalProperties": false
+    },
+    "AuditEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "記錄"
+        },
+        "actor_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "管理者或系統"
+        },
+        "action": {
+          "type": "string",
+          "description": "操作"
+        },
+        "resource_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "目標"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "時間"
+        },
+        "summary": {
+          "type": "string",
+          "description": "不含密碼及模型金鑰"
+        }
+      },
+      "required": [
+        "id",
+        "actor_id",
+        "action",
+        "resource_id",
+        "created_at",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "RegisterInput": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "合法信箱，最長 254"
+        },
+        "password": {
+          "type": "string",
+          "description": "12 至 128 字；不得記錄"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "2 至 30 字"
+        },
+        "terms_version": {
+          "type": "string",
+          "description": "必須符合 bootstrap"
+        },
+        "privacy_version": {
+          "type": "string",
+          "description": "必須符合 bootstrap"
+        }
+      },
+      "required": [
+        "email",
+        "password",
+        "display_name",
+        "terms_version",
+        "privacy_version"
+      ],
+      "additionalProperties": false
+    },
+    "LoginInput": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "信箱"
+        },
+        "password": {
+          "type": "string",
+          "description": "密碼"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ],
+      "additionalProperties": false
+    },
+    "EmailInput": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "信箱"
+        }
+      },
+      "required": [
+        "email"
+      ],
+      "additionalProperties": false
+    },
+    "TokenInput": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "僅經信箱連結取得，最長 512"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
+    },
+    "ResetInput": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "單次重設 token"
+        },
+        "new_password": {
+          "type": "string",
+          "description": "12 至 128 字"
+        }
+      },
+      "required": [
+        "token",
+        "new_password"
+      ],
+      "additionalProperties": false
+    },
+    "PasswordInput": {
+      "type": "object",
+      "properties": {
+        "current_password": {
+          "type": "string",
+          "description": "原密碼"
+        },
+        "new_password": {
+          "type": "string",
+          "description": "新密碼"
+        }
+      },
+      "required": [
+        "current_password",
+        "new_password"
+      ],
+      "additionalProperties": false
+    },
+    "ProfileInput": {
+      "type": "object",
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "description": "2 至 30 字"
+        }
+      },
+      "required": [
+        "display_name"
+      ],
+      "additionalProperties": false
+    },
+    "DeleteAccountInput": {
+      "type": "object",
+      "properties": {
+        "current_password": {
+          "type": "string",
+          "description": "重新確認"
+        },
+        "confirmation": {
+          "type": "string",
+          "description": "固定 DELETE_MY_ACCOUNT"
+        }
+      },
+      "required": [
+        "current_password",
+        "confirmation"
+      ],
+      "additionalProperties": false
+    },
+    "CreateCampaignInput": {
+      "type": "object",
+      "properties": {
+        "locale": {
+          "type": "string",
+          "description": "固定 zh-TW"
+        }
+      },
+      "required": [
+        "locale"
+      ],
+      "additionalProperties": false
+    },
+    "VersionInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "GET RunState 得到的 version"
+        }
+      },
+      "required": [
+        "expected_version"
+      ],
+      "additionalProperties": false
+    },
+    "SceneInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "目前輪次版本"
+        },
+        "scene_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "目標場景"
+        },
+        "complete_work": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expected_version",
+        "scene_id"
+      ],
+      "additionalProperties": false
+    },
+    "LifestyleInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "目前輪次版本"
+        },
+        "lifestyle": {
+          "type": "string",
+          "enum": [
+            "BASIC",
+            "BALANCED",
+            "COMFORT"
+          ],
+          "description": "下個月生效，不回溯"
+        }
+      },
+      "required": [
+        "expected_version",
+        "lifestyle"
+      ],
+      "additionalProperties": false
+    },
+    "ChoiceInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "輪次版本"
+        },
+        "choice_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "目前 Event 中 enabled 的選項"
+        },
+        "confirmed": {
+          "type": "boolean",
+          "description": "有重大代價時必須 true"
+        },
+        "automatic": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expected_version",
+        "confirmed"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "required": [
+                "choice_id"
+              ]
+            },
+            {
+              "properties": {
+                "automatic": {
+                  "const": true
+                }
+              },
+              "required": [
+                "automatic"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "ClaimInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "輪次版本"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "已發生事件"
+        },
+        "policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "所持保單"
+        },
+        "benefit_code": {
+          "type": "string",
+          "description": "條款保障專案"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "遊戲自產證據"
+        }
+      },
+      "required": [
+        "expected_version",
+        "event_id",
+        "policy_id",
+        "benefit_code",
+        "evidence_ids"
+      ],
+      "additionalProperties": false
+    },
+    "ClaimEvidenceInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "輪次版本"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "description": "僅限事件相關遊戲證據"
+        }
+      },
+      "required": [
+        "expected_version",
+        "evidence_ids"
+      ],
+      "additionalProperties": false
+    },
+    "QuoteExecuteInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "必須等於 quote 繫結版本"
+        },
+        "quote_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "仍有效且 eligible"
+        },
+        "confirmed": {
+          "type": "boolean",
+          "description": "固定 true"
+        }
+      },
+      "required": [
+        "expected_version",
+        "quote_id",
+        "confirmed"
+      ],
+      "additionalProperties": false
+    },
+    "PolicySettingsInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "輪次版本"
+        },
+        "auto_pay": {
+          "type": "boolean",
+          "description": "停用會提示未來失效風險"
+        }
+      },
+      "required": [
+        "expected_version",
+        "auto_pay"
+      ],
+      "additionalProperties": false
+    },
+    "TermSettingsInput": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "description": "輪次版本"
+        },
+        "auto_renew": {
+          "type": "boolean",
+          "description": "true 依到期時可用方案續存，無方案則回活存"
+        }
+      },
+      "required": [
+        "expected_version",
+        "auto_renew"
+      ],
+      "additionalProperties": false
+    },
+    "RebirthInput": {
+      "type": "object",
+      "properties": {
+        "expected_campaign_version": {
+          "type": "integer",
+          "description": "Campaign 版本"
+        },
+        "point_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "最近已結束輪次的重生點"
+        },
+        "confirmed": {
+          "type": "boolean",
+          "description": "固定 true"
+        }
+      },
+      "required": [
+        "expected_campaign_version",
+        "point_id",
+        "confirmed"
+      ],
+      "additionalProperties": false
+    },
+    "Acknowledged": {
+      "type": "object",
+      "properties": {
+        "accepted": {
+          "type": "boolean",
+          "description": "固定 true"
+        },
+        "message": {
+          "type": "string",
+          "description": "可讀訊息"
+        }
+      },
+      "required": [
+        "accepted",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "DeletionReceipt": {
+      "type": "object",
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "刪除工作"
+        },
+        "scheduled_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "排程時間"
+        }
+      },
+      "required": [
+        "job_id",
+        "scheduled_at"
+      ],
+      "additionalProperties": false
+    },
+    "ReleaseInput": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "唯一版本"
+        },
+        "persona_asset_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "內部已上傳人設資料"
+        },
+        "event_asset_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "內部已上傳事件資料"
+        },
+        "product_asset_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "已核對商品與來源"
+        },
+        "ruleset_asset_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "規則配置"
+        }
+      },
+      "required": [
+        "version",
+        "persona_asset_id",
+        "event_asset_id",
+        "product_asset_id",
+        "ruleset_asset_id"
+      ],
+      "additionalProperties": false
+    },
+    "AssetInput": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "PERSONAS",
+            "EVENTS",
+            "PRODUCTS",
+            "RULESET"
+          ],
+          "description": "資料種類"
+        },
+        "content_json": {
+          "type": "string",
+          "description": "合法 JSON 文字，需依內部內容驗證規則檢查"
+        }
+      },
+      "required": [
+        "kind",
+        "content_json"
+      ],
+      "additionalProperties": false
+    },
+    "AssetReceipt": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "內容識別"
+        },
+        "kind": {
+          "type": "string",
+          "description": "型別"
+        },
+        "sha256": {
+          "type": "string",
+          "description": "內容雜湊"
+        },
+        "validation_errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "靜態檢查結果"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "sha256",
+        "validation_errors"
+      ],
+      "additionalProperties": false
+    },
+    "QuoteInput": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "TRANSFER"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "from_account": {
+                  "type": "string",
+                  "enum": [
+                    "CASH",
+                    "SAVINGS"
+                  ]
+                },
+                "to_account": {
+                  "type": "string",
+                  "enum": [
+                    "CASH",
+                    "SAVINGS"
+                  ]
+                },
+                "amount_minor": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9000000000000
+                }
+              },
+              "required": [
+                "from_account",
+                "to_account",
+                "amount_minor"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "TERM_OPEN"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "product_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "amount_minor": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9000000000000
+                },
+                "source_account": {
+                  "type": "string",
+                  "enum": [
+                    "CASH",
+                    "SAVINGS"
+                  ]
+                },
+                "term_months": {
+                  "type": "integer",
+                  "enum": [
+                    6,
+                    12,
+                    24,
+                    36
+                  ]
+                },
+                "auto_renew": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "product_id",
+                "amount_minor",
+                "source_account",
+                "term_months"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "TERM_CLOSE"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "term_deposit_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                }
+              },
+              "required": [
+                "term_deposit_id"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "STOCK_BUY"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "stock_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "stock_id",
+                "quantity"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "STOCK_SELL"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "stock_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "stock_id",
+                "quantity"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "LOAN_BORROW"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "product_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "amount_minor": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9000000000000
+                },
+                "term_months": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "claim_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                }
+              },
+              "required": [
+                "product_id",
+                "amount_minor",
+                "term_months"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "LOAN_REPAY"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "loan_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "amount_minor": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9000000000000
+                }
+              },
+              "required": [
+                "loan_id",
+                "amount_minor"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "POLICY_BUY"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "product_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "coverage_minor": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9000000000000
+                },
+                "premium_period_months": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "beneficiary_label": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "product_id",
+                "coverage_minor",
+                "premium_period_months",
+                "beneficiary_label"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "POLICY_SURRENDER"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "policy_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                }
+              },
+              "required": [
+                "policy_id"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "POLICY_REINSTATE"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "policy_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                }
+              },
+              "required": [
+                "policy_id"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "POLICY_PREMIUM_PAY"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "policy_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                }
+              },
+              "required": [
+                "policy_id"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "expected_version": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "action": {
+              "const": "BILL_PAY"
+            },
+            "params": {
+              "type": "object",
+              "properties": {
+                "bill_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "amount_minor": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9000000000000
+                }
+              },
+              "required": [
+                "bill_id",
+                "amount_minor"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "expected_version",
+            "action",
+            "params"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Bill": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "帳單"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "LIVING",
+            "SUPPORT",
+            "LOAN",
+            "PREMIUM",
+            "OTHER",
+            "MEDICAL"
+          ],
+          "description": "型別"
+        },
+        "due_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "應繳日"
+        },
+        "total_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "原始金額"
+        },
+        "remaining_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "未付金額"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "PAID",
+            "OVERDUE"
+          ],
+          "description": "狀態"
+        },
+        "related_loan_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "若為貸款到期通知，連結既有義務，不重算本金"
+        },
+        "related_policy_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "若為保費通知，走保單補繳或復效流程"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "未繳後果"
+        },
+        "event_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "category",
+        "due_on",
+        "total_minor",
+        "remaining_minor",
+        "status",
+        "related_loan_id",
+        "related_policy_id",
+        "explanation"
+      ],
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "證據識別"
+        },
+        "label": {
+          "type": "string",
+          "description": "例如遊戲診斷紀錄或住院費用單"
+        },
+        "available_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "取得日期"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "來源事件"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "available_on",
+        "event_id"
+      ],
+      "additionalProperties": false
+    },
+    "LegalDocument": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "TERMS",
+            "PRIVACY"
+          ],
+          "description": "檔案種類"
+        },
+        "version": {
+          "type": "string",
+          "description": "版本"
+        },
+        "title": {
+          "type": "string",
+          "description": "名稱"
+        },
+        "body": {
+          "type": "string",
+          "description": "純文字全文"
+        },
+        "effective_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "生效日期"
+        }
+      },
+      "required": [
+        "kind",
+        "version",
+        "title",
+        "body",
+        "effective_on"
+      ],
+      "additionalProperties": false
+    },
+    "LifestyleOption": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "BASIC",
+            "BALANCED",
+            "COMFORT"
+          ],
+          "description": "方案"
+        },
+        "label": {
+          "type": "string",
+          "description": "白話名稱"
+        },
+        "monthly_living_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "必要生活費"
+        },
+        "quality_effect_summary": {
+          "type": "string",
+          "description": "對生活品質的影響"
+        },
+        "effective_from": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "下月起生效"
+        }
+      },
+      "required": [
+        "code",
+        "label",
+        "monthly_living_minor",
+        "quality_effect_summary",
+        "effective_from"
+      ],
+      "additionalProperties": false
+    },
+    "QuoteEffect": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "enum": [
+            "CASH",
+            "SAVINGS",
+            "TERM",
+            "STOCKS",
+            "LOAN",
+            "RECEIVABLE",
+            "BILL",
+            "POLICY_VALUE"
+          ],
+          "description": "受影響帳戶"
+        },
+        "delta_minor": {
+          "type": "integer",
+          "minimum": -9000000000000,
+          "maximum": 9000000000000,
+          "description": "資產或負債的正負變動；LOAN 正值表示負債增加"
+        },
+        "available_on": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "生效或可用日期"
+        },
+        "description": {
+          "type": "string",
+          "description": "白話項目說明"
+        }
+      },
+      "required": [
+        "account",
+        "delta_minor",
+        "available_on",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "AssetSnapshot": {
+      "type": "object",
+      "properties": {
+        "as_of": {
+          "type": "string"
+        },
+        "balances": {
+          "$ref": "#/$defs/Balances"
+        },
+        "term_interest_minor": {
+          "type": "integer"
+        },
+        "holdings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Holding"
+          }
+        },
+        "active_policy_count": {
+          "type": "integer"
+        },
+        "lapsed_policy_count": {
+          "type": "integer"
+        },
+        "annual_premium_minor": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "as_of",
+        "balances",
+        "term_interest_minor",
+        "holdings",
+        "active_policy_count",
+        "lapsed_policy_count",
+        "annual_premium_minor"
+      ],
+      "additionalProperties": false
+    },
+    "HospitalVisit": {
+      "type": "object",
+      "properties": {
+        "department": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "fee_label": {
+          "type": "string"
+        },
+        "mixed_cost": {
+          "type": "boolean"
+        },
+        "cost_minor": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "paid_minor": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outstanding_minor": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "claims_paid_minor": {
+          "type": "integer"
+        },
+        "claims_pending_minor": {
+          "type": "integer"
+        },
+        "bill_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "payment_verified": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "department",
+        "service",
+        "description",
+        "fee_label",
+        "mixed_cost",
+        "cost_minor",
+        "paid_minor",
+        "outstanding_minor",
+        "claims_paid_minor",
+        "claims_pending_minor",
+        "bill_ids",
+        "payment_verified"
+      ],
+      "additionalProperties": false
+    },
+    "SettingsPatch": {
+      "type": "object",
+      "properties": {
+        "locale": {
+          "type": "string",
+          "description": "v1 僅 zh-TW"
+        },
+        "sound_enabled": {
+          "type": "boolean",
+          "description": "是否播放音效"
+        },
+        "reduced_motion": {
+          "type": "boolean",
+          "description": "減少動畫"
+        },
+        "text_scale": {
+          "type": "number",
+          "description": "1 至 1.5"
+        },
+        "tutorial_completed": {
+          "type": "boolean",
+          "description": "首次操作教學是否完成"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

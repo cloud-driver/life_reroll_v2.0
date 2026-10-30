@@ -1,0 +1,217 @@
+{
+  "version": "radar-cart-20261023-2",
+  "content_version": "2026.09.simulated.1",
+  "features": [
+    "reserve_months",
+    "income_ratio",
+    "loan_payment_ratio",
+    "premium_ratio",
+    "bill_ratio",
+    "age",
+    "medical_months",
+    "critical_months",
+    "locked_months",
+    "stock_months",
+    "waiting_policies",
+    "negative_years"
+  ],
+  "metadata": {
+    "training_samples": 2400,
+    "validation_samples": 800,
+    "horizon_months": 12,
+    "label": "one-year funding gap, unpaid bill or delinquent loan under the documented scenario policy",
+    "sensitivity": 0.9473,
+    "specificity": 0.9623,
+    "balanced_accuracy": 0.9548,
+    "brier_score": 0.0316,
+    "confusion": {
+      "tp": 431,
+      "tn": 332,
+      "fp": 13,
+      "fn": 24
+    },
+    "split": "independent synthetic state and future seeds; validation never used for fitting",
+    "scenario_version": "scenarios-20261023-2",
+    "scope": "synthetic game scenarios only; not real-world financial prediction"
+  },
+  "tree": {
+    "feature": 1,
+    "threshold": 0.91518,
+    "left": {
+      "feature": 0,
+      "threshold": 12.10165,
+      "left": {
+        "feature": 1,
+        "threshold": 0.82589,
+        "left": {
+          "feature": 0,
+          "threshold": 8.615485,
+          "left": {
+            "probability": 0.99898,
+            "samples": 980
+          },
+          "right": {
+            "probability": 0.92105,
+            "samples": 36
+          }
+        },
+        "right": {
+          "feature": 0,
+          "threshold": 0.886185,
+          "left": {
+            "probability": 0.97561,
+            "samples": 39
+          },
+          "right": {
+            "probability": 0.59091,
+            "samples": 20
+          }
+        }
+      },
+      "right": {
+        "feature": 0,
+        "threshold": 21.46332,
+        "left": {
+          "feature": 9,
+          "threshold": 2.28012,
+          "left": {
+            "feature": 0,
+            "threshold": 16.073605,
+            "left": {
+              "probability": 0.10811,
+              "samples": 35
+            },
+            "right": {
+              "probability": 0.02941,
+              "samples": 32
+            }
+          },
+          "right": {
+            "probability": 0.15625,
+            "samples": 30
+          }
+        },
+        "right": {
+          "probability": 0.00505,
+          "samples": 196
+        }
+      }
+    },
+    "right": {
+      "feature": 2,
+      "threshold": 1.223735,
+      "left": {
+        "feature": 2,
+        "threshold": 0.197595,
+        "left": {
+          "feature": 5,
+          "threshold": 61.5,
+          "left": {
+            "feature": 1,
+            "threshold": 1.09722,
+            "left": {
+              "probability": 0.18182,
+              "samples": 20
+            },
+            "right": {
+              "feature": 5,
+              "threshold": 47.5,
+              "left": {
+                "probability": 0.0059,
+                "samples": 337
+              },
+              "right": {
+                "probability": 0.0386,
+                "samples": 283
+              }
+            }
+          },
+          "right": {
+            "probability": 0.27027,
+            "samples": 35
+          }
+        },
+        "right": {
+          "feature": 1,
+          "threshold": 1.55159,
+          "left": {
+            "feature": 0,
+            "threshold": 0.54461,
+            "left": {
+              "probability": 0.96875,
+              "samples": 30
+            },
+            "right": {
+              "probability": 0.59091,
+              "samples": 20
+            }
+          },
+          "right": {
+            "feature": 1,
+            "threshold": 1.962965,
+            "left": {
+              "feature": 2,
+              "threshold": 0.590865,
+              "left": {
+                "probability": 0.04545,
+                "samples": 42
+              },
+              "right": {
+                "probability": 0.56522,
+                "samples": 21
+              }
+            },
+            "right": {
+              "feature": 5,
+              "threshold": 55.5,
+              "left": {
+                "probability": 0.02703,
+                "samples": 72
+              },
+              "right": {
+                "probability": 0.14815,
+                "samples": 25
+              }
+            }
+          }
+        }
+      },
+      "right": {
+        "feature": 1,
+        "threshold": 3.416665,
+        "left": {
+          "feature": 2,
+          "threshold": 1.943975,
+          "left": {
+            "feature": 1,
+            "threshold": 2.194445,
+            "left": {
+              "probability": 0.9,
+              "samples": 28
+            },
+            "right": {
+              "probability": 0.33333,
+              "samples": 25
+            }
+          },
+          "right": {
+            "feature": 3,
+            "threshold": 0.0026,
+            "left": {
+              "probability": 0.90909,
+              "samples": 20
+            },
+            "right": {
+              "probability": 0.97619,
+              "samples": 40
+            }
+          }
+        },
+        "right": {
+          "probability": 0.27778,
+          "samples": 34
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,162 @@
+[
+  {
+    "id": "1",
+    "occupation": "軟體工程師",
+    "industry": "科技業",
+    "annual_income_minor": 120000000,
+    "commute_mode": "大眾運輸",
+    "family_history": "無病史"
+  },
+  {
+    "id": "2",
+    "occupation": "系統分析師",
+    "industry": "科技業",
+    "annual_income_minor": 55000000,
+    "commute_mode": "機車",
+    "family_history": "無病史"
+  },
+  {
+    "id": "3",
+    "occupation": "護理師",
+    "industry": "醫療業",
+    "annual_income_minor": 65000000,
+    "commute_mode": "機車",
+    "family_history": "糖尿病"
+  },
+  {
+    "id": "4",
+    "occupation": "藥師",
+    "industry": "醫療業",
+    "annual_income_minor": 52000000,
+    "commute_mode": "大眾運輸",
+    "family_history": "失智症"
+  },
+  {
+    "id": "5",
+    "occupation": "獸醫",
+    "industry": "醫療業",
+    "annual_income_minor": 72000000,
+    "commute_mode": "汽車",
+    "family_history": "高血壓"
+  },
+  {
+    "id": "6",
+    "occupation": "銀行理專",
+    "industry": "金融業",
+    "annual_income_minor": 95000000,
+    "commute_mode": "機車",
+    "family_history": "無病史"
+  },
+  {
+    "id": "7",
+    "occupation": "會計師",
+    "industry": "金融業",
+    "annual_income_minor": 85000000,
+    "commute_mode": "大眾運輸",
+    "family_history": "心血管疾病"
+  },
+  {
+    "id": "8",
+    "occupation": "外送員",
+    "industry": "運輸物流業",
+    "annual_income_minor": 78000000,
+    "commute_mode": "大眾運輸",
+    "family_history": "無病史"
+  },
+  {
+    "id": "9",
+    "occupation": "機師",
+    "industry": "運輸物流業",
+    "annual_income_minor": 48000000,
+    "commute_mode": "機車",
+    "family_history": "癌症"
+  },
+  {
+    "id": "10",
+    "occupation": "高中教師",
+    "industry": "軍公教",
+    "annual_income_minor": 88000000,
+    "commute_mode": "汽車",
+    "family_history": "無病史"
+  },
+  {
+    "id": "11",
+    "occupation": "警察",
+    "industry": "軍公教",
+    "annual_income_minor": 105000000,
+    "commute_mode": "機車",
+    "family_history": "高血壓"
+  },
+  {
+    "id": "12",
+    "occupation": "職業軍人",
+    "industry": "軍公教",
+    "annual_income_minor": 60000000,
+    "commute_mode": "機車",
+    "family_history": "糖尿病"
+  },
+  {
+    "id": "13",
+    "occupation": "行銷企劃",
+    "industry": "商業服務業",
+    "annual_income_minor": 82000000,
+    "commute_mode": "大眾運輸",
+    "family_history": "無病史"
+  },
+  {
+    "id": "14",
+    "occupation": "房仲業務",
+    "industry": "不動產業",
+    "annual_income_minor": 70000000,
+    "commute_mode": "步行",
+    "family_history": "無病史"
+  },
+  {
+    "id": "15",
+    "occupation": "自營商",
+    "industry": "零售與服務業",
+    "annual_income_minor": 180000000,
+    "commute_mode": "汽車",
+    "family_history": "無病史"
+  },
+  {
+    "id": "16",
+    "occupation": "廚師",
+    "industry": "餐飲業",
+    "annual_income_minor": 75000000,
+    "commute_mode": "機車",
+    "family_history": "心血管疾病"
+  },
+  {
+    "id": "17",
+    "occupation": "美髮設計師",
+    "industry": "零售與服務業",
+    "annual_income_minor": 92000000,
+    "commute_mode": "汽車",
+    "family_history": "無病史"
+  },
+  {
+    "id": "18",
+    "occupation": "健身教練",
+    "industry": "零售與服務業",
+    "annual_income_minor": 110000000,
+    "commute_mode": "大眾運輸",
+    "family_history": "癌症"
+  },
+  {
+    "id": "19",
+    "occupation": "平面設計師",
+    "industry": "媒體設計業",
+    "annual_income_minor": 45000000,
+    "commute_mode": "步行",
+    "family_history": "無病史"
+  },
+  {
+    "id": "20",
+    "occupation": "建築師",
+    "industry": "建築營造業",
+    "annual_income_minor": 65000000,
+    "commute_mode": "汽車",
+    "family_history": "高血壓"
+  }
+]
