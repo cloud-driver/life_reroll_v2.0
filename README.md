@@ -166,3 +166,9 @@ npm run test:integration
 本機完整 `HANDOFF.md`、提供者主機盤點 `LLM.md` 與 `qa/` 仍保留在原電腦，沒有推送；可攜式說明位於本 README、`TRAINING.md` 與 `docs/`。重新 clone 不會帶入舊存檔、帳號或授課材料。
 
 推送 GitHub 不會部署網站。正式部署使用完整建置的 `dist/`、受保護 API 與相應反向代理，並獨立設定 DB、郵件與 AI；見 [部署範本](deploy/README.md)。保存存檔時使用 SQLite 一致性備份，不把測試 DB 覆蓋到正式環境。
+
+## 授權
+
+Copyright © 2026 知與科技，保留所有權利。本儲存庫公開供閱覽，但未授予任何使用、修改或散布權利；詳見 [LICENSE](LICENSE)。授權洽詢：hasaki@hasaki.idv.tw。
+
+使用說明 PDF：[Life_Reroll_使用說明.pdf](Life_Reroll_使用說明.pdf)。
