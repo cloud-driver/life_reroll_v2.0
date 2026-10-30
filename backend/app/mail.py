@@ -205,12 +205,12 @@ def send(to, purpose, token):
     if purpose == 'VERIFY':
         message['Subject'] = 'Life Reroll｜信箱驗證碼'
         message.set_content(
-            f'你的 Life Reroll 信箱驗證碼是：\n\n{token}\n\n請回到剛才註冊的遊戲頁面輸入驗證碼。驗證碼於 10 分鐘內有效，最多可嘗試 5 次；重寄後舊碼立即失效。\n\n若不是你本人操作，請忽略此信，不要把驗證碼提供給他人。\n\n知與科技 · Life Reroll\n這是帳號驗證通知，不含行銷訊息。'
+            f'你的 Life Reroll 信箱驗證碼是：\n\n{token}\n\n請回到剛才註冊的遊戲頁面輸入驗證碼。驗證碼於 10 分鐘內有效，最多可嘗試 5 次；重寄後舊碼立即失效。\n\n若不是你本人操作，請忽略此信，不要把驗證碼提供給他人。\n\n知嶼科技 · Life Reroll\n這是帳號驗證通知，不含行銷訊息。'
         )
     else:
         message['Subject'] = 'Life Reroll｜密碼重設通知'
         message.set_content(
-            f'請回到 Life Reroll 的「忘記密碼」輸入以下一次性重設碼，並設定新密碼：\n\n{token}\n\n重設碼一小時內有效。若不是你本人操作，請忽略此信；未完成重設不會改變原密碼。\n\n知與科技 · Life Reroll'
+            f'請回到 Life Reroll 的「忘記密碼」輸入以下一次性重設碼，並設定新密碼：\n\n{token}\n\n重設碼一小時內有效。若不是你本人操作，請忽略此信；未完成重設不會改變原密碼。\n\n知嶼科技 · Life Reroll'
         )
     context = ssl.create_default_context()
     cls = smtplib.SMTP_SSL if cfg.get('tls', 'starttls') == 'ssl' else smtplib.SMTP

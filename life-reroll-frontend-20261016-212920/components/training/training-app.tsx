@@ -315,7 +315,7 @@ export function TrainingApp({ teacher = false }: { teacher?: boolean }) {
           </>
         )}
         <footer className="tr-footer">
-          知與科技 · 教育模擬，並非商品報價或投保建議。
+          知嶼科技 · 教育模擬，並非商品報價或投保建議。
           <a target="_blank" rel="noopener noreferrer" href="/terms">
             服務條款
           </a>

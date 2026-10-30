@@ -57,7 +57,7 @@ export function LegalPage({ kind }: { kind: 'TERMS' | 'PRIVACY' }) {
         </nav>
       </header>
       <article>
-        <p className="legal-eyebrow">知與科技 · LIFE REROLL</p>
+        <p className="legal-eyebrow">知嶼科技 · LIFE REROLL</p>
         <h1>{kind === 'TERMS' ? '服務條款' : '隱私政策'}</h1>
         {doc && (
           <p className="legal-version">
@@ -98,7 +98,7 @@ export function LegalPage({ kind }: { kind: 'TERMS' | 'PRIVACY' }) {
         ))}
         <footer>
           <p>
-            服務提供者：知與科技 · 聯絡信箱：<a href="mailto:hasaki@hasaki.idv.tw">hasaki@hasaki.idv.tw</a>
+            服務提供者：知嶼科技 · 聯絡信箱：<a href="mailto:hasaki@hasaki.idv.tw">hasaki@hasaki.idv.tw</a>
           </p>
           <p>本文件在獨立分頁開啟；關閉此分頁即可回到剛才的遊戲。</p>
         </footer>

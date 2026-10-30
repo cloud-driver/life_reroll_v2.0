@@ -169,6 +169,6 @@ npm run test:integration
 
 ## 授權
 
-Copyright © 2026 知與科技，保留所有權利。本儲存庫公開供閱覽，但未授予任何使用、修改或散布權利；詳見 [LICENSE](LICENSE)。授權洽詢：hasaki@hasaki.idv.tw。
+Copyright © 2026 知嶼科技，保留所有權利。本儲存庫公開供閱覽，但未授予任何使用、修改或散布權利；詳見 [LICENSE](LICENSE)。授權洽詢：hasaki@hasaki.idv.tw。
 
 使用說明 PDF：[Life_Reroll_使用說明.pdf](Life_Reroll_使用說明.pdf)。

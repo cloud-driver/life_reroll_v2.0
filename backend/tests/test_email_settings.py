@@ -200,7 +200,7 @@ def test_reset_delivery_and_versioned_legal(smtp):
     for kind, title in [('TERMS', '服務條款'), ('PRIVACY', '隱私政策')]:
         document = g.call('GET', '/content/legal/' + kind, status=200)[0]
         assert document['title'] == title and document['version'] == legal.VERSION
-        assert '知與科技' in document['body'] and legal.CONTACT in document['body'] and len(document['body']) > 1000
+        assert '知嶼科技' in document['body'] and legal.CONTACT in document['body'] and len(document['body']) > 1000
 
 
 def test_settings_partial_validation_preserves_other_fields(game):
@@ -268,7 +268,7 @@ def test_queue_bound_and_encrypted_smtp(smtp, monkeypatch):
         'host': 'smtp.example.test',
         'port': 587,
         'from_email': 'sender@example.test',
-        'from_name': '知與科技',
+        'from_name': '知嶼科技',
         'tls': 'starttls',
         'username': 'sender',
         'password': 'fixture',
