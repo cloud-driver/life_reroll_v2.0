@@ -6,7 +6,18 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
+import os
+import pytest
 
+ROOT = Path(__file__).resolve().parents[2]
+DIST = ROOT / 'life-reroll-frontend-20261016-212920' / 'dist' / 'index.html'
+# These exercise the built site; CI runs them after `npm run build` with LIFE_REQUIRE_DIST=1.
+needs_dist = pytest.mark.skipif(
+    not DIST.exists() and os.environ.get('LIFE_REQUIRE_DIST') != '1', reason='frontend dist/ not built'
+)
+
+
+@needs_dist
 def test_prebuilt_server_routes_assets_and_api_boundary():
     root = Path(__file__).resolve().parents[2]
     frontend = root / 'frontend'
@@ -146,6 +157,7 @@ def test_same_origin_proxy_preserves_session_mutations_and_pdf():
             worker.join()
 
 
+@needs_dist
 def test_precompressed_static_etags_head_and_private_boundary():
     import gzip
 

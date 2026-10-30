@@ -60,6 +60,10 @@ jobs:
           python -m venv backend/.venv
           backend/.venv/bin/python -m pip install -r backend/requirements.txt
           cd life-reroll-frontend-20261016-212920 && npm ci && npm run build
+      - name: Built-site static server tests
+        run: |
+          backend/.venv/bin/python -m pip install -r backend/requirements-test.txt
+          LIFE_REQUIRE_DIST=1 backend/.venv/bin/python -m pytest -q backend/tests/test_static_server.py
       - name: Three-round client integration
         working-directory: life-reroll-frontend-20261016-212920
         run: npm run test:integration
