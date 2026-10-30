@@ -5,7 +5,7 @@ import copy
 import json
 import threading
 import time
-import httpx
+import httpx2 as httpx
 from app import engine, store, content, handlers, scenarios, rebirth
 from app.main import app
 from test_game import game

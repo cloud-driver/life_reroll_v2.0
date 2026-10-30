@@ -3,7 +3,9 @@
 from __future__ import annotations
 import hashlib
 import json
+import logging
 import os
+import time
 from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response, StreamingResponse
@@ -23,6 +25,7 @@ from .training_routes import router as training_router
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = json.loads((ROOT / 'data/api_registry.json').read_text(encoding='utf-8'))
+REGISTRY_BY_ID = {x['id']: x for x in REGISTRY}
 SCHEMAS = json.loads((ROOT / 'data/schema_reference.json').read_text(encoding='utf-8'))['$defs']
 
 
@@ -32,7 +35,27 @@ async def lifespan(app):
     anyio.to_thread.current_default_thread_limiter().total_tokens = max(
         2, min(32, int(os.environ.get('LIFE_REQUEST_WORKERS', '4')))
     )
-    yield
+    async with anyio.create_task_group() as tasks:
+        tasks.start_soon(prune_forever)
+        yield
+        tasks.cancel_scope.cancel()
+
+
+def prune_once():
+    with store.tx() as db:
+        removed = store.prune(db)
+    if any(removed.values()):
+        logging.info('Pruned expired rows: %s', removed)
+
+
+async def prune_forever():
+    interval = max(60, int(os.environ.get('LIFE_PRUNE_INTERVAL_SECONDS', str(6 * 3600))))
+    while True:
+        try:
+            await run_in_threadpool(prune_once)
+        except Exception:
+            logging.exception('Pruning expired rows failed')
+        await anyio.sleep(interval)
 
 
 app = FastAPI(
@@ -108,17 +131,18 @@ def dispatch(op, request, body=None):
                 dev_token = value.pop('dev_verification_token', None) or value.pop('dev_token', None)
             if status == 204:
                 return Response(status_code=204)
-            value = wire.output(next(x for x in REGISTRY if x['id'] == op), value)
+            value = wire.output(REGISTRY_BY_ID[op], value)
             response = {'data': value, 'meta': {'api_version': 'v1'}}
             if key and current_user and request.method not in ('GET', 'HEAD'):
                 db.execute(
-                    'INSERT INTO idempotency VALUES(?,?,?,?,?)',
+                    'INSERT INTO idempotency(user_id,key,operation,request_hash,reply_json,created_at) VALUES(?,?,?,?,?,?)',
                     (
                         current_user,
                         key,
                         op,
                         digest,
                         json.dumps({'status': status, 'response': response}, ensure_ascii=False),
+                        time.time(),
                     ),
                 )
             resp = JSONResponse(
@@ -134,7 +158,7 @@ def dispatch(op, request, body=None):
                     max_age=60 * 60 * 24 * 30,
                     httponly=True,
                     samesite='lax',
-                    secure=__import__('os').environ.get('LIFE_DEVELOPMENT_MODE', '1') == '0',
+                    secure=os.environ.get('LIFE_DEVELOPMENT_MODE', '1') == '0',
                 )
             if dev_token:
                 resp.headers['X-Dev-Verification-Token'] = dev_token
@@ -146,8 +170,6 @@ def dispatch(op, request, body=None):
     except (TypeError, KeyError, OverflowError):
         return fail_response('VALIDATION_ERROR')
     except Exception:
-        import logging
-
         logging.exception('Unhandled operation %s', op)
         return fail_response('SERVICE_UNAVAILABLE')
 

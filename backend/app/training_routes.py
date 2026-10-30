@@ -377,8 +377,8 @@ def dispatch(op, request, b):
             value = {'data': result, 'meta': {'api_version': 'v1', 'training_version': catalog.VERSION}}
             if write:
                 db.execute(
-                    'INSERT INTO idempotency VALUES(?,?,?,?,?)',
-                    (u['id'], key, 'TRAINING_' + op, digest, store.j(value)),
+                    'INSERT INTO idempotency(user_id,key,operation,request_hash,reply_json,created_at) VALUES(?,?,?,?,?,?)',
+                    (u['id'], key, 'TRAINING_' + op, digest, store.j(value), time.time()),
                 )
         return JSONResponse(value, background=BackgroundTask(submit, tasks))
     except ValueError as exc:

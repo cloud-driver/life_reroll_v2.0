@@ -72,14 +72,15 @@ def get_user(db, request):
     if not token:
         return None, None
     row = db.execute(
-        'SELECT users.*,sessions.id AS sid,sessions.csrf AS csrf FROM sessions JOIN users ON users.id=sessions.user_id WHERE sessions.token_hash=? AND sessions.revoked=0',
+        '''SELECT users.*,sessions.id AS sid,sessions.csrf AS csrf,sessions.created_at AS session_created_at
+        FROM sessions JOIN users ON users.id=sessions.user_id WHERE sessions.token_hash=? AND sessions.revoked=0''',
         (t_hash(token),),
     ).fetchone()
-    if row:
-        created = db.execute('SELECT created_at FROM sessions WHERE id=?', (row['sid'],)).fetchone()['created_at']
-        if datetime.now().astimezone() - datetime.fromisoformat(created) > timedelta(days=30):
-            return None, None
-    return (row, row['sid']) if row else (None, None)
+    if not row:
+        return None, None
+    if datetime.now().astimezone() - datetime.fromisoformat(row['session_created_at']) > store.SESSION_TTL:
+        return None, None
+    return row, row['sid']
 
 
 def verify_csrf(request, u):
@@ -160,12 +161,7 @@ def result(operation, db, request, body, u, p, q):
             not db.execute("SELECT 1 FROM campaigns WHERE user_id=? AND status!='COMPLETED'", (u['id'],)).fetchone(),
             'ACTIVE_CAMPAIGN_EXISTS',
         )
-        published = [
-            json.loads(row['body'])
-            for row in db.execute('SELECT body FROM admin_releases')
-            if json.loads(row['body'])['status'] == 'PUBLISHED'
-        ]
-        release = max(published, key=lambda item: item['created_at']) if published else None
+        release = store.published_release(db)
         personas = content.PERSONAS
         if release:
             asset = db.execute(
@@ -441,12 +437,7 @@ def account(op, db, request, b, u, p):
 
 
 def basics(op, db, b, u, p, q):
-    releases = [
-        json.loads(row['body'])
-        for row in db.execute('SELECT body FROM admin_releases')
-        if json.loads(row['body'])['status'] == 'PUBLISHED'
-    ]
-    published = max(releases, key=lambda item: item['created_at']) if releases else None
+    published = store.published_release(db)
     active_version = published['version'] if published else content.CONTENT_VERSION
     if op == 'B01':
         return 200, {

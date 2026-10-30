@@ -4,8 +4,13 @@ from __future__ import annotations
 import json
 import os
 import sqlite3
+import time
 from contextlib import contextmanager, closing
+from datetime import timedelta
 from pathlib import Path
+
+SESSION_TTL = timedelta(days=30)
+IDEMPOTENCY_TTL_SECONDS = 7 * 86400
 
 DB_FILE = Path(os.environ.get('LIFE_REPLAY_DB', str(Path(__file__).resolve().parents[1] / 'game.sqlite3')))
 
@@ -87,6 +92,15 @@ def init():
         if 'created_at' not in {row['name'] for row in db.execute('PRAGMA table_info(insight_requests)')}:
             db.execute('ALTER TABLE insight_requests ADD COLUMN created_at REAL NOT NULL DEFAULT 0')
         db.execute('CREATE INDEX IF NOT EXISTS insight_requests_owner_created ON insight_requests(owner,created_at)')
+        if 'created_at' not in {row['name'] for row in db.execute('PRAGMA table_info(idempotency)')}:
+            # Existing replies get a fresh timestamp so in-flight retries keep working for a full TTL.
+            db.execute('ALTER TABLE idempotency ADD COLUMN created_at REAL NOT NULL DEFAULT 0')
+            db.execute('UPDATE idempotency SET created_at=?', (time.time(),))
+        db.execute('CREATE INDEX IF NOT EXISTS idempotency_created ON idempotency(created_at)')
+        db.execute('CREATE INDEX IF NOT EXISTS jobs_user ON jobs(user_id)')
+        db.execute(
+            "CREATE INDEX IF NOT EXISTS admin_releases_published ON admin_releases(json_extract(body,'$.status'),json_extract(body,'$.created_at'))"
+        )
         from .training_service import init_schema
 
         init_schema(db)
@@ -104,6 +118,33 @@ def tx(read_only=False):
         raise
     finally:
         db.close()
+
+
+def prune(db, now=None):
+    """Delete rows that can no longer be used: expired/revoked sessions, used-up tokens, stale replay records."""
+    now = time.time() if now is None else now
+    days = SESSION_TTL.days
+    removed = {
+        'sessions': db.execute(
+            "DELETE FROM sessions WHERE revoked=1 OR julianday(created_at) < julianday(?, 'unixepoch', ?)",
+            (now, f'-{days} days'),
+        ).rowcount,
+        'tokens': db.execute(
+            "DELETE FROM tokens WHERE julianday(expires_at) < julianday(?, 'unixepoch')", (now,)
+        ).rowcount,
+        'idempotency': db.execute(
+            'DELETE FROM idempotency WHERE created_at < ?', (now - IDEMPOTENCY_TTL_SECONDS,)
+        ).rowcount,
+    }
+    return removed
+
+
+def published_release(db):
+    row = db.execute(
+        "SELECT body FROM admin_releases WHERE json_extract(body,'$.status')='PUBLISHED' "
+        "ORDER BY json_extract(body,'$.created_at') DESC LIMIT 1"
+    ).fetchone()
+    return json.loads(row['body']) if row else None
 
 
 def j(value):
