@@ -545,7 +545,7 @@ def test_retirement_seven_negative_years_and_no_90_truncation(monkeypatch, game)
         def randint(self, _, __):
             return 5
 
-    monkeypatch.setattr(handlers.random, 'SystemRandom', lambda: Fixed())
+    monkeypatch.setattr('app.ops.events.random.SystemRandom', lambda: Fixed())
     game.call('POST', f'/runs/{r["id"]}/advances', {'expected_version': r['version']}, 201)
     r = game.refresh(r)
     assert r['status'] == 'TURN_REVIEW' and r['age'] == 93

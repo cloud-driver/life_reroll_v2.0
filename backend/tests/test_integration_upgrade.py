@@ -90,7 +90,7 @@ def test_90_years_ends_with_negative_assets(game, monkeypatch):
         def randint(self, *args):
             return 1
 
-    monkeypatch.setattr('app.handlers.random.SystemRandom', lambda: Fixed())
+    monkeypatch.setattr('app.ops.events.random.SystemRandom', lambda: Fixed())
     a, _ = game.call('POST', f'/runs/{r["id"]}/advances', {'expected_version': r['version']}, 201)
     r = game.refresh(r)
     assert r['age'] == 90 and r['balances']['net_worth_minor'] < 0
