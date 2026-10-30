@@ -1,0 +1,18 @@
+line-length = 120
+target-version = "py311"
+extend-exclude = [".venv"]
+
+[format]
+quote-style = "preserve"
+
+[lint]
+# Pyflakes plus the pycodestyle errors that catch real bugs.
+select = ["E4", "E7", "E9", "F"]
+# E731/E741: short lambdas and one-letter names are the house style.
+ignore = ["E731", "E741"]
+
+[lint.per-file-ignores]
+# Tests import pytest fixtures from sibling modules by name.
+"tests/*" = ["F401", "F811", "F841"]
+# Routers import shared helpers after the router object is created.
+"app/*_routes.py" = ["E402"]

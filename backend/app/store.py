@@ -1,27 +1,32 @@
 """SQLite transaction boundary; all run commands commit one authoritative snapshot."""
+
 from __future__ import annotations
 import json
 import os
 import sqlite3
-from contextlib import contextmanager,closing
+from contextlib import contextmanager, closing
 from pathlib import Path
 
-DB_FILE = Path(os.environ.get('LIFE_REPLAY_DB',str(Path(__file__).resolve().parents[1]/'game.sqlite3')))
+DB_FILE = Path(os.environ.get('LIFE_REPLAY_DB', str(Path(__file__).resolve().parents[1] / 'game.sqlite3')))
+
 
 def connect():
-    DB_FILE.parent.mkdir(parents=True,exist_ok=True)
-    db=sqlite3.connect(DB_FILE,timeout=15,check_same_thread=False)
-    db.row_factory=sqlite3.Row
+    DB_FILE.parent.mkdir(parents=True, exist_ok=True)
+    db = sqlite3.connect(DB_FILE, timeout=15, check_same_thread=False)
+    db.row_factory = sqlite3.Row
     db.execute('PRAGMA foreign_keys=ON')
     db.execute('PRAGMA busy_timeout=15000')
     return db
+
 
 def init():
     with closing(connect()) as db, db:
         # WAL persists in the database; setting it per request needlessly locks
         # schema metadata. Keep FULL durability for authoritative game saves.
         db.execute('PRAGMA journal_mode=WAL')
-        needs_run_index=not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='campaign_runs'").fetchone()
+        needs_run_index = not db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='campaign_runs'"
+        ).fetchone()
         db.executescript('''
         CREATE TABLE IF NOT EXISTS schema_migrations(name TEXT PRIMARY KEY);
         CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT NOT NULL UNIQUE,password_hash TEXT NOT NULL,
@@ -75,17 +80,21 @@ def init():
             terms_version TEXT NOT NULL,privacy_version TEXT NOT NULL,accepted_at TEXT NOT NULL);
         ''')
         if needs_run_index or not db.execute("SELECT 1 FROM schema_migrations WHERE name='run-index-v1'").fetchone():
-            db.execute("INSERT OR IGNORE INTO campaign_runs SELECT json_extract(value,'$.id'),c.id FROM campaigns c,json_each(c.body,'$.runs')")
+            db.execute(
+                "INSERT OR IGNORE INTO campaign_runs SELECT json_extract(value,'$.id'),c.id FROM campaigns c,json_each(c.body,'$.runs')"
+            )
             db.execute("INSERT OR IGNORE INTO schema_migrations VALUES('run-index-v1')")
         if 'created_at' not in {row['name'] for row in db.execute('PRAGMA table_info(insight_requests)')}:
             db.execute('ALTER TABLE insight_requests ADD COLUMN created_at REAL NOT NULL DEFAULT 0')
         db.execute('CREATE INDEX IF NOT EXISTS insight_requests_owner_created ON insight_requests(owner,created_at)')
         from .training_service import init_schema
+
         init_schema(db)
+
 
 @contextmanager
 def tx(read_only=False):
-    db=connect()
+    db = connect()
     try:
         db.execute('BEGIN' if read_only else 'BEGIN IMMEDIATE')
         yield db
@@ -96,23 +105,43 @@ def tx(read_only=False):
     finally:
         db.close()
 
-def j(value):return json.dumps(value,ensure_ascii=False,separators=(',',':'))
-def get_campaign(db,id_,user=None):
-    row=db.execute('SELECT * FROM campaigns WHERE id=?',(id_,)).fetchone()
-    if not row or user is not None and row['user_id']!=user:return None
+
+def j(value):
+    return json.dumps(value, ensure_ascii=False, separators=(',', ':'))
+
+
+def get_campaign(db, id_, user=None):
+    row = db.execute('SELECT * FROM campaigns WHERE id=?', (id_,)).fetchone()
+    if not row or user is not None and row['user_id'] != user:
+        return None
     return json.loads(row['body'])
-def put_campaign(db,c):
-    db.execute('UPDATE campaigns SET status=?,body=? WHERE id=?',(c['status'],j(c),c['id']))
-def list_campaigns(db,user):
-    return [json.loads(x['body']) for x in db.execute('SELECT body FROM campaigns WHERE user_id=? ORDER BY created_at DESC',(user,))]
-def active_campaign(db,user):
-    row=db.execute("SELECT body FROM campaigns WHERE user_id=? AND status!='COMPLETED'",(user,)).fetchone()
+
+
+def put_campaign(db, c):
+    db.execute('UPDATE campaigns SET status=?,body=? WHERE id=?', (c['status'], j(c), c['id']))
+
+
+def list_campaigns(db, user):
+    return [
+        json.loads(x['body'])
+        for x in db.execute('SELECT body FROM campaigns WHERE user_id=? ORDER BY created_at DESC', (user,))
+    ]
+
+
+def active_campaign(db, user):
+    row = db.execute("SELECT body FROM campaigns WHERE user_id=? AND status!='COMPLETED'", (user,)).fetchone()
     return json.loads(row['body']) if row else None
-def find_run(db,run_id,user):
-    row=db.execute('''SELECT c.body FROM campaign_runs r JOIN campaigns c ON c.id=r.campaign_id
-                      WHERE r.run_id=? AND c.user_id=?''',(run_id,user)).fetchone()
+
+
+def find_run(db, run_id, user):
+    row = db.execute(
+        '''SELECT c.body FROM campaign_runs r JOIN campaigns c ON c.id=r.campaign_id
+                      WHERE r.run_id=? AND c.user_id=?''',
+        (run_id, user),
+    ).fetchone()
     if row:
-        c=json.loads(row['body'])
+        c = json.loads(row['body'])
         for r in c['runs']:
-            if r['id']==run_id:return c,r
-    return None,None
+            if r['id'] == run_id:
+                return c, r
+    return None, None

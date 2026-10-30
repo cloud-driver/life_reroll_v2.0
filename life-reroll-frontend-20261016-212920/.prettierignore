@@ -1,0 +1,9 @@
+dist/
+node_modules/
+source-assets/
+public/
+package-lock.json
+content/
+lib/contracts/
+docs/
+*.md

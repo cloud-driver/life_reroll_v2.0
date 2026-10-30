@@ -1,20 +1,206 @@
 'use client';
-import {useState} from 'react';
-import type {Advance,Event,Claim,Balances} from '@/lib/game-types';
-import {money} from '@/lib/dashboard';
-import {PagedList} from './paged-list';
-const fields:[keyof Balances,string][]=[['cash_minor','現金'],['savings_minor','活存'],['term_principal_minor','定存本金'],['stocks_market_value_minor','股票市值'],['receivables_minor','應收未入帳'],['liabilities_minor','負債'],['immediate_liquidity_minor','可用資金'],['net_worth_minor','淨資產']];
-const change=(n:number)=>(n>0?'+':'')+money(n);
-export function AdvanceReview({advance:a,events,claims,onEvent,onRewind,canRewind,showRewind=true}:{advance:Advance;events:Event[];claims:Claim[];onEvent:(id:string)=>void;onRewind?:()=>void;canRewind:boolean;showRewind?:boolean;sourceLabel?:string}){
- const [tab,setTab]=useState('assets'),start=a.opening_snapshot,end=a.closing_snapshot,summary=a.summary;
- const periodEvents=events.filter(e=>summary?.event_ids.includes(e.id));
- return <section className="advance-review compact-advance" aria-label="期間資產變化"><p className="muted">{a.from_date} → {a.current_date} · 骰出 {a.roll_value} 年{a.status==='TERMINATED'?' · 本輪提前結束':''}</p>
-  <div className="play-actions compact-tabs">{[['assets','資產'],['flow','收支'],['investments','投資'],['insurance','保障'],['events','事件']].map(([id,label])=><button key={id} className={tab===id?'':'secondary'} onClick={()=>setTab(id)}>{label}</button>)}</div>
-  {tab==='assets'&&(!start||!end?<p>舊行程缺少完整快照，無法重建金額。</p>:<><div className="asset-table-scroll" role="region" aria-label="資產變化表，可左右捲動" tabIndex={0}><table className="asset-change-table"><caption>金額單位：元<span className="table-scroll-hint"> · 左右滑動查看完整表格</span></caption><thead><tr><th>項目</th><th>期初</th><th>期末</th><th>變化</th></tr></thead><tbody>{fields.map(([key,label])=>{const before=start.balances[key] as number,after=end.balances[key] as number;return <tr key={key}><th scope="row">{label}</th><td>{money(before)}</td><td>{money(after)}</td><td className={after<before?'amount-negative':''}>{change(after-before)}</td></tr>;})}<tr><th scope="row">定存利息</th><td>{money(start.term_interest_minor)}</td><td>{money(end.term_interest_minor)}</td><td>{change(end.term_interest_minor-start.term_interest_minor)}</td></tr></tbody></table></div><p className="muted">可用資金與淨資產是總額，不能重複相加；應收款尚不可支付。</p></>)}
-  {tab==='flow'&&(summary?<><div className="review-flow-grid">{[['期間收入',summary.income_minor],['期間支出',summary.expense_minor],['其中保費',summary.premium_minor],['其中理賠入帳',summary.claims_paid_minor]].map(([label,value])=><div key={label}><span>{label}</span><strong>{money(value as number)} 元</strong></div>)}</div><p className="muted">保費已含於支出，理賠已含於收入。資產變動也可能來自市值及借款。</p></>:<p>行程仍在推進。</p>)}
-  {tab==='investments'&&start&&end&&<><PagedList items={end.holdings} label="持股" render={h=>{const previous=start.holdings.find(p=>p.stock_id===h.stock_id);return <div key={h.stock_id} className="resource-row"><strong>{h.stock_id}</strong><span>{previous?.quantity??0} → {h.quantity} 股</span><span>{change(h.market_value_minor-(previous?.market_value_minor??0))} 元</span></div>;}}/><p className="muted">市值變化包含買賣數量，不等同投資報酬。</p>{!end.holdings.length&&<p>沒有持股。</p>}</>}
-  {tab==='insurance'&&start&&end&&<><dl className="play-data-list"><div><dt>有效／等待／寬限保單</dt><dd>{start.active_policy_count} → {end.active_policy_count}</dd></div><div><dt>失效保單</dt><dd>{start.lapsed_policy_count} → {end.lapsed_policy_count}</dd></div><div><dt>年保費</dt><dd>{money(start.annual_premium_minor)} → {money(end.annual_premium_minor)} 元</dd></div></dl></>}
-  {tab==='events'&&<>{!periodEvents.length&&<p>這段期間沒有事件。</p>}<PagedList items={periodEvents} label="期間事件" render={e=>{const paid=claims.filter(c=>c.event_id===e.id).reduce((sum,c)=>sum+c.paid_minor,0);return <div className="resource-row" key={e.id}><div><strong>{e.title}</strong><p>{e.occurred_on} · 理賠已入帳 {money(paid)} 元</p></div><button className="secondary" onClick={()=>onEvent(e.id)}>查看</button></div>;}}/></>}
-  {showRewind&&canRewind&&<button disabled={!onRewind} onClick={onRewind}>選擇回溯時點</button>}
- </section>;
+import { useState } from 'react';
+import type { Advance, Event, Claim, Balances } from '@/lib/game-types';
+import { money } from '@/lib/dashboard';
+import { PagedList } from './paged-list';
+const fields: [keyof Balances, string][] = [
+  ['cash_minor', '現金'],
+  ['savings_minor', '活存'],
+  ['term_principal_minor', '定存本金'],
+  ['stocks_market_value_minor', '股票市值'],
+  ['receivables_minor', '應收未入帳'],
+  ['liabilities_minor', '負債'],
+  ['immediate_liquidity_minor', '可用資金'],
+  ['net_worth_minor', '淨資產'],
+];
+const change = (n: number) => (n > 0 ? '+' : '') + money(n);
+export function AdvanceReview({
+  advance: a,
+  events,
+  claims,
+  onEvent,
+  onRewind,
+  canRewind,
+  showRewind = true,
+}: {
+  advance: Advance;
+  events: Event[];
+  claims: Claim[];
+  onEvent: (id: string) => void;
+  onRewind?: () => void;
+  canRewind: boolean;
+  showRewind?: boolean;
+  sourceLabel?: string;
+}) {
+  const [tab, setTab] = useState('assets'),
+    start = a.opening_snapshot,
+    end = a.closing_snapshot,
+    summary = a.summary;
+  const periodEvents = events.filter(e => summary?.event_ids.includes(e.id));
+  return (
+    <section className="advance-review compact-advance" aria-label="期間資產變化">
+      <p className="muted">
+        {a.from_date} → {a.current_date} · 骰出 {a.roll_value} 年
+        {a.status === 'TERMINATED' ? ' · 本輪提前結束' : ''}
+      </p>
+      <div className="play-actions compact-tabs">
+        {[
+          ['assets', '資產'],
+          ['flow', '收支'],
+          ['investments', '投資'],
+          ['insurance', '保障'],
+          ['events', '事件'],
+        ].map(([id, label]) => (
+          <button key={id} className={tab === id ? '' : 'secondary'} onClick={() => setTab(id)}>
+            {label}
+          </button>
+        ))}
+      </div>
+      {tab === 'assets' &&
+        (!start || !end ? (
+          <p>舊行程缺少完整快照，無法重建金額。</p>
+        ) : (
+          <>
+            <div
+              className="asset-table-scroll"
+              role="region"
+              aria-label="資產變化表，可左右捲動"
+              tabIndex={0}
+            >
+              <table className="asset-change-table">
+                <caption>
+                  金額單位：元<span className="table-scroll-hint"> · 左右滑動查看完整表格</span>
+                </caption>
+                <thead>
+                  <tr>
+                    <th>項目</th>
+                    <th>期初</th>
+                    <th>期末</th>
+                    <th>變化</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fields.map(([key, label]) => {
+                    const before = start.balances[key] as number,
+                      after = end.balances[key] as number;
+                    return (
+                      <tr key={key}>
+                        <th scope="row">{label}</th>
+                        <td>{money(before)}</td>
+                        <td>{money(after)}</td>
+                        <td className={after < before ? 'amount-negative' : ''}>{change(after - before)}</td>
+                      </tr>
+                    );
+                  })}
+                  <tr>
+                    <th scope="row">定存利息</th>
+                    <td>{money(start.term_interest_minor)}</td>
+                    <td>{money(end.term_interest_minor)}</td>
+                    <td>{change(end.term_interest_minor - start.term_interest_minor)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="muted">可用資金與淨資產是總額，不能重複相加；應收款尚不可支付。</p>
+          </>
+        ))}
+      {tab === 'flow' &&
+        (summary ? (
+          <>
+            <div className="review-flow-grid">
+              {[
+                ['期間收入', summary.income_minor],
+                ['期間支出', summary.expense_minor],
+                ['其中保費', summary.premium_minor],
+                ['其中理賠入帳', summary.claims_paid_minor],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <span>{label}</span>
+                  <strong>{money(value as number)} 元</strong>
+                </div>
+              ))}
+            </div>
+            <p className="muted">保費已含於支出，理賠已含於收入。資產變動也可能來自市值及借款。</p>
+          </>
+        ) : (
+          <p>行程仍在推進。</p>
+        ))}
+      {tab === 'investments' && start && end && (
+        <>
+          <PagedList
+            items={end.holdings}
+            label="持股"
+            render={h => {
+              const previous = start.holdings.find(p => p.stock_id === h.stock_id);
+              return (
+                <div key={h.stock_id} className="resource-row">
+                  <strong>{h.stock_id}</strong>
+                  <span>
+                    {previous?.quantity ?? 0} → {h.quantity} 股
+                  </span>
+                  <span>{change(h.market_value_minor - (previous?.market_value_minor ?? 0))} 元</span>
+                </div>
+              );
+            }}
+          />
+          <p className="muted">市值變化包含買賣數量，不等同投資報酬。</p>
+          {!end.holdings.length && <p>沒有持股。</p>}
+        </>
+      )}
+      {tab === 'insurance' && start && end && (
+        <>
+          <dl className="play-data-list">
+            <div>
+              <dt>有效／等待／寬限保單</dt>
+              <dd>
+                {start.active_policy_count} → {end.active_policy_count}
+              </dd>
+            </div>
+            <div>
+              <dt>失效保單</dt>
+              <dd>
+                {start.lapsed_policy_count} → {end.lapsed_policy_count}
+              </dd>
+            </div>
+            <div>
+              <dt>年保費</dt>
+              <dd>
+                {money(start.annual_premium_minor)} → {money(end.annual_premium_minor)} 元
+              </dd>
+            </div>
+          </dl>
+        </>
+      )}
+      {tab === 'events' && (
+        <>
+          {!periodEvents.length && <p>這段期間沒有事件。</p>}
+          <PagedList
+            items={periodEvents}
+            label="期間事件"
+            render={e => {
+              const paid = claims.filter(c => c.event_id === e.id).reduce((sum, c) => sum + c.paid_minor, 0);
+              return (
+                <div className="resource-row" key={e.id}>
+                  <div>
+                    <strong>{e.title}</strong>
+                    <p>
+                      {e.occurred_on} · 理賠已入帳 {money(paid)} 元
+                    </p>
+                  </div>
+                  <button className="secondary" onClick={() => onEvent(e.id)}>
+                    查看
+                  </button>
+                </div>
+              );
+            }}
+          />
+        </>
+      )}
+      {showRewind && canRewind && (
+        <button disabled={!onRewind} onClick={onRewind}>
+          選擇回溯時點
+        </button>
+      )}
+    </section>
+  );
 }

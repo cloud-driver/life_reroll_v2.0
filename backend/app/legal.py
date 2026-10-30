@@ -1,9 +1,10 @@
 """Public legal notice, versioned with registration consent records."""
-VERSION='2026-10-22'
-PROVIDER='知與科技'
-CONTACT='hasaki@hasaki.idv.tw'
 
-TERMS='''## 1. 服務提供者與適用範圍
+VERSION = '2026-10-22'
+PROVIDER = '知與科技'
+CONTACT = 'hasaki@hasaki.idv.tw'
+
+TERMS = '''## 1. 服務提供者與適用範圍
 Life Reroll「人生讀檔」由知與科技提供，作為比賽展示與保險、資金規劃教育用途。聯絡信箱：hasaki@hasaki.idv.tw。建立帳號時，你須閱讀並同意本服務條款及隱私政策；若不同意，可不註冊，或使用不需帳號的 Demo。
 
 ## 2. 遊戲與模擬資料
@@ -30,7 +31,7 @@ AI 回覆可能有錯誤、遺漏或過度簡化，請以遊戲紀錄及實際�
 ## 9. 條款變更與爭議聯絡
 本版自 2026-10-22 生效，版本為 2026-10-22。若有影響使用者權益的重要變更，將在網站揭露新版內容及日期，必要時另行取得同意，不以未公告內容追溯變更既有權利。對服務、資料或帳號有疑問，請聯絡 hasaki@hasaki.idv.tw。涉及法律爭議時，依適用的中華民國法律及法定管轄規定處理；不排除依法應適用的使用者保護規定。'''
 
-PRIVACY='''## 1. 誰處理資料、為什麼需要資料
+PRIVACY = '''## 1. 誰處理資料、為什麼需要資料
 服務提供者為知與科技，聯絡信箱：hasaki@hasaki.idv.tw。我們為帳號識別、寄送安全通知、驗證信箱、保存遊戲進度、提供閱讀偏好、產生遊戲學習回饋，以及維護安全與處理申訴而蒐集、處理及利用必要資料，不以本服務進行廣告追蹤或販售個人資料。
 
 ## 2. 蒐集的資料類別
@@ -62,6 +63,12 @@ PRIVACY='''## 1. 誰處理資料、為什麼需要資料
 本政策自 2026-10-22 生效，版本為 2026-10-22。重要變更會在網站揭露內容與日期，必要時另行告知或取得同意。聯絡窗口：知與科技，hasaki@hasaki.idv.tw。
 個人資料權利與告知事項可參考全國法規資料庫的個人資料保護法：https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=I0050021。'''
 
+
 def document(kind):
-    return {'kind':kind,'version':VERSION,'title':'服務條款' if kind=='TERMS' else '隱私政策',
-            'body':TERMS if kind=='TERMS' else PRIVACY,'effective_on':'2026-10-22'}
+    return {
+        'kind': kind,
+        'version': VERSION,
+        'title': '服務條款' if kind == 'TERMS' else '隱私政策',
+        'body': TERMS if kind == 'TERMS' else PRIVACY,
+        'effective_on': '2026-10-22',
+    }

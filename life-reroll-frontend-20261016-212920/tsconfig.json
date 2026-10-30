@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -16,23 +12,10 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "local",
-    "components",
-    "lib",
-    "app",
-    "vite.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["local", "components", "lib", "app", "vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }

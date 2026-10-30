@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements-test.txt
+      - run: python -m pip install -r backend/requirements-test.txt
+      - name: Lint and format
+        working-directory: backend
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Frontend contract copies match backend/data
+        run: python backend/scripts/sync_frontend_contracts.py --check
+      - run: python -m pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: life-reroll-frontend-20261016-212920
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13'
+          cache: npm
+          cache-dependency-path: life-reroll-frontend-20261016-212920/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm run test:unit
+      - run: npm run build
+      - run: node tests/error-messages.cjs
+
+  integration:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.13'
+      - name: Install
+        run: |
+          python -m venv backend/.venv
+          backend/.venv/bin/python -m pip install -r backend/requirements.txt
+          cd life-reroll-frontend-20261016-212920 && npm ci && npm run build
+      - name: Three-round client integration
+        working-directory: life-reroll-frontend-20261016-212920
+        run: npm run test:integration

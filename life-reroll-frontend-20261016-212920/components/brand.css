@@ -1,5 +1,21 @@
-.life-brand{display:inline-flex;align-items:center;gap:.45em;white-space:nowrap;line-height:1.2;vertical-align:middle}
-.life-brand .life-brand-mark{width:1.65em;height:1.65em;object-fit:contain;flex:none}
-.life-brand .life-brand-name{font-size:inherit}
+.life-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  white-space: nowrap;
+  line-height: 1.2;
+  vertical-align: middle;
+}
+.life-brand .life-brand-mark {
+  width: 1.65em;
+  height: 1.65em;
+  object-fit: contain;
+  flex: none;
+}
+.life-brand .life-brand-name {
+  font-size: inherit;
+}
 
-.workspace-header .life-brand{font-size:inherit}
+.workspace-header .life-brand {
+  font-size: inherit;
+}

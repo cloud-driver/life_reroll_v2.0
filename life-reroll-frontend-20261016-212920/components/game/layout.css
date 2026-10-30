@@ -13,17 +13,28 @@
   gap: 12px;
   flex-wrap: wrap;
 }
-.workspace-header strong, .workspace-header a { white-space: nowrap; }
-.workspace-header button { flex: none; }
-.workspace-body, .nav-expanded .workspace-body {
+.workspace-header strong,
+.workspace-header a {
+  white-space: nowrap;
+}
+.workspace-header button {
+  flex: none;
+}
+.workspace-body,
+.nav-expanded .workspace-body {
   grid-template-columns: var(--nav-width) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto;
   gap: var(--workspace-gap);
   padding: var(--workspace-edge);
 }
-.nav-expanded { --nav-width: 176px; }
-.workspace-body:has(.workspace-controls:empty) { row-gap: 0; }
-.workspace-nav, .nav-expanded .workspace-nav {
+.nav-expanded {
+  --nav-width: 176px;
+}
+.workspace-body:has(.workspace-controls:empty) {
+  row-gap: 0;
+}
+.workspace-nav,
+.nav-expanded .workspace-nav {
   display: flex;
   flex-direction: column;
   width: auto;
@@ -32,37 +43,86 @@
   box-shadow: none;
   scrollbar-width: thin;
 }
-.workspace-nav button { min-height: 42px; padding: 10px; }
-.nav-expanded .workspace-nav button { justify-content: flex-start; }
-.nav-expanded .workspace-nav .nav-label { display: inline; font-size: .8rem; }
-.workspace-nav button > span:first-child { flex: none; width: 20px; text-align: center; }
-.workspace-stage { gap: 12px; }
+.workspace-nav button {
+  min-height: 42px;
+  padding: 10px;
+}
+.nav-expanded .workspace-nav button {
+  justify-content: flex-start;
+}
+.nav-expanded .workspace-nav .nav-label {
+  display: inline;
+  font-size: 0.8rem;
+}
+.workspace-nav button > span:first-child {
+  flex: none;
+  width: 20px;
+  text-align: center;
+}
+.workspace-stage {
+  gap: 12px;
+}
 .workspace-hud {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
   padding: 14px 20px;
   gap: 20px;
 }
-.workspace-hud > div { min-width: 0; }
-.workspace-hud > div:last-child { text-align: right; }
-.workspace-hud > p { grid-column: 1 / -1; margin: 0; }
-.workspace-hud span { font-size: .75rem; }
-.workspace-hud strong { font-size: clamp(.9rem, 1.3vw, 1.1rem); overflow-wrap: anywhere; }
+.workspace-hud > div {
+  min-width: 0;
+}
+.workspace-hud > div:last-child {
+  text-align: right;
+}
+.workspace-hud > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.workspace-hud span {
+  font-size: 0.75rem;
+}
+.workspace-hud strong {
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+  overflow-wrap: anywhere;
+}
 .workspace-map-viewport .routine-scene {
   --scene-inset: clamp(24px, 3vw, 48px);
   padding: 64px var(--scene-inset) clamp(28px, 5dvh, 52px);
   justify-content: flex-start;
   overflow-y: auto;
 }
-.routine-scene-copy { margin-top: auto; flex-shrink: 0; }
-.routine-scene-copy h2 { line-height: 1.45; }
-.routine-scene-copy p { max-width: 58ch; font-size: .875rem; }
-.routine-scene-location { top: 24px; left: var(--scene-inset); }
-.routine-scene-actions { gap: 12px; }
-.play-shell .routine-scene-actions button { min-height: 44px; padding: 12px 20px; }
-.workspace-controls .travel-controls { padding: 14px 18px; gap: 12px 20px; }
-.workspace-controls .travel-controls .routine-progress { font-size: .78rem; }
-.workspace-controls .travel-controls button { min-height: 42px; }
+.routine-scene-copy {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+.routine-scene-copy h2 {
+  line-height: 1.45;
+}
+.routine-scene-copy p {
+  max-width: 58ch;
+  font-size: 0.875rem;
+}
+.routine-scene-location {
+  top: 24px;
+  left: var(--scene-inset);
+}
+.routine-scene-actions {
+  gap: 12px;
+}
+.play-shell .routine-scene-actions button {
+  min-height: 44px;
+  padding: 12px 20px;
+}
+.workspace-controls .travel-controls {
+  padding: 14px 18px;
+  gap: 12px 20px;
+}
+.workspace-controls .travel-controls .routine-progress {
+  font-size: 0.78rem;
+}
+.workspace-controls .travel-controls button {
+  min-height: 42px;
+}
 .workspace-welcome {
   width: min(460px, 100%);
   max-height: 100%;
@@ -70,61 +130,177 @@
   scrollbar-gutter: stable;
   overscroll-behavior: contain;
 }
-.workspace-welcome .account-card { padding: clamp(20px, 3vw, 28px); }
-.account-card .play-form { gap: 16px; }
-.account-card .play-form > label { margin: 0; }
-.account-card .play-actions { margin: 20px 0; }
+.workspace-welcome .account-card {
+  padding: clamp(20px, 3vw, 28px);
+}
+.account-card .play-form {
+  gap: 16px;
+}
+.account-card .play-form > label {
+  margin: 0;
+}
+.account-card .play-actions {
+  margin: 20px 0;
+}
 .workspace-notice {
   padding: 10px var(--workspace-edge);
   min-height: 44px;
   max-height: 96px;
   overflow-wrap: anywhere;
 }
-.workspace-notice > span { min-width: 0; }
-.workspace-notice > button { flex: none; min-width: 36px; }
-.workspace-alert { top: 72px; right: var(--workspace-edge); overflow-wrap: anywhere; }
+.workspace-notice > span {
+  min-width: 0;
+}
+.workspace-notice > button {
+  flex: none;
+  min-width: 36px;
+}
+.workspace-alert {
+  top: 72px;
+  right: var(--workspace-edge);
+  overflow-wrap: anywhere;
+}
 
 .game-dialog {
   max-width: calc(100vw - 48px);
   max-height: calc(100dvh - 48px);
 }
-.game-dialog > header { padding: 16px var(--dialog-padding); gap: 16px; }
-.game-dialog > header h2 { min-width: 0; line-height: 1.5; overflow-wrap: anywhere; }
-.game-dialog > header button { flex: none; min-height: 40px; }
+.game-dialog > header {
+  padding: 16px var(--dialog-padding);
+  gap: 16px;
+}
+.game-dialog > header h2 {
+  min-width: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.game-dialog > header button {
+  flex: none;
+  min-height: 40px;
+}
 .game-dialog-body {
   padding: var(--dialog-padding);
   scrollbar-gutter: stable;
   scroll-padding-block: var(--dialog-padding);
 }
-.dialog-content { min-width: 0; overflow-wrap: anywhere; }
-.dialog-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; padding: 10px 14px; border: 1px solid #cadbd2; border-radius: 8px; background: #eaf1ed; color: #426763; font-size: .8rem; }
-.dialog-notice > span { min-width: 0; }
-.dialog-notice > button { flex: none; }
-.game-dialog:has(.finance-reception, .finance-conversation, .hospital-panel) .dialog-notice { margin: 16px; }
-.play-shell input:not([type="checkbox"]):not([type="range"]), .play-shell select { min-height: 44px; }
-.dialog-content > p { margin: 12px 0; line-height: 1.8; }
-.dialog-content > h2, .overview-panel > h2 { font-size: 1.35rem; line-height: 1.5; margin: 0 0 16px; }
-.dialog-content > h3 { font-size: 1.1rem; margin: 24px 0 12px; }
-.overview-panel > p { margin: 12px 0; color: #667f85; line-height: 1.75; }
-.overview-panel > label { margin: 24px 0 14px; }
-.overview-panel > p:last-child { margin: 20px 0 0; font-size: .8rem; }
-.game-dialog .play-actions { gap: 10px; }
-.game-dialog .play-actions:first-child { margin-top: 0; }
-.game-dialog button { min-height: 40px; }
-.game-dialog .play-form-grid { gap: 16px 20px; }
-.game-dialog .play-form-grid label { margin: 0; }
-.game-dialog .play-data-list > div { align-items: baseline; gap: 12px; padding-bottom: 12px; }
-.game-dialog .play-data-list dt { flex: 1; }
-.game-dialog .play-data-list dd { min-width: 0; font-variant-numeric: tabular-nums; }
-.game-dialog .play-data-list dt, .game-dialog .play-data-list dd { font-size: .875rem; }
-.game-dialog .resource-row { gap: 12px 18px; flex-wrap: wrap; }
-.game-dialog .resource-row > span { min-width: 0; white-space: normal; }
-.compact-advance .asset-table-scroll { overflow-x: auto; scrollbar-width: thin; }
-.compact-advance .asset-change-table { min-width: 520px; font-size: .8rem; }
-.compact-advance .asset-change-table th, .compact-advance .asset-change-table td { padding: 10px; }
-.compact-advance .asset-change-table th:first-child { position: sticky; left: 0; background: #f7f8f1; }
-.compact-advance .asset-change-table thead th:first-child { background: #eef0e9; }
-.table-scroll-hint { display: none; }
+.dialog-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.dialog-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border: 1px solid #cadbd2;
+  border-radius: 8px;
+  background: #eaf1ed;
+  color: #426763;
+  font-size: 0.8rem;
+}
+.dialog-notice > span {
+  min-width: 0;
+}
+.dialog-notice > button {
+  flex: none;
+}
+.game-dialog:has(.finance-reception, .finance-conversation, .hospital-panel) .dialog-notice {
+  margin: 16px;
+}
+.play-shell input:not([type='checkbox']):not([type='range']),
+.play-shell select {
+  min-height: 44px;
+}
+.dialog-content > p {
+  margin: 12px 0;
+  line-height: 1.8;
+}
+.dialog-content > h2,
+.overview-panel > h2 {
+  font-size: 1.35rem;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+.dialog-content > h3 {
+  font-size: 1.1rem;
+  margin: 24px 0 12px;
+}
+.overview-panel > p {
+  margin: 12px 0;
+  color: #667f85;
+  line-height: 1.75;
+}
+.overview-panel > label {
+  margin: 24px 0 14px;
+}
+.overview-panel > p:last-child {
+  margin: 20px 0 0;
+  font-size: 0.8rem;
+}
+.game-dialog .play-actions {
+  gap: 10px;
+}
+.game-dialog .play-actions:first-child {
+  margin-top: 0;
+}
+.game-dialog button {
+  min-height: 40px;
+}
+.game-dialog .play-form-grid {
+  gap: 16px 20px;
+}
+.game-dialog .play-form-grid label {
+  margin: 0;
+}
+.game-dialog .play-data-list > div {
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 12px;
+}
+.game-dialog .play-data-list dt {
+  flex: 1;
+}
+.game-dialog .play-data-list dd {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+.game-dialog .play-data-list dt,
+.game-dialog .play-data-list dd {
+  font-size: 0.875rem;
+}
+.game-dialog .resource-row {
+  gap: 12px 18px;
+  flex-wrap: wrap;
+}
+.game-dialog .resource-row > span {
+  min-width: 0;
+  white-space: normal;
+}
+.compact-advance .asset-table-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.compact-advance .asset-change-table {
+  min-width: 520px;
+  font-size: 0.8rem;
+}
+.compact-advance .asset-change-table th,
+.compact-advance .asset-change-table td {
+  padding: 10px;
+}
+.compact-advance .asset-change-table th:first-child {
+  position: sticky;
+  left: 0;
+  background: #f7f8f1;
+}
+.compact-advance .asset-change-table thead th:first-child {
+  background: #eef0e9;
+}
+.table-scroll-hint {
+  display: none;
+}
 .settlement-actions {
   bottom: calc(-1 * var(--dialog-padding));
   margin-top: 24px;
@@ -132,130 +308,399 @@
   padding: 16px 0;
   z-index: 1;
 }
-.event-presentation { margin-inline: auto; }
-.event-presentation-copy p { line-height: 1.85; }
-.event-balance-pair { gap: 16px; }
-.event-balance-pair > div { min-width: 0; }
-.event-balance-pair strong { overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-.event-choices .choice-button { gap: 8px; padding: 16px 20px; }
-.event-continue { padding-bottom: 4px; }
-.finance-lobby-services { padding: 28px; gap: 16px; }
-.finance-lobby-scene { padding: 36px; }
-.finance-location { left: 36px; bottom: 28px; }
-.finance-service-body { padding: 24px 28px; }
-.finance-service-body > .play-card { padding: 12px 0 0; }
-.finance-service-body .play-section-title { margin-bottom: 20px; }
-.finance-service-body .play-form-grid { margin: 20px 0; gap: 16px 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
-.finance-service-body .play-form-grid label { margin: 0; }
-.finance-service-body .play-form-grid label, .finance-service-body .play-section-title p { font-size: .8rem; }
-.finance-screen-nav { align-items: center; flex-wrap: wrap; gap: 8px 16px; }
-.finance-screen-nav button { min-height: 36px; }
-.finance-service-options { margin: 16px 0; gap: 10px; }
-.play-shell .finance-service-options button { padding: 12px; min-height: 44px; }
-.finance-sector-text { min-width: 0; }
-.finance-sector-card > svg { flex-shrink: 0; }
-.finance-lobby-balance { flex-wrap: wrap; }
+.event-presentation {
+  margin-inline: auto;
+}
+.event-presentation-copy p {
+  line-height: 1.85;
+}
+.event-balance-pair {
+  gap: 16px;
+}
+.event-balance-pair > div {
+  min-width: 0;
+}
+.event-balance-pair strong {
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.event-choices .choice-button {
+  gap: 8px;
+  padding: 16px 20px;
+}
+.event-continue {
+  padding-bottom: 4px;
+}
+.finance-lobby-services {
+  padding: 28px;
+  gap: 16px;
+}
+.finance-lobby-scene {
+  padding: 36px;
+}
+.finance-location {
+  left: 36px;
+  bottom: 28px;
+}
+.finance-service-body {
+  padding: 24px 28px;
+}
+.finance-service-body > .play-card {
+  padding: 12px 0 0;
+}
+.finance-service-body .play-section-title {
+  margin-bottom: 20px;
+}
+.finance-service-body .play-form-grid {
+  margin: 20px 0;
+  gap: 16px 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+.finance-service-body .play-form-grid label {
+  margin: 0;
+}
+.finance-service-body .play-form-grid label,
+.finance-service-body .play-section-title p {
+  font-size: 0.8rem;
+}
+.finance-screen-nav {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.finance-screen-nav button {
+  min-height: 36px;
+}
+.finance-service-options {
+  margin: 16px 0;
+  gap: 10px;
+}
+.play-shell .finance-service-options button {
+  padding: 12px;
+  min-height: 44px;
+}
+.finance-sector-text {
+  min-width: 0;
+}
+.finance-sector-card > svg {
+  flex-shrink: 0;
+}
+.finance-lobby-balance {
+  flex-wrap: wrap;
+}
 
 @media (max-width: 1050px) {
-  .game-workspace { --workspace-gap: 12px; }
-  .workspace-header .workspace-status { display: inline; }
-  .finance-conversation { grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr); }
+  .game-workspace {
+    --workspace-gap: 12px;
+  }
+  .workspace-header .workspace-status {
+    display: inline;
+  }
+  .finance-conversation {
+    grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  }
 }
 
 @media (max-width: 760px) {
-  .finance-conversation { grid-template-columns: 1fr; }
-  .finance-service-body, .finance-lobby-services { padding: 22px; }
-  .finance-lobby-scene { padding: 22px; }
-  .finance-advisor { padding: 20px 22px; }
-  .finance-service-body .play-form-grid { gap: 16px; }
+  .finance-conversation {
+    grid-template-columns: 1fr;
+  }
+  .finance-service-body,
+  .finance-lobby-services {
+    padding: 22px;
+  }
+  .finance-lobby-scene {
+    padding: 22px;
+  }
+  .finance-advisor {
+    padding: 20px 22px;
+  }
+  .finance-service-body .play-form-grid {
+    gap: 16px;
+  }
 }
 
 @media (min-width: 761px) and (max-width: 900px) {
-  .finance-conversation { grid-template-columns: 1fr; }
-  .finance-advisor { min-height: 0; padding: 20px 28px; }
-  .finance-advisor-top, .finance-advisor-emblem, .finance-dialogue-rule, .finance-dialogue small { display: none; }
-  .finance-dialogue { margin: 0; padding: 0; border: 0; }
-  .finance-dialogue h2 { margin: 8px 0; font-size: 1.2rem; }
-  .finance-dialogue p { min-height: 0; font-size: .85rem; }
+  .finance-conversation {
+    grid-template-columns: 1fr;
+  }
+  .finance-advisor {
+    min-height: 0;
+    padding: 20px 28px;
+  }
+  .finance-advisor-top,
+  .finance-advisor-emblem,
+  .finance-dialogue-rule,
+  .finance-dialogue small {
+    display: none;
+  }
+  .finance-dialogue {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .finance-dialogue h2 {
+    margin: 8px 0;
+    font-size: 1.2rem;
+  }
+  .finance-dialogue p {
+    min-height: 0;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 700px) {
   /* Safari keeps the layout stable when a form field receives focus. */
-  .play-shell input:not([type="checkbox"]):not([type="range"]), .play-shell select, .play-shell textarea { font-size: max(16px, 1rem); }
+  .play-shell input:not([type='checkbox']):not([type='range']),
+  .play-shell select,
+  .play-shell textarea {
+    font-size: max(16px, 1rem);
+  }
   .game-workspace {
     --workspace-edge: 10px;
     --workspace-gap: 10px;
     --nav-width: 40px;
     --dialog-padding: 20px;
   }
-  .workspace-header { min-height: 52px; padding: 8px 12px; gap: 8px; }
-  .workspace-header .workspace-status { display: none; }
-  .workspace-header strong { font-size: .875rem; }
-  .workspace-header button { min-height: 36px; }
-  .workspace-nav, .nav-expanded .workspace-nav { padding: 2px; gap: 6px; }
-  .workspace-nav button { min-height: 38px; padding: 8px 4px; }
-  .workspace-stage { gap: 10px; }
-  .workspace-hud { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; padding: 12px; }
-  .workspace-hud span { font-size: .68rem; }
-  .workspace-hud strong { font-size: .8rem; }
-  .workspace-hud > div:last-child { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 12px; }
-  .workspace-hud > div:last-child strong { font-size: .75rem; }
-  .workspace-map-viewport .routine-scene { --scene-inset: 20px; padding: 56px var(--scene-inset) 24px; }
-  .routine-scene-location { top: 20px; }
-  .routine-scene-copy h2 { font-size: 1.3rem; }
-  .routine-scene-copy p { font-size: .8rem; }
-  .play-shell .routine-scene-actions button { min-width: 0; min-height: 44px; padding: 12px 16px; }
-  .workspace-controls .travel-controls { padding: 12px; gap: 12px; }
-  .workspace-controls .travel-controls .routine-progress { font-size: .75rem; }
-  .workspace-controls .travel-controls button { min-width: 0; }
-  .nav-expanded .workspace-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
-  .nav-expanded .workspace-body:has(.workspace-controls:empty) { grid-template-rows: auto minmax(0, 1fr); row-gap: var(--workspace-gap); }
-  .nav-expanded .workspace-nav { grid-column: 1; grid-row: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-height: 32dvh; overflow-y: auto; }
-  .nav-expanded .workspace-nav button { justify-content: center; gap: 4px; padding: 8px 4px; }
-  .nav-expanded .workspace-nav .nav-label { font-size: .7rem; }
-  .nav-expanded .workspace-nav button > span:first-child { width: 14px; }
-  .nav-expanded .workspace-stage { grid-column: 1; grid-row: 2; }
-  .nav-expanded .workspace-controls { grid-column: 1; grid-row: 3; }
-  .game-dialog { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); }
-  .game-dialog > header { padding: 14px var(--dialog-padding); }
-  .game-dialog .play-data-list > div { flex-wrap: wrap; }
-  .game-dialog .play-data-list dt, .game-dialog .play-data-list dd { font-size: .8rem; }
-  .game-dialog .play-form-grid { grid-template-columns: 1fr; }
-  .finance-lobby-copy h2 { text-wrap: balance; }
-  .table-scroll-hint { display: inline; }
-  .settlement-actions > button, .event-continue > button { width: 100%; }
-  .settlement-metrics { grid-template-columns: 1fr; }
-  .settlement-metrics > div:first-child { grid-column: auto; }
-  .settlement-metrics > div + div { border-left: 0; }
-  .event-balance-pair { gap: 12px; padding: 16px; }
-  .event-balance-pair strong { font-size: 1rem; }
-  .event-choices .choice-button { padding: 16px; }
-  .finance-service-options { gap: 8px; }
-  .play-shell .finance-service-options button { font-size: .78rem; }
-  .workspace-alert { top: 64px; right: 12px; left: 12px; max-width: none; }
+  .workspace-header {
+    min-height: 52px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .workspace-header .workspace-status {
+    display: none;
+  }
+  .workspace-header strong {
+    font-size: 0.875rem;
+  }
+  .workspace-header button {
+    min-height: 36px;
+  }
+  .workspace-nav,
+  .nav-expanded .workspace-nav {
+    padding: 2px;
+    gap: 6px;
+  }
+  .workspace-nav button {
+    min-height: 38px;
+    padding: 8px 4px;
+  }
+  .workspace-stage {
+    gap: 10px;
+  }
+  .workspace-hud {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    padding: 12px;
+  }
+  .workspace-hud span {
+    font-size: 0.68rem;
+  }
+  .workspace-hud strong {
+    font-size: 0.8rem;
+  }
+  .workspace-hud > div:last-child {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    gap: 12px;
+  }
+  .workspace-hud > div:last-child strong {
+    font-size: 0.75rem;
+  }
+  .workspace-map-viewport .routine-scene {
+    --scene-inset: 20px;
+    padding: 56px var(--scene-inset) 24px;
+  }
+  .routine-scene-location {
+    top: 20px;
+  }
+  .routine-scene-copy h2 {
+    font-size: 1.3rem;
+  }
+  .routine-scene-copy p {
+    font-size: 0.8rem;
+  }
+  .play-shell .routine-scene-actions button {
+    min-width: 0;
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+  .workspace-controls .travel-controls {
+    padding: 12px;
+    gap: 12px;
+  }
+  .workspace-controls .travel-controls .routine-progress {
+    font-size: 0.75rem;
+  }
+  .workspace-controls .travel-controls button {
+    min-width: 0;
+  }
+  .nav-expanded .workspace-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  .nav-expanded .workspace-body:has(.workspace-controls:empty) {
+    grid-template-rows: auto minmax(0, 1fr);
+    row-gap: var(--workspace-gap);
+  }
+  .nav-expanded .workspace-nav {
+    grid-column: 1;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: 32dvh;
+    overflow-y: auto;
+  }
+  .nav-expanded .workspace-nav button {
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 4px;
+  }
+  .nav-expanded .workspace-nav .nav-label {
+    font-size: 0.7rem;
+  }
+  .nav-expanded .workspace-nav button > span:first-child {
+    width: 14px;
+  }
+  .nav-expanded .workspace-stage {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .nav-expanded .workspace-controls {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .game-dialog {
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+  .game-dialog > header {
+    padding: 14px var(--dialog-padding);
+  }
+  .game-dialog .play-data-list > div {
+    flex-wrap: wrap;
+  }
+  .game-dialog .play-data-list dt,
+  .game-dialog .play-data-list dd {
+    font-size: 0.8rem;
+  }
+  .game-dialog .play-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .finance-lobby-copy h2 {
+    text-wrap: balance;
+  }
+  .table-scroll-hint {
+    display: inline;
+  }
+  .settlement-actions > button,
+  .event-continue > button {
+    width: 100%;
+  }
+  .settlement-metrics {
+    grid-template-columns: 1fr;
+  }
+  .settlement-metrics > div:first-child {
+    grid-column: auto;
+  }
+  .settlement-metrics > div + div {
+    border-left: 0;
+  }
+  .event-balance-pair {
+    gap: 12px;
+    padding: 16px;
+  }
+  .event-balance-pair strong {
+    font-size: 1rem;
+  }
+  .event-choices .choice-button {
+    padding: 16px;
+  }
+  .finance-service-options {
+    gap: 8px;
+  }
+  .play-shell .finance-service-options button {
+    font-size: 0.78rem;
+  }
+  .workspace-alert {
+    top: 64px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+  }
 }
 
 @media (max-width: 380px) {
-  .workspace-header { gap: 6px; }
-  .workspace-header > span:not(.workspace-status):not(.workspace-autosave) { font-size: .7rem; }
-  .workspace-header a { font-size: .65rem; }
-  .workspace-header button { padding: 6px 8px; }
-  .finance-service-options { grid-template-columns: 1fr; }
-  .event-balance-pair { grid-template-columns: 1fr; }
-  .event-balance-arrow { transform: rotate(90deg); justify-self: center; }
-  .review-flow-grid { grid-template-columns: 1fr; }
-  .finance-service-body, .finance-lobby-services { padding: 18px; }
+  .workspace-header {
+    gap: 6px;
+  }
+  .workspace-header > span:not(.workspace-status):not(.workspace-autosave) {
+    font-size: 0.7rem;
+  }
+  .workspace-header a {
+    font-size: 0.65rem;
+  }
+  .workspace-header button {
+    padding: 6px 8px;
+  }
+  .finance-service-options {
+    grid-template-columns: 1fr;
+  }
+  .event-balance-pair {
+    grid-template-columns: 1fr;
+  }
+  .event-balance-arrow {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+  .review-flow-grid {
+    grid-template-columns: 1fr;
+  }
+  .finance-service-body,
+  .finance-lobby-services {
+    padding: 18px;
+  }
 }
 
 @media (max-height: 600px) and (min-width: 701px) {
-  .game-workspace { --workspace-edge: 10px; --workspace-gap: 10px; --nav-width: 84px; }
-  .nav-expanded { --nav-width: 176px; }
-  .workspace-header { min-height: 44px; padding-block: 5px; }
-  .workspace-hud { padding: 8px 14px; }
-  .workspace-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; }
-  .nav-expanded .workspace-nav { grid-template-columns: 1fr; }
-  .workspace-nav button { min-height: 34px; padding: 6px; }
-  .workspace-map-viewport .routine-scene { padding-top: 44px; padding-bottom: 20px; }
-  .routine-scene-location { top: 14px; }
-  .routine-scene-copy p { font-size: .78rem; }
+  .game-workspace {
+    --workspace-edge: 10px;
+    --workspace-gap: 10px;
+    --nav-width: 84px;
+  }
+  .nav-expanded {
+    --nav-width: 176px;
+  }
+  .workspace-header {
+    min-height: 44px;
+    padding-block: 5px;
+  }
+  .workspace-hud {
+    padding: 8px 14px;
+  }
+  .workspace-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+  }
+  .nav-expanded .workspace-nav {
+    grid-template-columns: 1fr;
+  }
+  .workspace-nav button {
+    min-height: 34px;
+    padding: 6px;
+  }
+  .workspace-map-viewport .routine-scene {
+    padding-top: 44px;
+    padding-bottom: 20px;
+  }
+  .routine-scene-location {
+    top: 14px;
+  }
+  .routine-scene-copy p {
+    font-size: 0.78rem;
+  }
 }

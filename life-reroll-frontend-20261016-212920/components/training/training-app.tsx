@@ -1,34 +1,329 @@
-import {useCallback,useEffect,useRef,useState} from 'react';
-import {Brand} from '../brand';
-import {GameApiError,type RequestPlan} from '../../lib/game-client';
-import {api,get,plan,type Run,type RunSummary} from '../../lib/training';
-import {TrainingPlay} from './training-play';
-import {TeacherConsole} from './teacher-console';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Brand } from '../brand';
+import { GameApiError, type RequestPlan } from '../../lib/game-client';
+import { api, get, plan, type Run, type RunSummary } from '../../lib/training';
+import { TrainingPlay } from './training-play';
+import { TeacherConsole } from './teacher-console';
 import './training.css';
-export type Write=<T>(request:RequestPlan,after?:(value:T)=>void)=>Promise<T|null>;
-export function TrainingApp({teacher=false}:{teacher?:boolean}){
- const [session,setSession]=useState<{is_instructor:boolean;user:{id:string;display_name:string;email_verified:boolean};llm:{enabled:boolean;message:string}}|null>(null);
- const [refreshKey,setRefreshKey]=useState(0),[ready,setReady]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false);
- const [errorCode,setErrorCode]=useState('');
- function showError(e:unknown){setError(e instanceof Error?e.message:'操作未能完成，請稍後再試。');setErrorCode(e instanceof GameApiError?e.code:'');}
- const [uncertain,setUncertain]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState('');
- const [code,setCode]=useState(''),[runs,setRuns]=useState<RunSummary[]>([]),[run,setRun]=useState<Run|null>(null);
- const pending=useRef<{request:RequestPlan;after?:(value:unknown)=>void}|null>(null),lock=useRef(false);
- const load=useCallback(async()=>{try{const auth=await api.session();if(auth.user){const s=await get<NonNullable<typeof session>>('/session');setSession(s);setRuns(await get<typeof runs>('/runs'));}else setSession(null);}catch(e){showError(e);}finally{setReady(true);}},[]);
- useEffect(()=>{document.title=teacher?'講師工作室｜Life Reroll':'通路情境訓練｜Life Reroll';void load();},[load,teacher]);
- const write:Write=async<T,>(request:RequestPlan,after?:(value:T)=>void)=>{
-  if(lock.current||pending.current)return null;lock.current=true;setBusy(true);setError('');setNotice('');
-  try{const value=await api.send<T>(request);after?.(value);return value;}catch(e){showError(e);if(e instanceof GameApiError&&e.code==='CONNECTION_UNCERTAIN'){pending.current={request,after:after as ((value:unknown)=>void)|undefined};setUncertain(true);}return null;}finally{lock.current=false;setBusy(false);}
- };
- async function retry(){if(!pending.current||lock.current)return;lock.current=true;setBusy(true);try{const v=await api.send(pending.current.request);pending.current.after?.(v);pending.current=null;setUncertain(false);setError('');}catch(e){showError(e);if(!(e instanceof GameApiError)||e.code!=='CONNECTION_UNCERTAIN'){pending.current=null;setUncertain(false);}}finally{lock.current=false;setBusy(false);}}
- async function refresh(){if(teacher&&!window.confirm('重新讀取會清除尚未儲存的編輯，確定繼續？'))return;setError('');await load();if(teacher)setRefreshKey(k=>k+1);if(run)try{setRun(await get<Run>('/runs/'+run.id));}catch(e){showError(e);}}
- return <div className="tr-app"><header className="tr-header"><a href="/training" aria-label="Life Reroll 通路訓練"><Brand/></a><span className="tr-desktop-label">保險通路情境訓練</span><nav aria-label="主要導覽"><a href="/full">原版遊戲</a><a href={teacher?'/training':'/teach'}>{teacher?'學員入口':'講師工作室'}</a>{session&&<button onClick={()=>void write(api.plan('A04'),()=>{setSession(null);setRun(null);setPassword('');})} disabled={busy||uncertain}>登出</button>}</nav></header>
- <main className="tr-main">
- <div className="tr-status" aria-live="polite">{busy&&<p>正在處理…</p>}{error&&<p role="alert" className="tr-error">{error}</p>}{notice&&<p>{notice}</p>}{uncertain&&<div className="tr-warning">操作結果尚未確認，請使用原請求安全重試。<button disabled={busy} onClick={()=>void retry()}>安全重試原操作</button></div>}{error&&session&&!uncertain&&['BACKEND_UNAVAILABLE','STALE_VERSION','CSRF_INVALID','STATE_CONFLICT'].includes(errorCode)&&<button disabled={busy} onClick={()=>void refresh()}>重新讀取</button>}</div>
- {!ready?<p role="status">正在確認登入狀態…</p>:!session?<section className="tr-card tr-login"><p className="tr-eyebrow">LEARN THROUGH LIFE</p><h1>{teacher?'講師工作室':'讓每一次選擇，都成為一堂課'}</h1><p>{teacher?'使用已取得講師權限的遊戲帳號登入，即可準備教材、編輯教案與管理班次。':'使用遊戲帳號登入，輸入講師提供的班次代碼，即可開始情境訓練。'}</p><form onSubmit={e=>{e.preventDefault();void write(api.plan('A02',{}, {email,password}),async()=>{setPassword('');await load();});}}><label>電子郵件<input type="email" autoComplete="username" required value={email} onChange={e=>setEmail(e.target.value)}/></label><label>密碼<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label><button className="tr-primary" disabled={busy||uncertain}>登入訓練</button></form><p>尚無帳號？<a href="/full">前往註冊與信箱驗證</a></p><small>講師權限由服務管理者授予，註冊不會自動取得。</small></section>:<>
- <div className="tr-user"><span>{session.user.display_name} · {teacher?'講師工作室':'學員訓練'}</span><button disabled={busy} onClick={()=>void refresh()}>重讀資料</button></div>
- {!session.user.email_verified?<section className="tr-card"><h1>請先驗證電子郵件</h1><p>完成信箱驗證後即可加入班次。</p><a href="/full">前往帳號與驗證</a></section>:teacher?!session.is_instructor?<section className="tr-card"><h1>此帳號尚無講師權限</h1><p>請由服務管理者授權此已驗證帳號，再重新讀取。</p></section>:<fieldset disabled={busy||uncertain} className="tr-workspace"><TeacherConsole key={refreshKey} write={write} llmEnabled={session.llm.enabled} setNotice={setNotice} userId={session.user.id}/></fieldset>:run?<fieldset disabled={busy||uncertain} className="tr-workspace"><TrainingPlay run={run} write={write} onRun={setRun} onExit={()=>{setRun(null);void load();}}/></fieldset>:<fieldset disabled={busy||uncertain} className="tr-workspace"><section className="tr-card tr-welcome"><p className="tr-eyebrow">CARDIF · CHANNEL LEARNING</p><h1>在生活裡，練習理解保障</h1><p>先安排資金，再處理事件。每次選擇後只讀一小段回饋，最後一起回顧。</p><form className="tr-inline" onSubmit={e=>{e.preventDefault();void write<Run>(plan('/join',{code:code.trim().toUpperCase()}),setRun);}}><label>班次代碼<input required minLength={8} maxLength={8} pattern="[A-Za-z0-9]{8}" title="請輸入 8 碼英數字班次代碼" value={code} onChange={e=>setCode(e.target.value.toUpperCase())} placeholder="8 碼英數字" autoCapitalize="characters"/></label><button className="tr-primary">加入並開始</button></form><small>教案與情境設定在加入時固定；不會改動原版人生存檔。</small></section><section className="tr-card"><h2>繼續我的訓練</h2>{runs.length===0?<p>尚未加入班次。</p>:<div className="tr-grid">{runs.map(r=><article className="tr-tile" key={r.id}><h3>{r.class_title}</h3><p>{r.state.course_title}</p><p>第 {r.state.month}／{r.state.horizon_months} 月 · {r.state.status==='ENDED'?'已完成':'進行中'}</p><button onClick={()=>void get<Run>('/runs/'+r.id).then(setRun).catch(showError)}>{r.state.status==='ENDED'?'查看回顧':'繼續訓練'}</button></article>)}</div>}</section></fieldset>}
- </>}
- <footer className="tr-footer">知與科技 · 教育模擬，並非商品報價或投保建議。<a target="_blank" rel="noopener noreferrer" href="/terms">服務條款</a><a target="_blank" rel="noopener noreferrer" href="/privacy">隱私說明</a></footer>
- </main></div>;
+export type Write = <T>(request: RequestPlan, after?: (value: T) => void) => Promise<T | null>;
+export function TrainingApp({ teacher = false }: { teacher?: boolean }) {
+  const [session, setSession] = useState<{
+    is_instructor: boolean;
+    user: { id: string; display_name: string; email_verified: boolean };
+    llm: { enabled: boolean; message: string };
+  } | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0),
+    [ready, setReady] = useState(false),
+    [error, setError] = useState(''),
+    [notice, setNotice] = useState(''),
+    [busy, setBusy] = useState(false);
+  const [errorCode, setErrorCode] = useState('');
+  function showError(e: unknown) {
+    setError(e instanceof Error ? e.message : '操作未能完成，請稍後再試。');
+    setErrorCode(e instanceof GameApiError ? e.code : '');
+  }
+  const [uncertain, setUncertain] = useState(false),
+    [email, setEmail] = useState(''),
+    [password, setPassword] = useState('');
+  const [code, setCode] = useState(''),
+    [runs, setRuns] = useState<RunSummary[]>([]),
+    [run, setRun] = useState<Run | null>(null);
+  const pending = useRef<{ request: RequestPlan; after?: (value: unknown) => void } | null>(null),
+    lock = useRef(false);
+  const load = useCallback(async () => {
+    try {
+      const auth = await api.session();
+      if (auth.user) {
+        const s = await get<NonNullable<typeof session>>('/session');
+        setSession(s);
+        setRuns(await get<typeof runs>('/runs'));
+      } else setSession(null);
+    } catch (e) {
+      showError(e);
+    } finally {
+      setReady(true);
+    }
+  }, []);
+  useEffect(() => {
+    document.title = teacher ? '講師工作室｜Life Reroll' : '通路情境訓練｜Life Reroll';
+    void load();
+  }, [load, teacher]);
+  const write: Write = async <T,>(request: RequestPlan, after?: (value: T) => void) => {
+    if (lock.current || pending.current) return null;
+    lock.current = true;
+    setBusy(true);
+    setError('');
+    setNotice('');
+    try {
+      const value = await api.send<T>(request);
+      after?.(value);
+      return value;
+    } catch (e) {
+      showError(e);
+      if (e instanceof GameApiError && e.code === 'CONNECTION_UNCERTAIN') {
+        pending.current = { request, after: after as ((value: unknown) => void) | undefined };
+        setUncertain(true);
+      }
+      return null;
+    } finally {
+      lock.current = false;
+      setBusy(false);
+    }
+  };
+  async function retry() {
+    if (!pending.current || lock.current) return;
+    lock.current = true;
+    setBusy(true);
+    try {
+      const v = await api.send(pending.current.request);
+      pending.current.after?.(v);
+      pending.current = null;
+      setUncertain(false);
+      setError('');
+    } catch (e) {
+      showError(e);
+      if (!(e instanceof GameApiError) || e.code !== 'CONNECTION_UNCERTAIN') {
+        pending.current = null;
+        setUncertain(false);
+      }
+    } finally {
+      lock.current = false;
+      setBusy(false);
+    }
+  }
+  async function refresh() {
+    if (teacher && !window.confirm('重新讀取會清除尚未儲存的編輯，確定繼續？')) return;
+    setError('');
+    await load();
+    if (teacher) setRefreshKey(k => k + 1);
+    if (run)
+      try {
+        setRun(await get<Run>('/runs/' + run.id));
+      } catch (e) {
+        showError(e);
+      }
+  }
+  return (
+    <div className="tr-app">
+      <header className="tr-header">
+        <a href="/training" aria-label="Life Reroll 通路訓練">
+          <Brand />
+        </a>
+        <span className="tr-desktop-label">保險通路情境訓練</span>
+        <nav aria-label="主要導覽">
+          <a href="/full">原版遊戲</a>
+          <a href={teacher ? '/training' : '/teach'}>{teacher ? '學員入口' : '講師工作室'}</a>
+          {session && (
+            <button
+              onClick={() =>
+                void write(api.plan('A04'), () => {
+                  setSession(null);
+                  setRun(null);
+                  setPassword('');
+                })
+              }
+              disabled={busy || uncertain}
+            >
+              登出
+            </button>
+          )}
+        </nav>
+      </header>
+      <main className="tr-main">
+        <div className="tr-status" aria-live="polite">
+          {busy && <p>正在處理…</p>}
+          {error && (
+            <p role="alert" className="tr-error">
+              {error}
+            </p>
+          )}
+          {notice && <p>{notice}</p>}
+          {uncertain && (
+            <div className="tr-warning">
+              操作結果尚未確認，請使用原請求安全重試。
+              <button disabled={busy} onClick={() => void retry()}>
+                安全重試原操作
+              </button>
+            </div>
+          )}
+          {error &&
+            session &&
+            !uncertain &&
+            ['BACKEND_UNAVAILABLE', 'STALE_VERSION', 'CSRF_INVALID', 'STATE_CONFLICT'].includes(
+              errorCode,
+            ) && (
+              <button disabled={busy} onClick={() => void refresh()}>
+                重新讀取
+              </button>
+            )}
+        </div>
+        {!ready ? (
+          <p role="status">正在確認登入狀態…</p>
+        ) : !session ? (
+          <section className="tr-card tr-login">
+            <p className="tr-eyebrow">LEARN THROUGH LIFE</p>
+            <h1>{teacher ? '講師工作室' : '讓每一次選擇，都成為一堂課'}</h1>
+            <p>
+              {teacher
+                ? '使用已取得講師權限的遊戲帳號登入，即可準備教材、編輯教案與管理班次。'
+                : '使用遊戲帳號登入，輸入講師提供的班次代碼，即可開始情境訓練。'}
+            </p>
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                void write(api.plan('A02', {}, { email, password }), async () => {
+                  setPassword('');
+                  await load();
+                });
+              }}
+            >
+              <label>
+                電子郵件
+                <input
+                  type="email"
+                  autoComplete="username"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+              </label>
+              <label>
+                密碼
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
+              </label>
+              <button className="tr-primary" disabled={busy || uncertain}>
+                登入訓練
+              </button>
+            </form>
+            <p>
+              尚無帳號？<a href="/full">前往註冊與信箱驗證</a>
+            </p>
+            <small>講師權限由服務管理者授予，註冊不會自動取得。</small>
+          </section>
+        ) : (
+          <>
+            <div className="tr-user">
+              <span>
+                {session.user.display_name} · {teacher ? '講師工作室' : '學員訓練'}
+              </span>
+              <button disabled={busy} onClick={() => void refresh()}>
+                重讀資料
+              </button>
+            </div>
+            {!session.user.email_verified ? (
+              <section className="tr-card">
+                <h1>請先驗證電子郵件</h1>
+                <p>完成信箱驗證後即可加入班次。</p>
+                <a href="/full">前往帳號與驗證</a>
+              </section>
+            ) : teacher ? (
+              !session.is_instructor ? (
+                <section className="tr-card">
+                  <h1>此帳號尚無講師權限</h1>
+                  <p>請由服務管理者授權此已驗證帳號，再重新讀取。</p>
+                </section>
+              ) : (
+                <fieldset disabled={busy || uncertain} className="tr-workspace">
+                  <TeacherConsole
+                    key={refreshKey}
+                    write={write}
+                    llmEnabled={session.llm.enabled}
+                    setNotice={setNotice}
+                    userId={session.user.id}
+                  />
+                </fieldset>
+              )
+            ) : run ? (
+              <fieldset disabled={busy || uncertain} className="tr-workspace">
+                <TrainingPlay
+                  run={run}
+                  write={write}
+                  onRun={setRun}
+                  onExit={() => {
+                    setRun(null);
+                    void load();
+                  }}
+                />
+              </fieldset>
+            ) : (
+              <fieldset disabled={busy || uncertain} className="tr-workspace">
+                <section className="tr-card tr-welcome">
+                  <p className="tr-eyebrow">CARDIF · CHANNEL LEARNING</p>
+                  <h1>在生活裡，練習理解保障</h1>
+                  <p>先安排資金，再處理事件。每次選擇後只讀一小段回饋，最後一起回顧。</p>
+                  <form
+                    className="tr-inline"
+                    onSubmit={e => {
+                      e.preventDefault();
+                      void write<Run>(plan('/join', { code: code.trim().toUpperCase() }), setRun);
+                    }}
+                  >
+                    <label>
+                      班次代碼
+                      <input
+                        required
+                        minLength={8}
+                        maxLength={8}
+                        pattern="[A-Za-z0-9]{8}"
+                        title="請輸入 8 碼英數字班次代碼"
+                        value={code}
+                        onChange={e => setCode(e.target.value.toUpperCase())}
+                        placeholder="8 碼英數字"
+                        autoCapitalize="characters"
+                      />
+                    </label>
+                    <button className="tr-primary">加入並開始</button>
+                  </form>
+                  <small>教案與情境設定在加入時固定；不會改動原版人生存檔。</small>
+                </section>
+                <section className="tr-card">
+                  <h2>繼續我的訓練</h2>
+                  {runs.length === 0 ? (
+                    <p>尚未加入班次。</p>
+                  ) : (
+                    <div className="tr-grid">
+                      {runs.map(r => (
+                        <article className="tr-tile" key={r.id}>
+                          <h3>{r.class_title}</h3>
+                          <p>{r.state.course_title}</p>
+                          <p>
+                            第 {r.state.month}／{r.state.horizon_months} 月 ·{' '}
+                            {r.state.status === 'ENDED' ? '已完成' : '進行中'}
+                          </p>
+                          <button
+                            onClick={() =>
+                              void get<Run>('/runs/' + r.id)
+                                .then(setRun)
+                                .catch(showError)
+                            }
+                          >
+                            {r.state.status === 'ENDED' ? '查看回顧' : '繼續訓練'}
+                          </button>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </fieldset>
+            )}
+          </>
+        )}
+        <footer className="tr-footer">
+          知與科技 · 教育模擬，並非商品報價或投保建議。
+          <a target="_blank" rel="noopener noreferrer" href="/terms">
+            服務條款
+          </a>
+          <a target="_blank" rel="noopener noreferrer" href="/privacy">
+            隱私說明
+          </a>
+        </footer>
+      </main>
+    </div>
+  );
 }

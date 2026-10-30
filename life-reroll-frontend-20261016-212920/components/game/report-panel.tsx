@@ -1,53 +1,471 @@
 'use client';
-import {CoachWidget} from './coach';
-import {useBranches,BranchProgress,BranchOutlook} from './insights';
-import {useEffect,useState} from 'react';
-import type {Page} from '@/lib/game-client';
-import {money} from '@/lib/dashboard';
-import type {Advance,Event,Claim,RunReport,FinalReport,RebirthPoint,RebirthPreview,RunState,AsyncReceipt,Export} from '@/lib/game-types';
-import {AdvanceReview} from './advance-review';
-import {EventMedia} from './event-media';
-import {ReportCard} from './report-card';
-import {PagedList} from './paged-list';
-import {useResource,type GameModel} from './use-game';
-const endLabels:Record<string,string>={AGE_COMPLETED:'人生旅程告一段落',NEGATIVE_NET_WORTH_7Y:'連續七年負資產',UNFUNDED_CRITICAL_CARE:'未能完成必要治療'};
+import { CoachWidget } from './coach';
+import { useBranches, BranchProgress, BranchOutlook } from './insights';
+import { useEffect, useState } from 'react';
+import type { Page } from '@/lib/game-client';
+import { money } from '@/lib/dashboard';
+import type {
+  Advance,
+  Event,
+  Claim,
+  RunReport,
+  FinalReport,
+  RebirthPoint,
+  RebirthPreview,
+  RunState,
+  AsyncReceipt,
+  Export,
+} from '@/lib/game-types';
+import { AdvanceReview } from './advance-review';
+import { EventMedia } from './event-media';
+import { ReportCard } from './report-card';
+import { PagedList } from './paged-list';
+import { useResource, type GameModel } from './use-game';
+const endLabels: Record<string, string> = {
+  AGE_COMPLETED: '人生旅程告一段落',
+  NEGATIVE_NET_WORTH_7Y: '連續七年負資產',
+  UNFUNDED_CRITICAL_CARE: '未能完成必要治療',
+};
 
-function LifeComparison({before,after}:{before:RunReport;after:RunReport}){
- const rows=[['期初淨資產',before.opening_net_worth_minor,after.opening_net_worth_minor],['期末淨資產',before.ending_net_worth_minor,after.ending_net_worth_minor],['本輪淨資產變化',before.ending_net_worth_minor-before.opening_net_worth_minor,after.ending_net_worth_minor-after.opening_net_worth_minor]] as const;
- return <section className="play-inline-note life-comparison"><h3>兩輪人生對照</h3><p>先完成一輪，再選擇是否重新開始。這裡對照的是兩次完整人生結果；事件與市場可能不同，差異不代表單一選擇造成的因果效果。</p><div className="asset-table-scroll"><table className="asset-change-table"><thead><tr><th scope="col">項目</th><th scope="col">前一輪</th><th scope="col">本輪</th></tr></thead><tbody>{rows.map(([label,a,b])=><tr key={label}><th scope="row">{label}</th><td>{money(a)} 元</td><td>{money(b)} 元</td></tr>)}<tr><th scope="row">人生期間</th><td>{before.from_date}～{before.to_date}</td><td>{after.from_date}～{after.to_date}</td></tr><tr><th scope="row">結束原因</th><td>{endLabels[before.ending_reason]??before.ending_reason}</td><td>{endLabels[after.ending_reason]??after.ending_reason}</td></tr></tbody></table></div></section>;
+function LifeComparison({ before, after }: { before: RunReport; after: RunReport }) {
+  const rows = [
+    ['期初淨資產', before.opening_net_worth_minor, after.opening_net_worth_minor],
+    ['期末淨資產', before.ending_net_worth_minor, after.ending_net_worth_minor],
+    [
+      '本輪淨資產變化',
+      before.ending_net_worth_minor - before.opening_net_worth_minor,
+      after.ending_net_worth_minor - after.opening_net_worth_minor,
+    ],
+  ] as const;
+  return (
+    <section className="play-inline-note life-comparison">
+      <h3>兩輪人生對照</h3>
+      <p>
+        先完成一輪，再選擇是否重新開始。這裡對照的是兩次完整人生結果；事件與市場可能不同，差異不代表單一選擇造成的因果效果。
+      </p>
+      <div className="asset-table-scroll">
+        <table className="asset-change-table">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">前一輪</th>
+              <th scope="col">本輪</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(([label, a, b]) => (
+              <tr key={label}>
+                <th scope="row">{label}</th>
+                <td>{money(a)} 元</td>
+                <td>{money(b)} 元</td>
+              </tr>
+            ))}
+            <tr>
+              <th scope="row">人生期間</th>
+              <td>
+                {before.from_date}～{before.to_date}
+              </td>
+              <td>
+                {after.from_date}～{after.to_date}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">結束原因</th>
+              <td>{endLabels[before.ending_reason] ?? before.ending_reason}</td>
+              <td>{endLabels[after.ending_reason] ?? after.ending_reason}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
 }
-export function ReportPanel({game,coaching=true}:{game:GameModel;coaching?:boolean}){
- const c=game.campaign!,r=game.run;
- const report=useResource<RunReport>(game,'G01',{run_id:r?.id??''},r?.status==='ENDED');
- const lastAdvance=useResource<Advance>(game,'D02',{run_id:r?.id??'',advance_id:r?.advance_id??''},r?.status==='ENDED'&&!!r.advance_id);
- const events=useResource<Page<Event>>(game,'D04',{run_id:r?.id??''},r?.status==='ENDED');
- const claims=useResource<Page<Claim>>(game,'F09',{run_id:r?.id??''},r?.status==='ENDED');
- const [view,setView]=useState('summary'),[pointPage,setPointPage]=useState(0);
- const branching=r?.status==='ENDED'&&c.status==='AWAITING_REBIRTH';
- const analysis=useBranches(game.api,r?.id??'',r?.version??0,c.version,branching);
- const analyzing=!!analysis.job&&['QUEUED','RUNNING'].includes(analysis.job.status);
- const [reviewedEvent,setReviewedEvent]=useState<Event|null>(null);
- const points=useResource<RebirthPoint[]>(game,'G02',{campaign_id:c.id},c.status==='AWAITING_REBIRTH');
- const final=useResource<FinalReport>(game,'G05',{campaign_id:c.id},c.status==='COMPLETED');
- const runs=useResource<RunState[]>(game,'C05',{campaign_id:c.id});
- const [preview,setPreview]=useState<RebirthPreview|null>(null),[past,setPast]=useState<RunReport|null>(null),[previous,setPrevious]=useState<RunReport|null>(null),[download,setDownload]=useState<Export|null>(null),[ack,setAck]=useState(false);
- const priorRun=r&&runs.value?.filter(x=>x.run_index<r.run_index&&x.status==='ENDED').sort((a,b)=>b.run_index-a.run_index)[0];
- useEffect(()=>{setPrevious(null);if(!priorRun)return;const abort=new AbortController();void game.api.call<RunReport>('G01',{run_id:priorRun.id},undefined,{},abort.signal).then(value=>{if(!abort.signal.aborted)setPrevious(value);}).catch(()=>{});return()=>abort.abort();},[game.api,priorRun?.id]);
- useEffect(()=>{setPreview(null);setPointPage(0);setPast(null);setDownload(null);setAck(false);setReviewedEvent(null);},[c.id,c.current_run_id]);
- useEffect(()=>{const job=game.completedJob;if(job?.type!=='REPORT_EXPORT'||!job.result_ref||c.status!=='COMPLETED')return;const abort=new AbortController();void game.api.call<Export>('G07',{export_id:job.result_ref.id},undefined,{},abort.signal).then(value=>{if(!abort.signal.aborted)setDownload(value);}).catch(()=>{});return()=>abort.abort();},[game.completedJob,game.api,c.id,c.status]);
- return <section className="play-card report-panel"><div className="play-section-title"><span className="eyebrow">REROLL</span><h2>{c.status==='COMPLETED'?'三輪人生總評':r?.status==='ENDED'?'完整體驗結束 · 人生回顧':'人生紀錄'}</h2><p>{r?.status==='ENDED'&&c.status==='AWAITING_REBIRTH'?'這一輪已結束。先看完整結果，再決定是否選擇回溯時點、重新安排下一輪。':'每一輪完整結束後，才會開放是否重新開始；既有輪次會保留供回顧。'}</p></div>
-  <div className="play-actions compact-tabs">{[['summary','本輪結果'],...(points.value?[['rebirth','下一輪']]:[]),...(final.value?[['final','三輪總評']]:[]),['details','行程明細'],['history','歷史對照']].map(([id,label])=><button key={id} className={view===id?'':'secondary'} onClick={()=>setView(id)}>{label}</button>)}</div>
-  {[lastAdvance.error,events.error,claims.error,report.error,points.error,final.error,runs.error].filter(Boolean).map((x,i)=><p role="alert" key={i}>{x}</p>)}
-  {branching&&['summary','rebirth'].includes(view)&&<BranchProgress analysis={analysis} onCompare={view==='summary'?()=>setView('rebirth'):undefined}/>}
-  {coaching&&r?.status==='ENDED'&&['summary','final'].includes(view)&&<CoachWidget api={game.api} runId={r.id} version={r.version} topic="review" review autoOpen/>}
-  {view==='summary'&&report.value&&<ReportCard report={report.value}/>}{view==='history'&&report.value&&previous&&<LifeComparison before={previous} after={report.value}/>}
-  {view==='details'&&lastAdvance.value&&events.value&&claims.value&&<details className="play-details"><summary>查看最後一段擲骰推進的資產與事件明細</summary><AdvanceReview advance={lastAdvance.value} events={events.value.items} claims={claims.value.items} onEvent={id=>setReviewedEvent(events.value!.items.find(e=>e.id===id)??null)} canRewind={false} showRewind={false}/></details>}
-  {view==='details'&&reviewedEvent&&r&&<div className="play-inline-note"><EventMedia event={reviewedEvent} runId={r.id}/><h3>{reviewedEvent.title}</h3><p>{reviewedEvent.narrative}</p><p>{reviewedEvent.outcome?.summary}</p></div>}
-  {view==='rebirth'&&!preview&&points.value&&<><section className="play-inline-note"><h3 id="rebirth-points">選擇下一輪起點</h3><p>先比較日期，再檢查保留條件；確認後才會開始下一輪。</p></section><div className="event-choices"><PagedList items={points.value} pageSize={2} label="回溯時點" initialPage={pointPage} onPageChange={setPointPage} render={p=><div className="branch-point" key={p.id}><button className="choice-button" disabled={game.busy} onClick={()=>void game.perform(async()=>{setPreview(await game.api.call<RebirthPreview>('G03',{campaign_id:c.id,point_id:p.id}));setAck(false);})}><strong>{p.anchor_title??'本輪起點'}</strong><span>恢復至 {p.restore_age} 歲 · {p.restore_date}{p.anchor_date?` · 重要事件 ${p.anchor_date}`:''} · 準備時間 {p.preparation_days} 天</span><small>淨資產 {money(p.balance_preview.net_worth_minor)} 元 · 可用資金 {money(p.balance_preview.immediate_liquidity_minor)} 元</small><span>選擇這一天 →</span></button><BranchOutlook result={analysis.job?.results.find(x=>x.point_id===p.id)} pending={analyzing}/></div>}/></div></>}
-  {view==='rebirth'&&preview&&<div className="quote-panel"><h3>確認下一輪的起點</h3><button className="secondary" disabled={game.busy} onClick={()=>{setPreview(null);setAck(false);requestAnimationFrame(()=>document.getElementById("rebirth-points")?.scrollIntoView({block:"start"}));}}>重新選擇日期</button><p>你已完成第 {r?.run_index} 輪人生。這次確認會從「{preview.point.anchor_title??'本輪起點'}」開始建立下一輪，原本已結束的人生仍可回看。</p><p>{preview.point.restore_age} 歲 · {preview.point.restore_date} · 可準備 {preview.point.preparation_days} 天</p><div className="review-flow-grid"><div><span>恢復後可用資金</span><strong>{money(preview.point.balance_preview.immediate_liquidity_minor)} 元</strong></div><div><span>恢復後淨資產</span><strong>{money(preview.point.balance_preview.net_worth_minor)} 元</strong></div><div><span>現金</span><strong>{money(preview.point.balance_preview.cash_minor)} 元</strong></div><div><span>負債</span><strong>{money(preview.point.balance_preview.liabilities_minor)} 元</strong></div></div><p>保留：{preview.preserved_facts.join('、')}</p><p>重新安排：{preview.rerolled_scope.join('、')}</p>{preview.point.warnings.map(t=><p key={t}>{t}</p>)}<p>成功後剩餘重生次數：{preview.rebirths_after_commit}</p><label className="check-label"><input type="checkbox" checked={ack} onChange={e=>setAck(e.target.checked)}/>我已查看恢復資產、保留條件與準備時間</label><button disabled={game.busy||!ack} onClick={()=>void game.perform(async()=>{const result=await game.write<AsyncReceipt>('G04',{campaign_id:c.id},{expected_campaign_version:preview.campaign_version,point_id:preview.point.id,confirmed:true});await game.queued(result);setPreview(null);},'已建立下一輪人生')}>開始下一輪</button></div>}
-  {view==='final'&&final.value&&<div className="final-report"><h3>三輪的收穫</h3>{final.value.comparison_notes.map(t=><p key={t}>{t}</p>)}<PagedList items={[...final.value.strengths,...final.value.improvements]} pageSize={2} label="總評" render={(f,i)=><div className="play-inline-note" key={i}><h4>{f.title}</h4><p>{f.explanation}</p>{f.alternative_action&&<p>可以考慮：{f.alternative_action}</p>}{f.uncertainty&&<small>{f.uncertainty}</small>}</div>}/>{['READY','FALLBACK'].includes(final.value.status)?<button disabled={game.busy} onClick={()=>void game.perform(async()=>{const result=await game.write<AsyncReceipt>('G06',{campaign_id:c.id},{format:'PDF'});const job=await game.queued(result);if(job.status!=='SUCCEEDED'||!job.result_ref)throw Error('PDF 尚未完成，請稍後重試');setDownload(await game.api.call<Export>('G07',{export_id:job.result_ref.id}));},'PDF 已準備好')}>準備總評 PDF</button>:<div className="play-actions"><p>總評正在準備。</p><button className="secondary" disabled={game.busy} onClick={()=>void game.perform(async()=>{if(final.value?.job_id){const job=await game.api.call<import('@/lib/game-types').Job>('C12',{job_id:final.value.job_id});if(job.status==='FAILED'&&job.retryable){const q=await game.write<AsyncReceipt>('C13',{job_id:job.id},{});await game.queued(q);}else await game.api.waitJob(job,()=>{});}final.reload();})}>更新總評進度</button></div>}
-  {download?.download_url&&download.download_url.startsWith('/api/v1/report-exports/')&&<button className="play-download" disabled={game.busy} onClick={()=>void game.perform(async()=>{const blob=await game.api.download(download.download_url!);const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='life-reroll-report.pdf';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);})}>下載三輪人生總評 PDF</button>}</div>}
-  {view==='history'&&<details className="play-details" open><summary>閱讀各輪歷史</summary>{runs.value?.map(v=><div className="resource-row" key={v.id}><span>第 {v.run_index} 輪 · {v.age} 歲 · {v.status==='ENDED'?'已結束':'進行中'}</span><button className="secondary" disabled={game.busy||v.status!=='ENDED'} onClick={()=>void game.perform(async()=>setPast(await game.api.call<RunReport>('G01',{run_id:v.id})))}>閱讀成績</button></div>)}</details>}{view==='history'&&past&&<>{coaching&&runs.value?.find(x=>x.id===past.run_id)&&<CoachWidget key={past.run_id} api={game.api} runId={past.run_id} version={runs.value.find(x=>x.id===past.run_id)!.version} topic="review" review autoOpen/>}<ReportCard report={past}/></>}
-  {!report.value&&!final.value&&r?.status!=='ENDED'&&<p>完成本輪後，會在這裡呈現成績與重生選項。</p>}
- </section>;
+export function ReportPanel({ game, coaching = true }: { game: GameModel; coaching?: boolean }) {
+  const c = game.campaign!,
+    r = game.run;
+  const report = useResource<RunReport>(game, 'G01', { run_id: r?.id ?? '' }, r?.status === 'ENDED');
+  const lastAdvance = useResource<Advance>(
+    game,
+    'D02',
+    { run_id: r?.id ?? '', advance_id: r?.advance_id ?? '' },
+    r?.status === 'ENDED' && !!r.advance_id,
+  );
+  const events = useResource<Page<Event>>(game, 'D04', { run_id: r?.id ?? '' }, r?.status === 'ENDED');
+  const claims = useResource<Page<Claim>>(game, 'F09', { run_id: r?.id ?? '' }, r?.status === 'ENDED');
+  const [view, setView] = useState('summary'),
+    [pointPage, setPointPage] = useState(0);
+  const branching = r?.status === 'ENDED' && c.status === 'AWAITING_REBIRTH';
+  const analysis = useBranches(game.api, r?.id ?? '', r?.version ?? 0, c.version, branching);
+  const analyzing = !!analysis.job && ['QUEUED', 'RUNNING'].includes(analysis.job.status);
+  const [reviewedEvent, setReviewedEvent] = useState<Event | null>(null);
+  const points = useResource<RebirthPoint[]>(
+    game,
+    'G02',
+    { campaign_id: c.id },
+    c.status === 'AWAITING_REBIRTH',
+  );
+  const final = useResource<FinalReport>(game, 'G05', { campaign_id: c.id }, c.status === 'COMPLETED');
+  const runs = useResource<RunState[]>(game, 'C05', { campaign_id: c.id });
+  const [preview, setPreview] = useState<RebirthPreview | null>(null),
+    [past, setPast] = useState<RunReport | null>(null),
+    [previous, setPrevious] = useState<RunReport | null>(null),
+    [download, setDownload] = useState<Export | null>(null),
+    [ack, setAck] = useState(false);
+  const priorRun =
+    r &&
+    runs.value
+      ?.filter(x => x.run_index < r.run_index && x.status === 'ENDED')
+      .sort((a, b) => b.run_index - a.run_index)[0];
+  useEffect(() => {
+    setPrevious(null);
+    if (!priorRun) return;
+    const abort = new AbortController();
+    void game.api
+      .call<RunReport>('G01', { run_id: priorRun.id }, undefined, {}, abort.signal)
+      .then(value => {
+        if (!abort.signal.aborted) setPrevious(value);
+      })
+      .catch(() => {});
+    return () => abort.abort();
+  }, [game.api, priorRun?.id]);
+  useEffect(() => {
+    setPreview(null);
+    setPointPage(0);
+    setPast(null);
+    setDownload(null);
+    setAck(false);
+    setReviewedEvent(null);
+  }, [c.id, c.current_run_id]);
+  useEffect(() => {
+    const job = game.completedJob;
+    if (job?.type !== 'REPORT_EXPORT' || !job.result_ref || c.status !== 'COMPLETED') return;
+    const abort = new AbortController();
+    void game.api
+      .call<Export>('G07', { export_id: job.result_ref.id }, undefined, {}, abort.signal)
+      .then(value => {
+        if (!abort.signal.aborted) setDownload(value);
+      })
+      .catch(() => {});
+    return () => abort.abort();
+  }, [game.completedJob, game.api, c.id, c.status]);
+  return (
+    <section className="play-card report-panel">
+      <div className="play-section-title">
+        <span className="eyebrow">REROLL</span>
+        <h2>
+          {c.status === 'COMPLETED'
+            ? '三輪人生總評'
+            : r?.status === 'ENDED'
+              ? '完整體驗結束 · 人生回顧'
+              : '人生紀錄'}
+        </h2>
+        <p>
+          {r?.status === 'ENDED' && c.status === 'AWAITING_REBIRTH'
+            ? '這一輪已結束。先看完整結果，再決定是否選擇回溯時點、重新安排下一輪。'
+            : '每一輪完整結束後，才會開放是否重新開始；既有輪次會保留供回顧。'}
+        </p>
+      </div>
+      <div className="play-actions compact-tabs">
+        {[
+          ['summary', '本輪結果'],
+          ...(points.value ? [['rebirth', '下一輪']] : []),
+          ...(final.value ? [['final', '三輪總評']] : []),
+          ['details', '行程明細'],
+          ['history', '歷史對照'],
+        ].map(([id, label]) => (
+          <button key={id} className={view === id ? '' : 'secondary'} onClick={() => setView(id)}>
+            {label}
+          </button>
+        ))}
+      </div>
+      {[lastAdvance.error, events.error, claims.error, report.error, points.error, final.error, runs.error]
+        .filter(Boolean)
+        .map((x, i) => (
+          <p role="alert" key={i}>
+            {x}
+          </p>
+        ))}
+      {branching && ['summary', 'rebirth'].includes(view) && (
+        <BranchProgress
+          analysis={analysis}
+          onCompare={view === 'summary' ? () => setView('rebirth') : undefined}
+        />
+      )}
+      {coaching && r?.status === 'ENDED' && ['summary', 'final'].includes(view) && (
+        <CoachWidget api={game.api} runId={r.id} version={r.version} topic="review" review autoOpen />
+      )}
+      {view === 'summary' && report.value && <ReportCard report={report.value} />}
+      {view === 'history' && report.value && previous && (
+        <LifeComparison before={previous} after={report.value} />
+      )}
+      {view === 'details' && lastAdvance.value && events.value && claims.value && (
+        <details className="play-details">
+          <summary>查看最後一段擲骰推進的資產與事件明細</summary>
+          <AdvanceReview
+            advance={lastAdvance.value}
+            events={events.value.items}
+            claims={claims.value.items}
+            onEvent={id => setReviewedEvent(events.value!.items.find(e => e.id === id) ?? null)}
+            canRewind={false}
+            showRewind={false}
+          />
+        </details>
+      )}
+      {view === 'details' && reviewedEvent && r && (
+        <div className="play-inline-note">
+          <EventMedia event={reviewedEvent} runId={r.id} />
+          <h3>{reviewedEvent.title}</h3>
+          <p>{reviewedEvent.narrative}</p>
+          <p>{reviewedEvent.outcome?.summary}</p>
+        </div>
+      )}
+      {view === 'rebirth' && !preview && points.value && (
+        <>
+          <section className="play-inline-note">
+            <h3 id="rebirth-points">選擇下一輪起點</h3>
+            <p>先比較日期，再檢查保留條件；確認後才會開始下一輪。</p>
+          </section>
+          <div className="event-choices">
+            <PagedList
+              items={points.value}
+              pageSize={2}
+              label="回溯時點"
+              initialPage={pointPage}
+              onPageChange={setPointPage}
+              render={p => (
+                <div className="branch-point" key={p.id}>
+                  <button
+                    className="choice-button"
+                    disabled={game.busy}
+                    onClick={() =>
+                      void game.perform(async () => {
+                        setPreview(
+                          await game.api.call<RebirthPreview>('G03', { campaign_id: c.id, point_id: p.id }),
+                        );
+                        setAck(false);
+                      })
+                    }
+                  >
+                    <strong>{p.anchor_title ?? '本輪起點'}</strong>
+                    <span>
+                      恢復至 {p.restore_age} 歲 · {p.restore_date}
+                      {p.anchor_date ? ` · 重要事件 ${p.anchor_date}` : ''} · 準備時間 {p.preparation_days} 天
+                    </span>
+                    <small>
+                      淨資產 {money(p.balance_preview.net_worth_minor)} 元 · 可用資金{' '}
+                      {money(p.balance_preview.immediate_liquidity_minor)} 元
+                    </small>
+                    <span>選擇這一天 →</span>
+                  </button>
+                  <BranchOutlook
+                    result={analysis.job?.results.find(x => x.point_id === p.id)}
+                    pending={analyzing}
+                  />
+                </div>
+              )}
+            />
+          </div>
+        </>
+      )}
+      {view === 'rebirth' && preview && (
+        <div className="quote-panel">
+          <h3>確認下一輪的起點</h3>
+          <button
+            className="secondary"
+            disabled={game.busy}
+            onClick={() => {
+              setPreview(null);
+              setAck(false);
+              requestAnimationFrame(() =>
+                document.getElementById('rebirth-points')?.scrollIntoView({ block: 'start' }),
+              );
+            }}
+          >
+            重新選擇日期
+          </button>
+          <p>
+            你已完成第 {r?.run_index} 輪人生。這次確認會從「{preview.point.anchor_title ?? '本輪起點'}
+            」開始建立下一輪，原本已結束的人生仍可回看。
+          </p>
+          <p>
+            {preview.point.restore_age} 歲 · {preview.point.restore_date} · 可準備{' '}
+            {preview.point.preparation_days} 天
+          </p>
+          <div className="review-flow-grid">
+            <div>
+              <span>恢復後可用資金</span>
+              <strong>{money(preview.point.balance_preview.immediate_liquidity_minor)} 元</strong>
+            </div>
+            <div>
+              <span>恢復後淨資產</span>
+              <strong>{money(preview.point.balance_preview.net_worth_minor)} 元</strong>
+            </div>
+            <div>
+              <span>現金</span>
+              <strong>{money(preview.point.balance_preview.cash_minor)} 元</strong>
+            </div>
+            <div>
+              <span>負債</span>
+              <strong>{money(preview.point.balance_preview.liabilities_minor)} 元</strong>
+            </div>
+          </div>
+          <p>保留：{preview.preserved_facts.join('、')}</p>
+          <p>重新安排：{preview.rerolled_scope.join('、')}</p>
+          {preview.point.warnings.map(t => (
+            <p key={t}>{t}</p>
+          ))}
+          <p>成功後剩餘重生次數：{preview.rebirths_after_commit}</p>
+          <label className="check-label">
+            <input type="checkbox" checked={ack} onChange={e => setAck(e.target.checked)} />
+            我已查看恢復資產、保留條件與準備時間
+          </label>
+          <button
+            disabled={game.busy || !ack}
+            onClick={() =>
+              void game.perform(async () => {
+                const result = await game.write<AsyncReceipt>(
+                  'G04',
+                  { campaign_id: c.id },
+                  {
+                    expected_campaign_version: preview.campaign_version,
+                    point_id: preview.point.id,
+                    confirmed: true,
+                  },
+                );
+                await game.queued(result);
+                setPreview(null);
+              }, '已建立下一輪人生')
+            }
+          >
+            開始下一輪
+          </button>
+        </div>
+      )}
+      {view === 'final' && final.value && (
+        <div className="final-report">
+          <h3>三輪的收穫</h3>
+          {final.value.comparison_notes.map(t => (
+            <p key={t}>{t}</p>
+          ))}
+          <PagedList
+            items={[...final.value.strengths, ...final.value.improvements]}
+            pageSize={2}
+            label="總評"
+            render={(f, i) => (
+              <div className="play-inline-note" key={i}>
+                <h4>{f.title}</h4>
+                <p>{f.explanation}</p>
+                {f.alternative_action && <p>可以考慮：{f.alternative_action}</p>}
+                {f.uncertainty && <small>{f.uncertainty}</small>}
+              </div>
+            )}
+          />
+          {['READY', 'FALLBACK'].includes(final.value.status) ? (
+            <button
+              disabled={game.busy}
+              onClick={() =>
+                void game.perform(async () => {
+                  const result = await game.write<AsyncReceipt>(
+                    'G06',
+                    { campaign_id: c.id },
+                    { format: 'PDF' },
+                  );
+                  const job = await game.queued(result);
+                  if (job.status !== 'SUCCEEDED' || !job.result_ref) throw Error('PDF 尚未完成，請稍後重試');
+                  setDownload(await game.api.call<Export>('G07', { export_id: job.result_ref.id }));
+                }, 'PDF 已準備好')
+              }
+            >
+              準備總評 PDF
+            </button>
+          ) : (
+            <div className="play-actions">
+              <p>總評正在準備。</p>
+              <button
+                className="secondary"
+                disabled={game.busy}
+                onClick={() =>
+                  void game.perform(async () => {
+                    if (final.value?.job_id) {
+                      const job = await game.api.call<import('@/lib/game-types').Job>('C12', {
+                        job_id: final.value.job_id,
+                      });
+                      if (job.status === 'FAILED' && job.retryable) {
+                        const q = await game.write<AsyncReceipt>('C13', { job_id: job.id }, {});
+                        await game.queued(q);
+                      } else await game.api.waitJob(job, () => {});
+                    }
+                    final.reload();
+                  })
+                }
+              >
+                更新總評進度
+              </button>
+            </div>
+          )}
+          {download?.download_url && download.download_url.startsWith('/api/v1/report-exports/') && (
+            <button
+              className="play-download"
+              disabled={game.busy}
+              onClick={() =>
+                void game.perform(async () => {
+                  const blob = await game.api.download(download.download_url!);
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = 'life-reroll-report.pdf';
+                  link.click();
+                  setTimeout(() => URL.revokeObjectURL(url), 1000);
+                })
+              }
+            >
+              下載三輪人生總評 PDF
+            </button>
+          )}
+        </div>
+      )}
+      {view === 'history' && (
+        <details className="play-details" open>
+          <summary>閱讀各輪歷史</summary>
+          {runs.value?.map(v => (
+            <div className="resource-row" key={v.id}>
+              <span>
+                第 {v.run_index} 輪 · {v.age} 歲 · {v.status === 'ENDED' ? '已結束' : '進行中'}
+              </span>
+              <button
+                className="secondary"
+                disabled={game.busy || v.status !== 'ENDED'}
+                onClick={() =>
+                  void game.perform(async () =>
+                    setPast(await game.api.call<RunReport>('G01', { run_id: v.id })),
+                  )
+                }
+              >
+                閱讀成績
+              </button>
+            </div>
+          ))}
+        </details>
+      )}
+      {view === 'history' && past && (
+        <>
+          {coaching && runs.value?.find(x => x.id === past.run_id) && (
+            <CoachWidget
+              key={past.run_id}
+              api={game.api}
+              runId={past.run_id}
+              version={runs.value.find(x => x.id === past.run_id)!.version}
+              topic="review"
+              review
+              autoOpen
+            />
+          )}
+          <ReportCard report={past} />
+        </>
+      )}
+      {!report.value && !final.value && r?.status !== 'ENDED' && (
+        <p>完成本輪後，會在這裡呈現成績與重生選項。</p>
+      )}
+    </section>
+  );
 }
