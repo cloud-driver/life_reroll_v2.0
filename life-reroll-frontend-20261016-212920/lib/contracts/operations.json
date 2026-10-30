@@ -511,9 +511,9 @@
     "description": "確認事件選擇",
     "input": "ChoiceInput",
     "output": "200 MutationReceipt",
-    "allowed": "EVENT_PENDING / FUNDING (automatic)",
+    "allowed": "EVENT_PENDING",
     "errors": "CHOICE_UNAVAILABLE,EVENT_ALREADY_DECIDED",
-    "rule": "automatic=true applies the standard event effect, records unpaid compulsory costs as bills, and submits eligible claims. Explicit choice_id remains supported."
+    "rule": "選擇與結果原子儲存；需籌資轉 FUNDING，其他轉 EVENT_RESULT 或 ENDED。"
   },
   {
     "id": "D07",

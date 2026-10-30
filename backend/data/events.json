@@ -372,7 +372,7 @@
     "major": false,
     "critical": false,
     "effect": {
-      "cash_delta_minor": 2000000,
+      "cash_delta_minor": -2000000,
       "quality_delta": 0,
       "salary_change_bps": 0,
       "monthly_cost_delta_minor": 0,

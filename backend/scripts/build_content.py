@@ -60,9 +60,11 @@ def condition(source):
 def make_card(row):
     key = row['cardID']
     impact = row.get('impact') or ''
-    amount_m = re.search(r'(?:存款|醫療支出)\s*([+-])\s*(\d+(?:\.\d+)?)(萬|元)', impact)
-    amount = int(float(amount_m.group(2)) * (10_000 if amount_m.group(3) == '萬' else 1)) if amount_m else 0
-    sign = amount_m.group(1) if amount_m else '-'
+    amount_m = re.search(r'(存款|醫療支出)\s*([+-])\s*(\d+(?:\.\d+)?)(萬|元)', impact)
+    amount = int(float(amount_m.group(3)) * (10_000 if amount_m.group(4) == '萬' else 1)) if amount_m else 0
+    sign = amount_m.group(2) if amount_m else '-'
+    if amount_m and amount_m.group(1) == '醫療支出':
+        sign = '-'  # "醫療支出 +2萬" means 2萬 more spending, i.e. a cash loss.
     critical = key in {'FA01', 'FA02', 'FA05', 'FA07', 'FA17', 'FA25', 'FA26'}
     amount = min(amount or (60_000 if key.startswith('FA') else 15_000), 800_000 if critical else 180_000)
     if key in {'CH03', 'CH04', 'CH06', 'CH18', 'FA21', 'FA22', 'FA23'}:
