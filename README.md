@@ -139,13 +139,21 @@ AI 使用 **Qwen Workspace 自訂 `/chats`、`/responses` NDJSON 協定**，不�
 ## 開發與測試
 
 ```sh
+backend/.venv/bin/ruff check backend && backend/.venv/bin/ruff format --check backend
+backend/.venv/bin/python backend/scripts/sync_frontend_contracts.py --check
 backend/.venv/bin/python -m pytest backend/tests -q
 cd life-reroll-frontend-20261016-212920
+npm run format:check
 npm run typecheck
+npm run test:unit
 npm run build
 node tests/error-messages.cjs
 npm run test:integration
 ```
+
+`.github/workflows/ci.yml` 在 push／PR 時執行同一組檢查。格式化用 `ruff format backend` 與前端 `npm run format`；大量格式化的 commit 列在 `.git-blame-ignore-revs`，本機可執行 `git config blame.ignoreRevsFile .git-blame-ignore-revs`。
+
+遊戲內容與 API 契約以 `backend/data/` 為唯一來源。修改後執行 `backend/.venv/bin/python backend/scripts/sync_frontend_contracts.py` 複製到前端；不一致時測試與 CI 會失敗。
 
 後端測試與整合測試使用隔離資料庫，正常回歸會停用真實模型與外寄郵件。整合測試會啟動自己的 API／代理並跑完三輪人生，不是針對既有玩家資料執行。最新驗收範圍及模組位置見 [開發說明](docs/DEVELOPMENT.md)。
 

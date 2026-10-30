@@ -2,7 +2,7 @@
 
 ## 系統分工
 
-- `backend/app/main.py`、`handlers.py`、`store.py`：FastAPI、原版操作與 SQLite 交易。91 個已登錄操作的契約位於 `backend/data/api_registry.json` 與 `schema_reference.json`，訓練與教練另有路由。
+- `backend/app/main.py`、`handlers.py`、`store.py`：FastAPI、原版操作分派與 SQLite 交易。`handlers.result` 依操作代碼字首分派到 `app/ops/`：`accounts`（A）、`basics`（B）、`campaigns`／`runs`（C、G）、`events`（D）、`finance`（E）、`insurance`（F）、`admin`（H），共用驗證／權限輔助在 `ops/common.py`。91 個已登錄操作的契約位於 `backend/data/api_registry.json` 與 `schema_reference.json`，訓練與教練另有路由。
 - `engine.py`／`finance.py`：原版人生、資產、事件、金融 quote 與確認。quote 先在副本試算，確認才寫入。
 - `training_catalog.py`／`training_engine.py`／`training_service.py`：獨立課程、來源、20 檔股票、固定班次路徑、學員進度與成效。發布後不能原地修改。
 - `training_routes.py`／`training_jobs.py`／`training_materials.py`：講師權限、教材背景解析、AI 工作及契約檢查。
@@ -13,6 +13,9 @@
 - 前端 `lib/game-client.ts`：具體錯誤、Bearer／CSRF、request key、讀寫連線差異與 PDF 下載。
 - 前端 `lib/training-validation.ts`：每則 1–8 項引用、欄位範圍與出錯位置。不得默默刪掉超限或失效引用。
 - `scripts/training-tailscale.py`：只讀取已連線的 Tailscale IPv4 並啟動私有網站代理。
+
+- 前端 `components/training/teacher-console.tsx` 只是外框；狀態與動作在 `teacher-studio-state.ts`（`useTeacherStudio`），四個步驟頁分別為 `teacher-{materials,courses,ai,classes}-stage.tsx`。
+- `store.prune`：API 啟動時與每 6 小時（`LIFE_PRUNE_INTERVAL_SECONDS`）刪除已撤銷／超過 30 天的 session、過期重設 token，以及超過 7 天的 Idempotency 重播紀錄。
 
 ## 資料與權限
 
@@ -37,6 +40,13 @@
 先讀根目錄 README 和相關模組。依改動執行有意義的後端回歸／客戶端測試、typecheck／build 與必要的瀏覽器驗收。使用暫存 DB、停用真實模型及外寄郵件，除非該次任務明確需要真實服務。
 
 版本庫不含 dist；可用 `git archive HEAD` 建立純來源副本，再從該副本建置，以檢查是否依賴被忽略的本機檔案。來源圖片放 `source-assets/`，可公開服務的最佳化版本放 `public/`，部署完整 build 的 `dist/`。
+
+## 效能量測與保留決定（2026-10-30）
+
+- 每局存檔仍是一份 campaign JSON。模擬 40 年單輪約 317 KB（帳本 192 KB、股價歷史 96 KB），序列化約 1 ms；三輪約 1 MB。此規模下拆分帳本表的遷移風險大於收益，暫不拆分；若日後延長年限或大量併發，再以 `ledger` 獨立資料表為第一優先。
+- 前端 React 獨立為 `react-vendor` chunk，部署更新遊戲程式時瀏覽器可沿用快取；入口 chunk 約 4 KB。
+- 前端目錄名稱維持 `life-reroll-frontend-20261016-212920`，因為啟動腳本、部署範本與既有伺服器路徑都依賴它。
+- `source-assets/` 約 181 MB 仍在 Git 歷史中。改用 Git LFS 或移出需要改寫歷史並強制推送，須由維護者另行決定。
 
 ## 已知限制
 
