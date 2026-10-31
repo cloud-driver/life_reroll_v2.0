@@ -103,6 +103,7 @@ id_ed25519
 /output/
 /.codex-presentation-build/
 test_mail/
+/temp.txt
 
 # Logs, transient process files, backups, and distribution archives
 *.log
