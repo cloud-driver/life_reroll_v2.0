@@ -25,7 +25,8 @@ def add_user(db, id_='u1'):
 
 def test_prune_removes_only_unusable_rows(tmp_path):
     fresh(tmp_path)
-    now = time.time()
+    # 2026-10-30 12:30 Asia/Taipei; every timestamp below is relative to this fixed clock
+    now = 1793334600
     with store.tx() as db:
         add_user(db)
         sessions = [
@@ -42,8 +43,7 @@ def test_prune_removes_only_unusable_rows(tmp_path):
                 'INSERT INTO idempotency(user_id,key,operation,request_hash,reply_json,created_at) VALUES(?,?,?,?,?,?)',
                 ('u1', key, 'C01', 'hash', '{}', created),
             )
-        # 2026-10-30 12:30 Asia/Taipei
-        removed = store.prune(db, now=1793334600)
+        removed = store.prune(db, now=now)
     assert removed == {'sessions': 2, 'tokens': 1, 'idempotency': 1}
     with closing(store.connect()) as db:
         assert [r['id'] for r in db.execute('SELECT id FROM sessions')] == ['live']
