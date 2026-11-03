@@ -1,4 +1,5 @@
-import { plan, fileBody, kinds, type Product } from '../../lib/training';
+import { useState } from 'react';
+import { plan, fileBody, kinds, type Material, type Product } from '../../lib/training';
 import { type Studio, emptyProduct } from './teacher-studio-state';
 
 export function MaterialsStage({ s }: { s: Studio }) {
@@ -17,7 +18,24 @@ export function MaterialsStage({ s }: { s: Studio }) {
     custom,
     setCustom,
     load,
+    course,
   } = s;
+  const [confirming, setConfirming] = useState('');
+  // The open draft may hold unsaved selections the server cannot see yet.
+  const usedByOpenCourse = (m: Material) => !!course?.material_ids.includes(m.id);
+  async function remove(m: Material) {
+    setError('');
+    const done = await write<{ id: string }>(plan('/admin/materials/' + m.id, {}, 'DELETE'), () => {
+      setNotice(`已刪除教材「${m.name}」與原檔。已發布的教案與班次不受影響。`);
+      void load();
+    });
+    setConfirming('');
+    // The page-level alert sits above the upload form, out of view from the library list.
+    if (!done)
+      requestAnimationFrame(() =>
+        document.querySelector('[role=alert]')?.scrollIntoView({ block: 'center', behavior: 'instant' }),
+      );
+  }
   return (
     <div className="tr-stack">
       <section className="tr-card">
@@ -104,6 +122,30 @@ export function MaterialsStage({ s }: { s: Studio }) {
                 重新解析
               </button>
             )}
+            {confirming === m.id ? (
+              <div className="tr-actions" role="group" aria-label={'確認刪除教材「' + m.name + '」'}>
+                <span>刪除後原檔與擷取內容都會移除，無法復原。</span>
+                <button className="tr-danger" onClick={() => void remove(m)}>
+                  確認刪除
+                </button>
+                <button onClick={() => setConfirming('')}>取消</button>
+              </div>
+            ) : (
+              <button
+                disabled={m.status === 'PARSING' || usedByOpenCourse(m)}
+                title={
+                  m.status === 'PARSING'
+                    ? '解析完成後才能刪除'
+                    : usedByOpenCourse(m)
+                      ? '目前開啟的教案已選用此教材，請先取消選用並儲存'
+                      : undefined
+                }
+                onClick={() => setConfirming(m.id)}
+              >
+                刪除教材
+              </button>
+            )}
+            {usedByOpenCourse(m) && <small>目前開啟的教案已選用此教材，取消選用並儲存後才能刪除。</small>}
             <details>
               <summary>核對擷取內容（{m.sections.length} 段）</summary>
               {m.sections.map(s => (

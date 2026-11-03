@@ -149,6 +149,29 @@ def handle(op, db, u, b, p, tasks):
         db.execute('UPDATE training_materials SET body=?,created_at=? WHERE id=?', (store.j(m), time.time(), row['id']))
         tasks.append(('material', str(store.DB_FILE), row['id']))
         return {'accepted': True}
+    if op == 'material_delete':
+        row = db.execute(
+            'SELECT id,name,body FROM training_materials WHERE id=? AND owner=?', (p['material_id'], uid)
+        ).fetchone()
+        svc.require(row, 'NOT_FOUND')
+        svc.require(json.loads(row['body']).get('status') != 'PARSING', 'MATERIAL_DELETE_PARSING')
+        # Published courses keep their own copy of cited sections; only drafts re-read the material on save.
+        drafts = [
+            r['title']
+            for r in db.execute(
+                '''SELECT json_extract(body,'$.title') AS title FROM training_courses
+                WHERE owner=? AND status='DRAFT' AND EXISTS(SELECT 1 FROM json_each(body,'$.material_ids') WHERE value=?)''',
+                (uid, row['id']),
+            )
+        ]
+        svc.require(
+            not drafts,
+            'MATERIAL_IN_USE',
+            f'教材「{row["name"]}」仍被教案草稿選用：{"、".join(drafts)}。請先在教案中取消選用並儲存，再刪除教材。',
+        )
+        db.execute('DELETE FROM training_materials WHERE id=?', (row['id'],))
+        svc.audit(db, uid, 'MATERIAL_DELETE:' + row['id'])
+        return {'id': row['id'], 'deleted': True}
     if op == 'products':
         return svc.all_products(db, uid)
     if op == 'product_add':
@@ -426,6 +449,7 @@ for method, path, op in [
     ('GET', '/admin/materials', 'materials'),
     ('POST', '/admin/materials', 'material_add'),
     ('POST', '/admin/materials/{material_id}/retry', 'material_retry'),
+    ('DELETE', '/admin/materials/{material_id}', 'material_delete'),
     ('GET', '/admin/products', 'products'),
     ('POST', '/admin/products', 'product_add'),
     ('POST', '/admin/courses', 'course_add'),

@@ -116,6 +116,8 @@ MESSAGES = {
     'MATERIAL_PARSE_FAILED': '所選教材解析失敗，請先查看教材錯誤並重新解析或改用其他檔案。',
     'MATERIAL_INTERRUPTED': '教材解析中斷，原檔已保留，可重新解析。',
     'MATERIAL_QUEUE_FULL': '目前已有 4 份教材正在處理或等候解析，請稍後再上傳。',
+    'MATERIAL_IN_USE': '教材仍被教案草稿選用，請先在教案中取消選用並儲存，再刪除教材。',
+    'MATERIAL_DELETE_PARSING': '教材仍在解析，請等待完成後再刪除。',
     'AUTHORING_BUSY': '目前已有 2 份 AI 編課工作正在處理或等候，請稍後再試。',
     'AUTHORING_RATE_LIMIT': '本帳號一小時內已建立 20 份編課需求，請稍後再試。',
     'AI_JOB_RUNNING': '這份編課工作仍在等候或生成，請等待完成或先取消。',
@@ -160,6 +162,8 @@ for status, codes in {
     503: ['MAIL_NOT_CONFIGURED', 'SERVICE_UNAVAILABLE', 'MODEL_UNAVAILABLE'],
     409: [
         'STALE_VERSION',
+        'MATERIAL_IN_USE',
+        'MATERIAL_DELETE_PARSING',
         'IDEMPOTENCY_KEY_REUSED',
         'ACTION_NOT_ALLOWED',
         'STATE_CONFLICT',

@@ -563,3 +563,42 @@ def test_long_material_context_is_bounded_and_does_not_mutate_course(teacher):
     context, cut = jobs.provider_context(c)
     assert len(json.dumps(context, ensure_ascii=False)) <= 22000 and cut > 0 and c == original
     assert len(context['sources']) < len(c['sources']) and 'vul' in context['sources']
+
+
+def test_material_delete_guards_and_removes_raw_file(teacher):
+    g = teacher
+    raw = '授課範本：先問資金用途。'.encode()
+    m = call(g, 'POST', '/admin/materials', {'name': '刪除測試.txt', 'data_base64': base64.b64encode(raw).decode()})
+    jobs.POOL.submit(lambda: None).result(10)
+    parsed = next(x for x in call(g, 'GET', '/admin/materials') if x['id'] == m['id'])
+    assert parsed['status'] == 'READY'
+    # Simulate a file the background parser is still working on.
+    with store.tx() as db:
+        db.execute("UPDATE training_materials SET body=json_set(body,'$.status','PARSING') WHERE id=?", (m['id'],))
+    err = g.call('DELETE', f'/training/admin/materials/{m["id"]}', {}, 409)[1].json()['error']
+    assert err['code'] == 'MATERIAL_DELETE_PARSING'
+    with store.tx() as db:
+        db.execute("UPDATE training_materials SET body=json_set(body,'$.status','READY') WHERE id=?", (m['id'],))
+    section = parsed['sections'][0]['id']
+    c = catalog.base_course()
+    c['title'] = '使用教材的草稿'
+    c['material_ids'] = [m['id']]
+    c['events'][0]['source_ids'] = [section]
+    draft = save(g, **{**c, 'reviewed': True})
+
+    blocked = g.call('DELETE', f'/training/admin/materials/{m["id"]}', {}, 409)[1].json()['error']
+    assert blocked['code'] == 'MATERIAL_IN_USE' and '使用教材的草稿' in blocked['message']
+
+    published = publish(g, draft)
+    room = classroom(g, published)
+    assert call(g, 'DELETE', f'/admin/materials/{m["id"]}', {}) == {'id': m['id'], 'deleted': True}
+    assert all(x['id'] != m['id'] for x in call(g, 'GET', '/admin/materials'))
+    with store.tx() as db:
+        assert db.execute('SELECT 1 FROM training_materials WHERE id=?', (m['id'],)).fetchone() is None
+        assert db.execute('SELECT 1 FROM training_audit WHERE action=?', ('MATERIAL_DELETE:' + m['id'],)).fetchone()
+    # Published course and its class keep their own copy of the cited text.
+    run = join(g, room)
+    assert run['id']
+    kept = next(x for x in call(g, 'GET', '/courses') if x['id'] == published['id'])
+    assert kept['sources'][section]['text']
+    call(g, 'DELETE', f'/admin/materials/{m["id"]}', {}, 404)
