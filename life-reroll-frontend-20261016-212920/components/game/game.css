@@ -445,6 +445,13 @@
 .choice-button small {
   font-size: 0.8125rem;
 }
+.choice-impacts {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #355963;
+}
 .quote-panel,
 .play-inline-note,
 .funding-panel {

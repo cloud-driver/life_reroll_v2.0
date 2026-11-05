@@ -178,6 +178,7 @@ export type Choice = {
   disabled_reason: string | null;
   requires_confirmation: boolean;
   estimated_cash_cost_minor: number | null;
+  impacts: Array<string>;
 };
 export type Event = {
   id: string;
@@ -203,6 +204,8 @@ export type EventOutcome = {
   claim_ids: Array<string>;
   learning_message: string;
   is_terminal: boolean;
+  cash_delta_minor?: number;
+  quality_delta?: number;
 };
 export type Funding = {
   event_id: string;

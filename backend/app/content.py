@@ -7,6 +7,24 @@ ROOT = Path(__file__).resolve().parents[1]
 PERSONAS = json.loads((ROOT / 'data/personas.json').read_text(encoding='utf-8'))
 EVENTS = json.loads((ROOT / 'data/events.json').read_text(encoding='utf-8'))
 EVENT_BY_ID = {x['id']: x for x in EVENTS}
+# Events whose consequence is not a plain cash cost get choices priced from the run when they
+# fire (app/event_choices.py). The card-level cash/quality effect is replaced by the choice.
+EVENT_CHOICE_MODELS = {
+    k: v
+    for k, v in json.loads((ROOT / 'data/event_choices.json').read_text(encoding='utf-8')).items()
+    if not k.startswith('_')
+}
+for _id, _model in EVENT_CHOICE_MODELS.items():
+    _card = EVENT_BY_ID[_id]
+    _card['choice_model'] = _model['model']
+    _card['lesson'] = _model['lesson']
+    _card['description'] = _model.get('description', _card['description'])
+    if 'dividend_bps' in _model:
+        _card['dividend_bps'] = _model['dividend_bps']
+    _card['effect'] = {**_card['effect'], 'cash_delta_minor': 0, 'quality_delta': 0}
+    _card['choices'] = [
+        {**c, 'effect_multiplier_bps': 10000} for c in _model.get('choices', [{'id': 'ACK', 'label': '了解，繼續'}])
+    ]
 CONTENT_VERSION = '2026.09.simulated.1'
 MARKET_VERSION = 'market-20261023-2'
 STOCK_TRADE_FEE_BPS = 30

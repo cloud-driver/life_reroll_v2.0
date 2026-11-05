@@ -103,14 +103,23 @@ export function EventPanel({ game }: { game: GameModel; onRewind?: () => void })
             >
               <strong>{choice.label}</strong>
               <span>{choice.description}</span>
-              {choice.estimated_cash_cost_minor != null && (
-                <small>預估支出 {money(choice.estimated_cash_cost_minor)} 元</small>
+              {choice.impacts?.length ? (
+                <ul className="choice-impacts">
+                  {choice.impacts.map(line => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              ) : (
+                choice.estimated_cash_cost_minor != null && (
+                  <small>預估支出 {money(choice.estimated_cash_cost_minor)} 元</small>
+                )
               )}
+              {!choice.enabled && choice.disabled_reason && <small>{choice.disabled_reason}</small>}
             </button>
           ))}
         </div>
       )}
-      {e?.outcome && r.pending_event_id === e.id && <EventClaims game={game} event={e} />}
+      {e?.outcome && r.pending_event_id === e.id && mayClaim(e) && <EventClaims game={game} event={e} />}
       {r.status === 'FUNDING' && <FundingActions game={game} />}
       {r.status === 'EVENT_RESULT' && (
         <div className="event-continue">
@@ -125,6 +134,9 @@ export function EventPanel({ game }: { game: GameModel; onRewind?: () => void })
     </section>
   );
 }
+// Coverage only matters when the event cost money or was an injury/illness; a raise or market news has nothing to claim.
+const mayClaim = (e: Event) =>
+  e.kind === 'HEALTH' || e.kind === 'ACCIDENT' || (e.outcome?.cash_delta_minor ?? -1) < 0;
 function EventClaims({ game, event: e }: { game: GameModel; event: Event }) {
   const r = game.run!,
     params = { run_id: r.id };

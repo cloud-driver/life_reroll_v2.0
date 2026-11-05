@@ -114,6 +114,7 @@ def adapt(name, value):
         v['disabled_reason'] = v.get('disabled_reason')
         v['requires_confirmation'] = v.get('requires_confirmation', False)
         v['estimated_cash_cost_minor'] = v.get('estimated_cash_cost_minor')
+        v['impacts'] = v.get('impacts', [])
     elif name == 'EventOutcome':
         v['ledger_entry_ids'] = v.get('ledger_entry_ids', [])
         v['claim_ids'] = v.get('claim_ids', [])

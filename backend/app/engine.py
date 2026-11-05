@@ -565,7 +565,13 @@ def next_step(r):
             if card['kind'] in ('HEALTH', 'ACCIDENT'):
                 r['event_return_scene'] = r['scene_id']
                 r['scene_id'] = 'HOSPITAL'
+            if card.get('choice_model'):
+                from . import event_choices
+
+                event_choices.prepare(r, card, event)
             for choice in event['choices']:
+                if 'effect' in choice:
+                    continue
                 cost = max(0, -card['effect']['cash_delta_minor'] * choice['effect_multiplier_bps'] // 10000)
                 choice['estimated_cash_cost_minor'] = cost
                 if cost > r['balances']['cash_minor'] + r['balances']['savings_minor']:
@@ -733,15 +739,20 @@ def decide(r, event_id, choice_id):
         raise ValueError('STATE_CONFLICT')
     card = EVENT_BY_ID[e['card_id']]
     choice = next((c for c in e['choices'] if c['id'] == choice_id), None)
-    if not choice:
+    if not choice or not choice.get('enabled', True):
         raise ValueError('CHOICE_UNAVAILABLE')
     mul = choice['effect_multiplier_bps']
     eff = card['effect']
-    delta = eff['cash_delta_minor'] * mul // 10000
+    # Prepared choices (event_choices.py) carry their own concrete effect; older ones scale the card.
+    prepared = choice.get('effect')
+    delta = prepared['cash_delta_minor'] if prepared else eff['cash_delta_minor'] * mul // 10000
+    quality = prepared['quality_delta'] if prepared else eff['quality_delta'] * mul // 10000
     e['choice_id'] = choice_id
     e['evidence'] = [{'id': uid(), 'event_id': e['id'], 'label': '遊戲事件紀錄', 'available_on': sim_date(r)}]
-    r['quality'] = max(0, min(100, r['quality'] + eff['quality_delta'] * mul // 10000))
-    r['salary_minor'] = max(0, r['salary_minor'] * (10000 + eff['salary_change_bps'] * mul // 10000) // 10000)
+    if not prepared:
+        r['quality'] = max(0, min(100, r['quality'] + quality))
+    # A raise or a market move is a fact of the event, not something the choice can scale.
+    r['salary_minor'] = max(0, r['salary_minor'] * (10000 + eff['salary_change_bps']) // 10000)
     if card['id'] in ('CH08', 'CR04') and r['employment_status'] == 'EMPLOYED':
         r['prior_salary_minor'] = r['salary_minor']
         r['salary_minor'] = 0
@@ -755,22 +766,27 @@ def decide(r, event_id, choice_id):
     if card['id'] == 'FA04':
         r['support_minor'] += 2500000 * mul // 10000
     r['living_minor'] += max(0, eff['monthly_cost_delta_minor'] * mul // 10000)
-    r['market_residual'] = eff['market_shock_bps'] * mul // 10000
+    r['market_residual'] = eff['market_shock_bps']
     if card['critical'] and delta < 0:
         e['funding'] = {'required_minor': -delta, 'paid_minor': 0}
         r['status'] = 'FUNDING'
         e['status'] = 'FUNDING'
     else:
         if delta >= 0:
-            income(r, delta, 'EVENT', card['title'], e['id'])
+            category = 'DIVIDEND' if card.get('choice_model') == 'DIVIDEND' else 'EVENT'
+            income(r, delta, category, card['title'], e['id'])
         else:
             spend(r, -delta, 'EVENT', card['title'], e['id'], force_bill=True)
+        if prepared:
+            from . import event_choices
+
+            event_choices.apply(r, choice)
         e['status'] = 'RESOLVED'
         r['status'] = 'EVENT_RESULT'
     e['outcome'] = {
         'choice_id': choice_id,
         'cash_delta_minor': delta,
-        'quality_delta': eff['quality_delta'] * mul // 10000,
+        'quality_delta': quality,
         'is_terminal': False,
         'summary': f'選擇「{choice["label"]}」，費用與效果已記錄。',
     }

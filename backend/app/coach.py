@@ -74,6 +74,8 @@ def choices_text(r, event):
     rows = []
     for choice in event['choices']:
         description = f'{choice["label"]}：預估費用 {amount(choice.get("estimated_cash_cost_minor") or 0)}'
+        if choice.get('impacts'):
+            description += '（' + '、'.join(choice['impacts']) + '）'
         if r['status'] == 'EVENT_PENDING' and r.get('pending_event') == event['id']:
             simulated = copy.deepcopy(r)
             engine.decide(simulated, event['id'], choice['id'])

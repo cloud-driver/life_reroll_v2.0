@@ -1,0 +1,118 @@
+{
+  "_comment": "Per-event choice models merged into events.json at load (app/content.py). Models: COST (one-time cost, capped at 55% of total assets), CAREER_RAISE, MARKET_SHOCK, DIVIDEND, NEWS. Amounts are integer TWD cents.",
+  "CH01": {
+    "model": "MARKET_SHOCK",
+    "lesson": "科技股修正時，波動大的持股跌幅通常比大盤更深；先確認手上有多少比例押在同一產業。",
+    "choices": [
+      { "id": "HOLD", "label": "續抱不動", "description": "不買不賣，承受接下來的市場波動。", "action": "HOLD" },
+      { "id": "REDUCE", "label": "先減碼一半", "description": "現在賣出一半持股，降低接下來的跌幅影響，但要付交易費，也可能錯過反彈。", "action": "REDUCE" },
+      { "id": "ADD", "label": "加碼承接", "description": "用可用資金的一成買進現有持股，賭市場很快回穩；若繼續下跌，損失也會放大。", "action": "ADD" }
+    ]
+  },
+  "CH13": {
+    "model": "MARKET_SHOCK",
+    "lesson": "資金行情推升股價時，追高與獲利了結都有風險；配置比例比猜測漲跌更重要。",
+    "choices": [
+      { "id": "HOLD", "label": "續抱不動", "description": "維持現有持股，跟著市場行情變動。", "action": "HOLD" },
+      { "id": "REDUCE", "label": "獲利了結一半", "description": "現在賣出一半持股落袋，要付交易費，也可能少賺後續漲幅。", "action": "REDUCE" },
+      { "id": "ADD", "label": "追價加碼", "description": "用可用資金的一成買進現有持股；若行情反轉，損失也會放大。", "action": "ADD" }
+    ]
+  },
+  "CH14": {
+    "model": "MARKET_SHOCK",
+    "lesson": "升息會讓股市資金退潮；保留足夠的預備金，才不必在低點被迫賣股。",
+    "choices": [
+      { "id": "HOLD", "label": "續抱不動", "description": "不買不賣，承受接下來的市場波動。", "action": "HOLD" },
+      { "id": "REDUCE", "label": "先減碼一半", "description": "現在賣出一半持股，降低接下來的跌幅影響，但要付交易費，也可能錯過反彈。", "action": "REDUCE" },
+      { "id": "ADD", "label": "加碼承接", "description": "用可用資金的一成買進現有持股；若熊市持續，損失也會放大。", "action": "ADD" }
+    ]
+  },
+  "CH03": {
+    "model": "NEWS",
+    "lesson": "這類高度投機的資產可能在短時間內歸零；投入前先想清楚：全部損失時，生活會不會受影響？"
+  },
+  "CH04": {
+    "model": "NEWS",
+    "lesson": "高收益通常伴隨違約與匯率風險；分散配置，不把預備金放進波動大的資產。"
+  },
+  "CH06": {
+    "model": "NEWS",
+    "lesson": "放在交易平台上的資產，可能因平台倒閉或遭駭而被凍結；了解資產由誰保管，也是風險的一部分。"
+  },
+  "CH18": {
+    "model": "DIVIDEND",
+    "description": "你持有的股票今年配發額外的特別股利，金額依你目前的持股市值計算。",
+    "lesson": "高股息不等於高報酬；股利發放後股價可能下修，領到的錢也要想好用途。",
+    "dividend_bps": 300,
+    "choices": [
+      { "id": "CASH", "label": "領現金入帳", "description": "股利直接存入現金，可用來補預備金或日常開銷。", "action": "CASH" },
+      { "id": "REINVEST", "label": "全數再投入", "description": "把股利買回原本的持股，扣交易費後增加持股。", "action": "REINVEST" }
+    ]
+  },
+  "CH07": {
+    "model": "CAREER_RAISE",
+    "lesson": "加薪後先決定多少要存下來；生活支出一旦提高，之後很難再降回來。",
+    "choices": [
+      { "id": "SAVE", "label": "加薪全數存起來", "description": "維持原本的生活支出，把多出來的薪水留作存款。", "living_share_bps": 0, "quality_delta": 0 },
+      { "id": "HALF", "label": "一半存、一半改善生活", "description": "每月生活支出增加加薪的一半，生活品質小幅提升。", "living_share_bps": 5000, "quality_delta": 2 },
+      { "id": "LIFESTYLE", "label": "全部用來提升生活", "description": "每月生活支出增加整筆加薪，生活品質明顯提升，但存款不會增加。", "living_share_bps": 10000, "quality_delta": 4 }
+    ]
+  },
+  "CH09": {
+    "model": "CAREER_RAISE",
+    "lesson": "跳槽加薪時，也要想好新工作的穩定度；先把一部分加薪存成預備金。",
+    "choices": [
+      { "id": "SAVE", "label": "加薪全數存起來", "description": "維持原本的生活支出，把多出來的薪水留作存款。", "living_share_bps": 0, "quality_delta": 0 },
+      { "id": "HALF", "label": "一半存、一半改善生活", "description": "每月生活支出增加加薪的一半，生活品質小幅提升。", "living_share_bps": 5000, "quality_delta": 2 },
+      { "id": "LIFESTYLE", "label": "全部用來提升生活", "description": "每月生活支出增加整筆加薪，生活品質明顯提升，但存款不會增加。", "living_share_bps": 10000, "quality_delta": 4 }
+    ]
+  },
+  "CH12": {
+    "model": "CAREER_RAISE",
+    "lesson": "證照帶來的加薪是長期收入；先決定多少要存下來，再調整生活水準。",
+    "choices": [
+      { "id": "SAVE", "label": "加薪全數存起來", "description": "維持原本的生活支出，把多出來的薪水留作存款。", "living_share_bps": 0, "quality_delta": 0 },
+      { "id": "HALF", "label": "一半存、一半改善生活", "description": "每月生活支出增加加薪的一半，生活品質小幅提升。", "living_share_bps": 5000, "quality_delta": 2 },
+      { "id": "LIFESTYLE", "label": "全部用來提升生活", "description": "每月生活支出增加整筆加薪，生活品質明顯提升，但存款不會增加。", "living_share_bps": 10000, "quality_delta": 4 }
+    ]
+  },
+  "FA21": {
+    "model": "COST",
+    "description": "半夜發生百年一遇的大地震，住處結構受損被貼上紅單，需要暫時搬離並處理修繕。本遊戲沒有住宅地震險，損失需要自行負擔。",
+    "lesson": "住宅地震險與火險能分擔重建與暫住費用；沒有保障時，預備金就是唯一的緩衝。",
+    "choices": [
+      { "id": "FAMILY", "label": "暫住親友家", "description": "花費最少，但通勤與生活都不方便。", "cost_minor": 8000000, "quality_delta": -4 },
+      { "id": "RENT", "label": "租屋暫住並添購必需品", "description": "維持基本生活，同時等待修繕。", "cost_minor": 22000000, "quality_delta": -2 },
+      { "id": "REBUILD", "label": "立即整修並重購家具", "description": "最快恢復原本的生活，但花費最高。", "cost_minor": 48000000, "quality_delta": 0 }
+    ]
+  },
+  "FA22": {
+    "model": "COST",
+    "description": "樓下鄰居電線走火引發大火，濃煙與火勢波及住家，裝潢與家具嚴重受損。本遊戲沒有住宅火險，損失需要自行負擔。",
+    "lesson": "住宅火險能分擔裝潢與家具的損失；沒有保障時，預備金就是唯一的緩衝。",
+    "choices": [
+      { "id": "BASIC", "label": "清理後先湊合著住", "description": "只處理安全問題，生活品質下降。", "cost_minor": 6000000, "quality_delta": -4 },
+      { "id": "REPAIR", "label": "修繕並添購必需家具", "description": "恢復基本的居住機能。", "cost_minor": 18000000, "quality_delta": -2 },
+      { "id": "RENOVATE", "label": "全面重新裝潢", "description": "恢復原本的居住品質，但花費最高。", "cost_minor": 40000000, "quality_delta": 0 }
+    ]
+  },
+  "FA23": {
+    "model": "COST",
+    "description": "致災性暴雨導致市區大淹水，停在地下室的愛車泡水報廢。本遊戲沒有車險，損失需要自行負擔。",
+    "lesson": "車體險能分擔泡水車的損失；交通工具也是生活支出的一部分，要預留重置的錢。",
+    "choices": [
+      { "id": "TRANSIT", "label": "改搭大眾運輸", "description": "幾乎不花錢，但通勤時間變長。", "cost_minor": 1500000, "quality_delta": -3 },
+      { "id": "USED", "label": "購買二手車", "description": "花費中等，維持原本的通勤方式。", "cost_minor": 25000000, "quality_delta": -1 },
+      { "id": "NEW", "label": "購買新車", "description": "最舒適，但花費最高。", "cost_minor": 60000000, "quality_delta": 1 }
+    ]
+  },
+  "FA27": {
+    "model": "COST",
+    "lesson": "退休居所與照護會持續花錢；越早估算，越能在品質與預算之間取捨。",
+    "choices": [
+      { "id": "HOME", "label": "在家養老並安排居家照顧", "description": "保留熟悉的環境，需要裝設無障礙設施。", "cost_minor": 15000000, "quality_delta": 1 },
+      { "id": "FAMILY", "label": "與家人同住", "description": "花費較少，彼此有照應，但需要調整生活習慣。", "cost_minor": 5000000, "quality_delta": 2 },
+      { "id": "VILLAGE", "label": "入住養生村", "description": "有完整照護與社交活動，入住費用最高。", "cost_minor": 60000000, "quality_delta": 4 }
+    ]
+  }
+}

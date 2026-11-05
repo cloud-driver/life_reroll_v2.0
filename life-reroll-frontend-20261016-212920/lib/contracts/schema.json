@@ -1210,6 +1210,14 @@
             }
           ],
           "description": "已知成本，未知為 null"
+        },
+        "impacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "description": "選擇後的具體影響，例如一次支出、月薪或持股變化"
         }
       },
       "required": [
@@ -1219,7 +1227,8 @@
         "enabled",
         "disabled_reason",
         "requires_confirmation",
-        "estimated_cash_cost_minor"
+        "estimated_cash_cost_minor",
+        "impacts"
       ],
       "additionalProperties": false
     },

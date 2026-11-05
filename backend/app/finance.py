@@ -125,7 +125,7 @@ def quote(r, action, params):
             raise ValueError('VALIDATION_ERROR')
         related = sid
         gross = qty * r['prices'][sid]
-        fee = max(100, gross * STOCK_TRADE_FEE_BPS // 10000)
+        fee = trade_fee(gross)
         if action == 'STOCK_BUY':
             delta = -(gross + fee)
             if liquid < -delta:
@@ -242,6 +242,40 @@ def quote(r, action, params):
     }
 
 
+def trade_fee(gross):
+    return max(100, gross * STOCK_TRADE_FEE_BPS // 10000)
+
+
+def buy_stock(r, sid, qty):
+    """Book a purchase at the current price; the caller has checked that cash covers gross + fee."""
+    gross = qty * r['prices'][sid]
+    fee = trade_fee(gross)
+    spend(r, gross, 'TRANSFER', '購入股票本金', cashflow='INTERNAL')
+    spend(r, fee, 'FEE', '股票交易費')
+    r['holdings'][sid] = r['holdings'].get(sid, 0) + qty
+    r['holding_cost_minor'][sid] = r['holding_cost_minor'].get(sid, 0) + gross
+    return gross, fee
+
+
+def sell_stock(r, sid, qty):
+    held = r['holdings'][sid]
+    cost = r['holding_cost_minor'].get(sid, 0) * qty // held
+    r['holding_cost_minor'][sid] -= cost
+    r['holdings'][sid] -= qty
+    gross = qty * r['prices'][sid]
+    fee = trade_fee(gross)
+    # Market value change is a capital gain/loss only once sold, and not gross sale proceeds.
+    gain = gross - cost
+    r['balances']['cash_minor'] += cost
+    ledger(r, 'PRINCIPAL', cost, cashflow='INTERNAL', description='出售股票本金返還')
+    if gain >= 0:
+        income(r, gain, 'REALIZED_PNL', '已實現股票獲利')
+    else:
+        spend(r, -gain, 'REALIZED_PNL', '已實現股票損失', force_bill=False)
+    spend(r, fee, 'FEE', '股票交易費')
+    return gross, fee
+
+
 def execute(r, q):
     if q['used']:
         raise ValueError('QUOTE_ALREADY_EXECUTED')
@@ -302,29 +336,11 @@ def execute(r, q):
         income(r, v - t['principal_minor'], 'INTEREST', '解約利息入帳')
         resource = {'type': 'term_deposit', 'id': t['id']}
     elif action == 'STOCK_BUY':
-        spend(r, amount_minor - q['fees_minor'], 'TRANSFER', '購入股票本金', cashflow='INTERNAL')
-        spend(r, q['fees_minor'], 'FEE', '股票交易費')
-        sid = p['stock_id']
-        r['holdings'][sid] = r['holdings'].get(sid, 0) + p['quantity']
-        r['holding_cost_minor'][sid] = r['holding_cost_minor'].get(sid, 0) + p['quantity'] * r['prices'][sid]
-        resource = {'type': 'stock', 'id': sid}
+        buy_stock(r, p['stock_id'], p['quantity'])
+        resource = {'type': 'stock', 'id': p['stock_id']}
     elif action == 'STOCK_SELL':
-        sid = p['stock_id']
-        held = r['holdings'][sid]
-        cost = r['holding_cost_minor'].get(sid, 0) * p['quantity'] // held
-        r['holding_cost_minor'][sid] -= cost
-        r['holdings'][sid] -= p['quantity']
-        income_amount = p['quantity'] * r['prices'][sid]
-        # Market value change is a capital gain/loss only once sold, and not gross sale proceeds.
-        gain = income_amount - cost
-        r['balances']['cash_minor'] += cost
-        ledger(r, 'PRINCIPAL', cost, cashflow='INTERNAL', description='出售股票本金返還')
-        if gain >= 0:
-            income(r, gain, 'REALIZED_PNL', '已實現股票獲利')
-        else:
-            spend(r, -gain, 'REALIZED_PNL', '已實現股票損失', force_bill=False)
-        spend(r, q['fees_minor'], 'FEE', '股票交易費')
-        resource = {'type': 'stock', 'id': sid}
+        sell_stock(r, p['stock_id'], p['quantity'])
+        resource = {'type': 'stock', 'id': p['stock_id']}
     elif action == 'LOAN_BORROW':
         income_amt = p['amount_minor']
         r['balances']['cash_minor'] += income_amt
