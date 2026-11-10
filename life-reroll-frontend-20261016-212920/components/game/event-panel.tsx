@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Skeleton } from '@/components/feedback';
 import { allowed, type Page } from '@/lib/game-client';
 import { money } from '@/lib/dashboard';
 import type { Event, Funding, ClaimAssessment, Claim } from '@/lib/game-types';
@@ -89,8 +90,10 @@ export function EventPanel({ game }: { game: GameModel; onRewind?: () => void })
             </div>
           </div>
         </article>
+      ) : event.loading || history.loading ? (
+        <Skeleton lines={3} label="正在整理事件…" block />
       ) : (
-        <p role="status">{event.loading || history.loading ? '正在整理事件…' : '目前沒有事件。'}</p>
+        <p role="status">目前沒有事件。</p>
       )}
       {choosing && (
         <div className="event-choices" aria-label="事件選擇">
@@ -152,7 +155,7 @@ function EventClaims({ game, event: e }: { game: GameModel; event: Event }) {
       <h3>保障與理賠</h3>
       {(assessment.error || claims.error) && <p role="alert">{assessment.error || claims.error}</p>}
       {assessment.loading || claims.loading ? (
-        <p>正在核對事故當時的保障…</p>
+        <Skeleton lines={3} label="正在核對事故當時的保障…" />
       ) : (
         <>
           {!eligible.length && !existing.length && <p>這次事件沒有符合條件的保障，費用需自行準備。</p>}

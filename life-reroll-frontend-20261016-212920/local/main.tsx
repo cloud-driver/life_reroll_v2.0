@@ -14,6 +14,7 @@ const DestinationScene = lazy(() =>
 );
 import type { DestinationId } from '../lib/map-data';
 import '../app/globals.css';
+import { AppSplash, ErrorBoundary } from '../components/feedback';
 
 const legalKind =
   window.location.pathname.replace(/\/$/, '') === '/terms'
@@ -26,26 +27,22 @@ const scene = window.location.pathname.match(/^\/place\/(work|hospital|leisure|f
   | undefined;
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Suspense
-      fallback={
-        <p role="status" style={{ padding: '24px' }}>
-          正在載入人生讀檔…
-        </p>
-      }
-    >
-      {['/training', '/teach'].includes(window.location.pathname.replace(/\/$/, '')) ? (
-        <TrainingApp teacher={window.location.pathname.startsWith('/teach')} />
-      ) : legalKind ? (
-        <LegalPage kind={legalKind} />
-      ) : window.location.pathname.startsWith('/demo') ? (
-        <MinimalDemo />
-      ) : scene ? (
-        <DestinationScene destination={scene} />
-      ) : window.location.pathname.startsWith('/city') ? (
-        <CityPage />
-      ) : (
-        <GameApp />
-      )}
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<AppSplash />}>
+        {['/training', '/teach'].includes(window.location.pathname.replace(/\/$/, '')) ? (
+          <TrainingApp teacher={window.location.pathname.startsWith('/teach')} />
+        ) : legalKind ? (
+          <LegalPage kind={legalKind} />
+        ) : window.location.pathname.startsWith('/demo') ? (
+          <MinimalDemo />
+        ) : scene ? (
+          <DestinationScene destination={scene} />
+        ) : window.location.pathname.startsWith('/city') ? (
+          <CityPage />
+        ) : (
+          <GameApp />
+        )}
+      </Suspense>
+    </ErrorBoundary>
   </React.StrictMode>,
 );

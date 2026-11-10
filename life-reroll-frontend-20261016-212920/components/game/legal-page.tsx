@@ -1,4 +1,5 @@
 import { Brand } from '@/components/brand';
+import { Skeleton } from '@/components/feedback';
 import { useEffect, useState, type ReactNode } from 'react';
 import { GameClient } from '@/lib/game-client';
 import type { LegalDocument } from '@/lib/game-types';
@@ -69,7 +70,7 @@ export function LegalPage({ kind }: { kind: 'TERMS' | 'PRIVACY' }) {
             ? '這是一款保險與資金規劃教育遊戲。請先了解模擬內容、帳號使用及 AI 回饋的範圍。'
             : '這裡說明本站如何使用帳號、遊戲與 AI 問答資料，以及你可以如何行使個人資料權利。'}
         </p>
-        {!doc && !error && <p role="status">正在讀取文件…</p>}
+        {!doc && !error && <Skeleton lines={5} label="正在讀取文件…" />}
         {error && (
           <div role="alert">
             <p>{error}</p>

@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Skeleton } from '@/components/feedback';
 import { money } from '@/lib/dashboard';
 import type { LedgerEntry, Event, PeriodSummary, PricePoint, Stock } from '@/lib/game-types';
 import type { Page } from '@/lib/game-client';
@@ -45,7 +46,7 @@ export function HistoryPanel({ game }: { game: GameModel }) {
       ))}
       {tab === 'ledger' && (
         <>
-          {ledger.loading && <p>讀取收支中…</p>}
+          {ledger.loading && <Skeleton lines={4} label="讀取收支中…" />}
           <PagedList
             items={(ledger.value?.items ?? []).toReversed()}
             label="收支紀錄"

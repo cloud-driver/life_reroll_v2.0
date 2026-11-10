@@ -14,21 +14,31 @@ from .. import store, engine, mail, legal
 from .common import fail, email_bypass, require, page, hash_password, check_password, t_hash, user_view
 
 
+def _text(body, key, error='VALIDATION_ERROR'):
+    """Body field as a string. Missing or null is '' (as before); any other non-string is rejected."""
+    value = body.get(key)
+    if value is None:
+        return ''
+    if not isinstance(value, str):
+        fail(error)
+    return value
+
+
 def account(op, db, request, b, u, p):
     if op == 'A01':
-        raw_email = b.get('email', '')
-        require(isinstance(raw_email, str), 'EMAIL_INVALID')
+        raw_email = _text(b, 'email', 'EMAIL_INVALID')
         email = raw_email.strip().lower()
-        password = b.get('password', '')
-        display = b.get('display_name', '')
         require(
             isinstance(email, str) and re.fullmatch(r'[^@\s]+@[^@\s]+\.[^@\s]+', email) and len(email) <= 254,
             'EMAIL_INVALID',
         )
+        password = _text(b, 'password', 'PASSWORD_LENGTH_INVALID')
         require(isinstance(password, str) and 12 <= len(password) <= 128, 'PASSWORD_LENGTH_INVALID')
+        display = _text(b, 'display_name', 'DISPLAY_NAME_LENGTH_INVALID')
         require(isinstance(display, str) and 2 <= len(display.strip()) <= 30, 'DISPLAY_NAME_LENGTH_INVALID')
         require(
-            b.get('terms_version') == legal.VERSION and b.get('privacy_version') == legal.VERSION,
+            _text(b, 'terms_version', 'LEGAL_VERSION_INVALID') == legal.VERSION
+            and _text(b, 'privacy_version', 'LEGAL_VERSION_INVALID') == legal.VERSION,
             'LEGAL_VERSION_INVALID',
         )
         display = display.strip()
@@ -57,14 +67,14 @@ def account(op, db, request, b, u, p):
             out['dev_verification_token'] = token
         return 201, out
     if op == 'A02':
-        email = (b.get('email') or '').strip().lower()
+        email = _text(b, 'email').strip().lower()
         h = t_hash(email)
         stamp = int(time.time())
         attempts = db.execute('SELECT * FROM login_attempts WHERE email_hash=?', (h,)).fetchone()
         if attempts and stamp - attempts['first_at'] < 600 and attempts['count'] >= 5:
             fail('RATE_LIMITED')
         row = db.execute('SELECT * FROM users WHERE email=?', (email,)).fetchone()
-        if not row or not check_password(b.get('password', ''), row['password_hash']):
+        if not row or not check_password(_text(b, 'password'), row['password_hash']):
             # Handle invalid credentials as a successful request outcome so the failure counter commits.
             count = attempts['count'] + 1 if attempts and stamp - attempts['first_at'] < 600 else 1
             start = attempts['first_at'] if attempts and stamp - attempts['first_at'] < 600 else stamp
@@ -89,7 +99,7 @@ def account(op, db, request, b, u, p):
             'session_id': u['sid'] if u else None,
         }
     if op == 'A05' or op == 'A07':
-        email = (b.get('email') or '').strip().lower()
+        email = _text(b, 'email').strip().lower()
         row = db.execute('SELECT * FROM users WHERE email=?', (email,)).fetchone()
         token = None
         if op == 'A05':
@@ -112,24 +122,24 @@ def account(op, db, request, b, u, p):
         return 202, msg
     if op == 'A06':
         require(u, 'UNAUTHENTICATED')
-        email = b.get('email') or (u['email'] if u else '')
+        email = _text(b, 'email') or (u['email'] if u else '')
         require(isinstance(email, str), 'VALIDATION_ERROR')
         row = db.execute('SELECT * FROM users WHERE email=?', (email.strip().lower(),)).fetchone()
         if not row:
             return 422, {'_account_error': 'INVALID_VERIFICATION_CODE'}
         if u and row['id'] != u['id']:
             return 422, {'_account_error': 'INVALID_VERIFICATION_CODE'}
-        code = mail.verify(db, row, b.get('token', ''))
+        code = mail.verify(db, row, _text(b, 'token'))
         # Return normally so failed-attempt increments commit too.
         if code:
             return (429 if code == 'VERIFICATION_ATTEMPTS_EXCEEDED' else 422), {'_account_error': code}
         return 200, {'accepted': True, 'message': '信箱驗證成功'}
     if op == 'A08':
-        token = b.get('token', '')
+        token = _text(b, 'token')
         purpose = 'RESET'
         row = db.execute('SELECT * FROM tokens WHERE token_hash=? AND purpose=?', (t_hash(token), purpose)).fetchone()
         require(row and row['expires_at'] > engine.now(), 'INVALID_TOKEN')
-        new = b.get('new_password', '')
+        new = _text(b, 'new_password', 'PASSWORD_LENGTH_INVALID')
         require(isinstance(new, str) and 12 <= len(new) <= 128, 'PASSWORD_LENGTH_INVALID')
         db.execute('UPDATE users SET password_hash=? WHERE id=?', (hash_password(new), row['user_id']))
         db.execute('UPDATE sessions SET revoked=1 WHERE user_id=?', (row['user_id'],))
@@ -140,8 +150,8 @@ def account(op, db, request, b, u, p):
         db.execute('UPDATE sessions SET revoked=1 WHERE id=?', (u['sid'],))
         return 204, None
     if op == 'A09':
-        require(check_password(b.get('current_password', ''), u['password_hash']), 'INVALID_CREDENTIALS')
-        new = b.get('new_password', '')
+        require(check_password(_text(b, 'current_password'), u['password_hash']), 'INVALID_CREDENTIALS')
+        new = _text(b, 'new_password', 'PASSWORD_LENGTH_INVALID')
         require(isinstance(new, str) and 12 <= len(new) <= 128, 'PASSWORD_LENGTH_INVALID')
         db.execute('UPDATE users SET password_hash=? WHERE id=?', (hash_password(new), u['id']))
         db.execute('UPDATE sessions SET revoked=1 WHERE user_id=? AND id!=?', (u['id'], u['sid']))
@@ -149,7 +159,7 @@ def account(op, db, request, b, u, p):
     if op == 'A10':
         return 200, user_view(u)
     if op == 'A11':
-        display = b.get('display_name', '')
+        display = _text(b, 'display_name')
         require(isinstance(display, str) and 2 <= len(display) <= 30, 'VALIDATION_ERROR')
         db.execute('UPDATE users SET display_name=? WHERE id=?', (display, u['id']))
         return 200, user_view(db.execute('SELECT * FROM users WHERE id=?', (u['id'],)).fetchone())
@@ -187,14 +197,16 @@ def account(op, db, request, b, u, p):
             require(type(b['reduced_motion']) is bool, 'VALIDATION_ERROR')
         if 'text_scale' in b:
             require(type(b['text_scale']) in (int, float) and b['text_scale'] in (1, 1.2, 1.5), 'VALIDATION_ERROR')
+        if 'locale' in b:
+            _text(b, 'locale')
         stored = json.loads(u['settings'])
         stored.update(b)
         db.execute('UPDATE users SET settings=? WHERE id=?', (store.j(stored), u['id']))
         return 200, stored
     if op == 'A16':
         require(
-            check_password(b.get('current_password', ''), u['password_hash'])
-            and b.get('confirmation') == 'DELETE_MY_ACCOUNT',
+            check_password(_text(b, 'current_password'), u['password_hash'])
+            and _text(b, 'confirmation') == 'DELETE_MY_ACCOUNT',
             'INVALID_CREDENTIALS',
         )
         # Erase the local account and its game history atomically; no queued worker is needed.

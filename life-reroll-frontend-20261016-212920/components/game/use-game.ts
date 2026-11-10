@@ -16,7 +16,9 @@ export function useGame() {
     [job, setJob] = useState<Job | null>(null),
     [retry, setRetry] = useState<RequestPlan | null>(null);
   const [snapshotRevision, setSnapshotRevision] = useState(0),
-    [completedJob, setCompletedJob] = useState<Job | null>(null);
+    [completedJob, setCompletedJob] = useState<Job | null>(null),
+    // False until the first session read settles, so the sign-in form never flashes for a returning player.
+    [ready, setReady] = useState(false);
   const recovery = useRef<GameRecovery | null>(null),
     userRef = useRef<string | null>(null);
   const bootstrapRef = useRef<Bootstrap | null>(null),
@@ -38,7 +40,7 @@ export function useGame() {
         bootstrapRef.current = boot;
         setBootstrap(boot);
       }
-      const current = await api.current(signal);
+      const current = await api.current(signal, runRef.current?.id);
       if (!mounted.current || signal?.aborted || sequence !== readSequence.current) return;
       userRef.current = current.session.user?.id ?? null;
       if (userRef.current) {
@@ -164,7 +166,9 @@ export function useGame() {
       try {
         await refresh(controller.signal);
       } catch (e) {
-        if (!controller.signal.aborted) setError(e instanceof Error ? e.message : '後端尚未連線');
+        if (!controller.signal.aborted) setError(e instanceof Error ? e.message : '尚未連線到伺服器');
+      } finally {
+        if (!controller.signal.aborted) setReady(true);
       }
     })();
     return () => {
@@ -172,6 +176,19 @@ export function useGame() {
       controller.abort();
     };
   }, [api, refresh]);
+  // Reconnect by itself when the network returns, instead of leaving the player on a stale "offline" screen.
+  useEffect(() => {
+    if (online || !ready) return;
+    const reconnect = () => {
+      if (document.visibilityState === 'visible') void perform(() => refresh());
+    };
+    window.addEventListener('online', reconnect);
+    document.addEventListener('visibilitychange', reconnect);
+    return () => {
+      window.removeEventListener('online', reconnect);
+      document.removeEventListener('visibilitychange', reconnect);
+    };
+  }, [online, ready, perform, refresh]);
   useEffect(() => {
     if (run?.status !== 'ADVANCING' && (!job || ['SUCCEEDED', 'FAILED'].includes(job.status))) return;
     const timer = setTimeout(() => void perform(() => refresh()), 2000);
@@ -229,6 +246,7 @@ export function useGame() {
     completedJob,
     bootstrap,
     busy,
+    ready,
     error,
     notice,
     online,
@@ -250,39 +268,51 @@ export function useResource<T>(
   enabled = true,
   query: Record<string, string> = {},
 ) {
-  const [resource, setResource] = useState<{ key: string; value: T | null; error: string; loading: boolean }>(
-    { key: '', value: null, error: '', loading: false },
-  );
+  const [resource, setResource] = useState<{
+    key: string;
+    identity: string;
+    value: T | null;
+    error: string;
+    loading: boolean;
+  }>({ key: '', identity: '', value: null, error: '', loading: false });
   const [revision, setRevision] = useState(0);
   // Scene definitions follow the content version; account settings do not
   // change when moving between scenes. Explicit sync still refreshes settings.
   const runScoped = id !== 'B02' && id !== 'A14';
-  const key = JSON.stringify([
+  // What the data is: the same identity at the same run version is the same server state.
+  const identity = JSON.stringify([
     id,
     params,
     query,
     runScoped ? game.run?.id : null,
     runScoped ? game.run?.version : null,
     game.session?.user?.id,
-    game.snapshotRevision,
     enabled,
-    revision,
   ]);
+  // When to read it again: a sync or an explicit reload re-reads the same identity.
+  const key = JSON.stringify([identity, game.snapshotRevision, revision]);
   useEffect(() => {
     if (!enabled) {
-      setResource({ key, value: null, error: '', loading: false });
+      setResource({ key, identity, value: null, error: '', loading: false });
       return;
     }
     const abort = new AbortController();
-    setResource({ key, value: null, error: '', loading: true });
+    // A re-read of the same identity keeps the shown value until the fresh one arrives, so a sync
+    // does not blank every open panel. A different identity never shows the previous value.
+    setResource(previous =>
+      previous.identity === identity && previous.value !== null
+        ? { ...previous, key, error: '', loading: false }
+        : { key, identity, value: null, error: '', loading: true },
+    );
     void (async () => {
       try {
         const value = await game.api.call<T>(id, params, undefined, query, abort.signal);
-        if (!abort.signal.aborted) setResource({ key, value, error: '', loading: false });
+        if (!abort.signal.aborted) setResource({ key, identity, value, error: '', loading: false });
       } catch (e) {
         if (!abort.signal.aborted)
           setResource({
             key,
+            identity,
             value: null,
             error: e instanceof Error ? e.message : '資料無法讀取',
             loading: false,
@@ -294,6 +324,16 @@ export function useResource<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, game.api]);
   // Never expose a previous event/resource for one paint before the effect resets it.
-  const current = resource.key === key ? resource : { value: null, error: '', loading: enabled };
-  return { ...current, reload: () => setRevision(n => n + 1) };
+  const current =
+    resource.key === key
+      ? resource
+      : resource.identity === identity && resource.value !== null
+        ? { value: resource.value, error: '', loading: false }
+        : { value: null, error: '', loading: enabled };
+  return {
+    value: current.value,
+    error: current.error,
+    loading: current.loading,
+    reload: () => setRevision(n => n + 1),
+  };
 }

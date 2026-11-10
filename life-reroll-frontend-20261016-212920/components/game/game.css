@@ -25,10 +25,20 @@
   cursor: pointer;
   line-height: 1.4;
   font-size: 0.875rem;
-  transition: background 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s,
+    box-shadow 0.15s,
+    opacity 0.15s,
+    scale 0.1s;
 }
 .play-shell button:hover:not(:disabled) {
   background: #345b67;
+}
+/* `scale` is independent of `transform`, so pressed feedback never fights positioned buttons. */
+.play-shell button:active:not(:disabled) {
+  scale: 0.97;
 }
 .play-shell button:disabled {
   cursor: not-allowed;

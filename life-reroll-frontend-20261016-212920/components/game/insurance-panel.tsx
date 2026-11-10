@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Skeleton } from '@/components/feedback';
 import { useResource, type GameModel } from './use-game';
 import type { Policy, Claim } from '@/lib/game-types';
 import type { Page } from '@/lib/game-client';
@@ -25,7 +26,7 @@ export function InsurancePanel({ game }: { game: GameModel }) {
           {error}
         </p>
       ))}
-      {(policies.loading || claims.loading) && <p>正在整理保障紀錄…</p>}
+      {(policies.loading || claims.loading) && <Skeleton lines={3} label="正在整理保障紀錄…" />}
       {tab === 'policies' && (
         <>
           {policies.value?.length === 0 && <p>目前沒有保單，可在金融大樓的人壽服務區了解保障。</p>}

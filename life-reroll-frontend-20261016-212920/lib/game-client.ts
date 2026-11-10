@@ -204,7 +204,7 @@ export class GameClient {
       throw new GameApiError(
         envelope?.error?.code ?? 'HTTP_ERROR',
         response.status,
-        envelope?.error?.message ?? '後端暫時無法使用',
+        envelope?.error?.message ?? '伺服器暫時無法回應，請稍後再試。',
         envelope?.error?.details,
       );
     if (!envelope || !Object.hasOwn(envelope, 'data'))
@@ -265,19 +265,30 @@ export class GameClient {
     this.csrf = session.csrf_token;
     return session;
   }
+  /**
+   * Session, campaign and current run. `knownRunId` is the run already on screen: it is read
+   * alongside the campaign, so a normal refresh costs two round trips instead of three. The
+   * campaign stays authoritative; a speculative read that fails or names another run is discarded.
+   */
   async current(
     signal?: AbortSignal,
+    knownRunId?: string | null,
   ): Promise<{ session: Session; campaign: Campaign | null; run: RunState | null }> {
     const session = await this.session(signal);
     if (!session.user) return { session, campaign: null, run: null };
+    const guess = knownRunId
+      ? this.call<RunState>('C06', { run_id: knownRunId }, undefined, {}, signal).catch(() => null)
+      : null;
     let campaign = await this.call<Campaign | null>('C02', {}, undefined, {}, signal);
     if (!campaign) {
       const history = await this.call<{ items: Campaign[] }>('C03', {}, undefined, {}, signal);
       campaign = history.items[0] ?? null;
     }
-    const run = campaign?.current_run_id
-      ? await this.call<RunState>('C06', { run_id: campaign.current_run_id }, undefined, {}, signal)
-      : null;
+    if (!campaign?.current_run_id) return { session, campaign, run: null };
+    const guessed = campaign.current_run_id === knownRunId ? await guess : null;
+    const run =
+      guessed ??
+      (await this.call<RunState>('C06', { run_id: campaign.current_run_id }, undefined, {}, signal));
     return { session, campaign, run };
   }
   async waitJob(job: Job, onProgress: (job: Job) => void, signal?: AbortSignal): Promise<Job> {
