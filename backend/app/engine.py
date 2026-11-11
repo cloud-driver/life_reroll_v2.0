@@ -574,8 +574,12 @@ def next_step(r):
                     continue
                 cost = max(0, -card['effect']['cash_delta_minor'] * choice['effect_multiplier_bps'] // 10000)
                 choice['estimated_cash_cost_minor'] = cost
-                if cost > r['balances']['cash_minor'] + r['balances']['savings_minor']:
+                liquid_minor = r['balances']['cash_minor'] + r['balances']['savings_minor']
+                if cost > liquid_minor:
                     choice['description'] = '需要額外籌資；一般生活支出不足時會形成未付帳單。'
+                from . import event_choices
+
+                choice['impacts'] = event_choices.scaled_impacts(card, choice['effect_multiplier_bps'], liquid_minor)
             r['events'].append(event)
             r['pending_event'] = event['id']
             r['status'] = 'EVENT_PENDING'

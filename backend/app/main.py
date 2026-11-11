@@ -8,10 +8,12 @@ import os
 import time
 from pathlib import Path
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response, StreamingResponse
 from fastapi.openapi.utils import get_openapi
 from starlette.background import BackgroundTask
 from starlette.concurrency import run_in_threadpool
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.gzip import GZipMiddleware
 from contextlib import asynccontextmanager
 import anyio
@@ -93,6 +95,82 @@ def fail_response(error):
     return error_response(error)
 
 
+# Framework-level failures (unknown route, wrong method, malformed parameters, an escaped
+# exception) answer in the same {data, error} envelope as operations, so clients read one shape.
+HTTP_ERROR_CODES = {
+    401: 'UNAUTHENTICATED',
+    403: 'FORBIDDEN',
+    404: 'NOT_FOUND',
+    405: 'METHOD_NOT_ALLOWED',
+    413: 'PAYLOAD_TOO_LARGE',
+    429: 'RATE_LIMITED',
+}
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_error(request: Request, exc: StarletteHTTPException):
+    code = HTTP_ERROR_CODES.get(exc.status_code, 'VALIDATION_ERROR' if exc.status_code < 500 else 'SERVICE_UNAVAILABLE')
+    reply = error_response(code)
+    reply.status_code = exc.status_code
+    for name, value in (exc.headers or {}).items():
+        reply.headers[name] = value
+    return reply
+
+
+@app.exception_handler(RequestValidationError)
+async def request_invalid(request: Request, exc: RequestValidationError):
+    return error_response('VALIDATION_ERROR')
+
+
+@app.exception_handler(Exception)
+async def unexpected_error(request: Request, exc: Exception):
+    # The server still logs the traceback; the client only ever sees the public message.
+    return error_response('SERVICE_UNAVAILABLE')
+
+
+# Ordinary operations carry a few fields; only a content upload (H01, up to 2 MiB of text) is large.
+MAX_BODY_BYTES = 256 * 1024
+MAX_UPLOAD_BODY_BYTES = 8 * 1024 * 1024
+DRAIN_BODY_BYTES = 16 * 1024 * 1024
+
+
+def reject_constant(name):
+    raise ValueError('non-finite number')
+
+
+async def read_body(request: Request, limit: int):
+    """Parse a bounded JSON object. Returns (body, error code); unreadable JSON stays an empty body."""
+    declared = request.headers.get('content-length', '')
+    too_large = declared.isdecimal() and int(declared) > limit
+    raw = bytearray()
+    seen = 0
+    async for chunk in request.stream():
+        seen += len(chunk)
+        if too_large or seen > limit:
+            # Discard rather than buffer. Reading the rest lets the client receive the 413 instead
+            # of a reset connection; past the drain allowance the connection is simply dropped.
+            too_large = True
+            raw.clear()
+            if seen > DRAIN_BODY_BYTES:
+                break
+            continue
+        raw += chunk
+    if too_large:
+        return None, 'PAYLOAD_TOO_LARGE'
+    try:
+        # NaN and Infinity are not JSON; letting them through would poison stored amounts.
+        body = json.loads(raw, parse_constant=reject_constant) if raw.strip() else {}
+    except ValueError:
+        # Covers malformed JSON, bad UTF-8 and NaN/Infinity alike. Treating a broken body as
+        # empty used to surface as a misleading downstream error (e.g. "wrong password").
+        return None, 'VALIDATION_ERROR'
+    except RecursionError:
+        return None, 'VALIDATION_ERROR'
+    if not isinstance(body, dict):
+        return None, 'VALIDATION_ERROR'
+    return body, None
+
+
 def dispatch(op, request, body=None):
     if body is None:
         body = {}
@@ -167,7 +245,9 @@ def dispatch(op, request, body=None):
             return resp
     except ValueError as exc:
         return fail_response(exc)
-    except (TypeError, KeyError, OverflowError):
+    except (TypeError, KeyError, OverflowError, AttributeError, IndexError):
+        # A wrongly typed or shaped field; logged because the same types can also mean a defect.
+        logging.warning('Rejected malformed input for operation %s', op, exc_info=True)
         return fail_response('VALIDATION_ERROR')
     except Exception:
         logging.exception('Unhandled operation %s', op)
@@ -183,13 +263,12 @@ def make_get(op):
 
 
 def make_write(op):
+    limit = MAX_UPLOAD_BODY_BYTES if op == 'H01' else MAX_BODY_BYTES
+
     async def endpoint(request: Request):
-        try:
-            body = await request.json()
-        except Exception:
-            body = {}
-        if not isinstance(body, dict):
-            return fail_response('VALIDATION_ERROR')
+        body, error = await read_body(request, limit)
+        if error:
+            return fail_response(error)
         return await run_in_threadpool(dispatch, op, request, body)
 
     endpoint.__name__ = 'write_' + op

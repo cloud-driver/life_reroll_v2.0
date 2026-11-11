@@ -464,7 +464,14 @@ export function ReportPanel({ game, coaching = true }: { game: GameModel; coachi
         </>
       )}
       {!report.value && !final.value && r?.status !== 'ENDED' && (
-        <p>完成本輪後，會在這裡呈現成績與重生選項。</p>
+        // Every tab needs its own answer mid-life; one shared line made the tabs look unresponsive.
+        <p role="status">
+          {view === 'details'
+            ? '本輪結束後，這裡會列出最後一段擲骰的資產與事件明細。進行中的紀錄可在「階段結算」與「事件與理賠」查看。'
+            : view === 'history'
+              ? '上方列出目前的輪次；完成一輪後即可閱讀該輪成績，並和下一輪對照。'
+              : '完成本輪後，會在這裡呈現成績與重生選項。'}
+        </p>
       )}
     </section>
   );

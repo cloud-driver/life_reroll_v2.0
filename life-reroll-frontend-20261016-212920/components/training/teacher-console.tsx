@@ -1,3 +1,4 @@
+import { Skeleton } from '@/components/feedback';
 import { TeacherTutorial } from './teacher-tutorial';
 import { TrainingPlay } from './training-play';
 import { useTeacherStudio, type StudioProps, stages } from './teacher-studio-state';
@@ -105,7 +106,7 @@ export function TeacherConsole(props: StudioProps) {
           </p>
         )}
         {!catalog ? (
-          <p role="status">正在載入講師資料…</p>
+          <Skeleton lines={5} label="正在載入講師資料…" block />
         ) : page === 'courses' ? (
           <CoursesStage s={s} />
         ) : page === 'materials' ? (

@@ -657,3 +657,13 @@ def test_separate_frontend_bearer_cors_and_development_bypass(game, monkeypatch)
     monkeypatch.setenv('LIFE_DEVELOPMENT_MODE', '1')
     monkeypatch.setenv('LIFE_SKIP_EMAIL_VERIFICATION', '0')
     assert not handlers.email_bypass()
+
+
+def test_quote_summary_names_the_action_in_plain_language():
+    from app import finance
+
+    r = engine.create_run(content.PERSONAS[0], 7)
+    r['scene_id'] = 'FINANCE'
+    q = finance.quote(r, 'TRANSFER', {'amount_minor': 1000, 'direction': 'CASH_TO_SAVINGS'})
+    assert q['summary'].startswith('現金與活存轉帳')
+    assert 'TRANSFER' not in q['summary']

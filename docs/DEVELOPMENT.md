@@ -7,10 +7,13 @@
 - `training_catalog.py`／`training_engine.py`／`training_service.py`：獨立課程、來源、20 檔股票、固定班次路徑、學員進度與成效。發布後不能原地修改。
 - `training_routes.py`／`training_jobs.py`／`training_materials.py`：講師權限、教材背景解析、AI 工作及契約檢查。
 - `errors.py`：中文訊息、HTTP 狀態與附帶欄位／情境細節的 `UserError`。新增錯誤要同時檢查實際觸發條件與顯示內容。
+- `main.py` 的例外處理：未知路徑、方法不符、參數驗證失敗與未攔截例外一律回 `{data, error}` 信封（404 `NOT_FOUND`、405 `METHOD_NOT_ALLOWED`、422 `VALIDATION_ERROR`、503 `SERVICE_UNAVAILABLE`）。寫入請求的 JSON 上限為 256 KiB（H01 內容上傳 8 MiB），超過回 413 `PAYLOAD_TOO_LARGE`；`NaN`／`Infinity` 視為驗證錯誤。
 - `qwen.py`／`zh.py`：Workspace NDJSON、主機備援、取消／封存與臺灣繁體。
 - `radar.py`／`insights.py`／`scenarios.py`：當下風險、合成分岔預演。不得洩漏原存檔未來事件、種子或隱藏人物資料。
 - 前端 `components/training/`：四步工作室、12 步導覽、學員遊玩。導覽使用記憶體範本，不替使用者上傳、產生或發布。
 - 前端 `lib/game-client.ts`：具體錯誤、Bearer／CSRF、request key、讀寫連線差異與 PDF 下載。
+- 前端 `components/feedback.tsx`／`feedback.css`：共用回饋元件——`Toast`（浮動、自動消失；對話框內須經 `GameDialog` 的 `overlay` 傳入，否則會被 modal 蓋住）、`Skeleton`、`BusyBar`、`AnimatedAmount`、`AppSplash` 與最外層 `ErrorBoundary`。新的載入中／成功提示請沿用這些元件。
+- 前端 `useResource`：同一資源在同一 run 版本下重讀（同步、`reload()`）時保留畫面上的值直到新值回來；資源身分或 run 版本不同時仍先清空，不顯示上一筆資料。
 - 前端 `lib/training-validation.ts`：每則 1–8 項引用、欄位範圍與出錯位置。不得默默刪掉超限或失效引用。
 - `scripts/training-tailscale.py`：只讀取已連線的 Tailscale IPv4 並啟動私有網站代理。
 

@@ -61,9 +61,13 @@ export const STATUS_LABELS: Record<string, string> = {
   TURN_REVIEW: '回顧本輪人生',
   ENDED: '本輪已結束',
 };
+// Whole amounts stay short; an amount with cents always shows both digits (1,430,092.60, not .6).
 export const money = (minor: number) =>
   Number.isFinite(minor)
-    ? new Intl.NumberFormat('zh-TW', { maximumFractionDigits: 2 }).format(minor / 100)
+    ? new Intl.NumberFormat('zh-TW', {
+        minimumFractionDigits: Math.round(minor) % 100 === 0 ? 0 : 2,
+        maximumFractionDigits: 2,
+      }).format(minor / 100)
     : '—';
 export function parseRun(value: unknown): DashboardRun {
   const r = value as DashboardRun;

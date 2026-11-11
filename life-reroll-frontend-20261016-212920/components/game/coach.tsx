@@ -239,7 +239,7 @@ export function CoachWidget({
   return (
     <section
       ref={cardRef}
-      className={`coach-card ${open ? 'coach-is-open' : ''}`}
+      className={`coach-card ${open ? 'coach-is-open' : ''} ${posting && job ? 'coach-replacing' : ''}`}
       aria-label={review ? 'AI 人生回顧' : 'AI 人生教練'}
     >
       <button

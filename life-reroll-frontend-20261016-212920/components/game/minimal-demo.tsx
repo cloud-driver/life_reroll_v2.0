@@ -3,6 +3,8 @@ import { Brand } from '@/components/brand';
 import './game.css';
 import './workspace.css';
 import { useEffect, useRef, useState } from 'react';
+import { CalendarClock, LayoutDashboard, ReceiptText, Settings, Wallet } from 'lucide-react';
+import { AnimatedAmount } from '@/components/feedback';
 import { DESTINATIONS, HOME, type DestinationId, type Point } from '@/lib/map-data';
 import {
   advanceDemo,
@@ -24,6 +26,8 @@ import { EventMedia } from './event-media';
 import { GameDialog } from './game-dialog';
 import { TutorialCoach, TutorialLaunch, useGuidedTour } from './tutorial';
 import { demoTutorialSteps } from '@/lib/tutorial';
+// Same order as `titles`: overview, assets, events, settlement, settings.
+const navIcons = [LayoutDashboard, Wallet, CalendarClock, ReceiptText, Settings];
 export function MinimalDemo() {
   const coachApi = useRef(new GameClient()).current;
   const [state, setState] = useState<DemoState>(initialDemo),
@@ -184,35 +188,40 @@ export function MinimalDemo() {
         <span>
           {state.age} 歲 · {state.year} 年
         </span>
-        <span>免登入展示資料</span>
+        <span className="demo-badge">免登入展示資料</span>
         <a href="/full">後端整合版</a>
       </header>
       <div className="workspace-body">
         <nav className="workspace-nav" aria-label="查閱儀表板">
-          {Object.entries(titles).map(([id, title], i) => (
-            <button
-              key={id}
-              title={title}
-              aria-label={title}
-              disabled={rolling}
-              onClick={() => {
-                setTab('summary');
-                setPanel(id);
-              }}
-            >
-              {['◉', '▤', '▧', '▦', '⚙'][i]}
-            </button>
-          ))}
+          {Object.entries(titles).map(([id, title], i) => {
+            const Icon = navIcons[i];
+            return (
+              <button
+                key={id}
+                title={title}
+                aria-label={title}
+                disabled={rolling}
+                onClick={() => {
+                  setTab('summary');
+                  setPanel(id);
+                }}
+              >
+                <span aria-hidden="true">
+                  <Icon />
+                </span>
+              </button>
+            );
+          })}
         </nav>
         <section className="workspace-stage">
           <div className="workspace-hud">
             <div>
               <span>可用資金</span>
-              <strong>{money(snapshot.balances.immediate_liquidity_minor)} 元</strong>
+              <AnimatedAmount minor={snapshot.balances.immediate_liquidity_minor} format={money} />
             </div>
             <div>
               <span>淨資產</span>
-              <strong>{money(snapshot.balances.net_worth_minor)} 元</strong>
+              <AnimatedAmount minor={snapshot.balances.net_worth_minor} format={money} />
             </div>
             <div>
               <span>已完成擲骰</span>
@@ -242,7 +251,7 @@ export function MinimalDemo() {
             {trip ? '車輛正在沿道路行駛。' : '從選單查看資料，在家擲骰或選擇目的地。重新整理後從家恢復。'}
           </p>
         </section>
-        <aside className="workspace-controls">
+        <aside className="workspace-controls demo-controls">
           <section className="play-card">
             <span className="eyebrow">01 · DICE</span>
             <h2>推進人生</h2>

@@ -199,3 +199,12 @@
     font-size: 0.9rem;
   }
 }
+
+/* A new question is being sent while the previous answer is still on screen: fade the old one. */
+.coach-replacing .coach-context,
+.coach-replacing .coach-question,
+.coach-replacing .coach-notice,
+.coach-replacing .coach-answer {
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}

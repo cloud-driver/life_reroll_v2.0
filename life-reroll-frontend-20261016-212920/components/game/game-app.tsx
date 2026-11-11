@@ -10,6 +10,20 @@ import './hospital.css';
 import './viewport.css';
 import './layout.css';
 import { useEffect, useState, useRef } from 'react';
+import {
+  CalendarClock,
+  FolderCog,
+  History,
+  LayoutDashboard,
+  Menu,
+  ReceiptText,
+  Settings as SettingsIcon,
+  ShieldCheck,
+  UserRound,
+  Wallet,
+  type LucideIcon,
+} from 'lucide-react';
+import { AnimatedAmount, BusyBar, Skeleton, Toast } from '@/components/feedback';
 import { allowed } from '@/lib/game-client';
 import { automaticPanel, panelContext, visibleGamePanel } from '@/lib/game-panels';
 import { scenePath } from '@/lib/game-scenes';
@@ -40,14 +54,14 @@ const sceneIds: Record<DestinationId, string> = {
 };
 const destination = (scene: string) =>
   Object.keys(sceneIds).find(k => sceneIds[k as DestinationId] === scene) as DestinationId | undefined;
-const menu = [
-  ['overview', '◉', '人生總覽'],
-  ['assets', '▤', '資產與收支'],
-  ['insurance', '◇', '保險與理賠'],
-  ['event', '▧', '事件與理賠'],
-  ['review', '▦', '階段結算'],
-  ['reports', '↺', '人生回顧'],
-  ['settings', '⚙', '設定與教學'],
+const menu: [string, LucideIcon, string][] = [
+  ['overview', LayoutDashboard, '人生總覽'],
+  ['assets', Wallet, '資產與收支'],
+  ['insurance', ShieldCheck, '保險與理賠'],
+  ['event', CalendarClock, '事件與理賠'],
+  ['review', ReceiptText, '階段結算'],
+  ['reports', History, '人生回顧'],
+  ['settings', SettingsIcon, '設定與教學'],
 ];
 export function GameApp() {
   const game = useGame(),
@@ -311,13 +325,19 @@ export function GameApp() {
     <main className={`play-shell game-workspace ${expanded ? 'nav-expanded' : ''}`}>
       {rolling && <DiceInteraction value={roll} />}
       <header className="workspace-header">
+        <BusyBar active={game.busy} />
         <strong>
           <Brand />
         </strong>
         <span className="workspace-status">
           {r ? `${r.age} 歲 · ${r.sim_date} · 第 ${r.run_index} 輪` : '人生讀檔 · 整合版'}
         </span>
-        <span>{game.online ? '已連線' : '未連線'}</span>
+        <span
+          className={`workspace-connection ${!game.ready ? 'pending' : game.online ? 'on' : 'off'}`}
+          role="status"
+        >
+          {!game.ready ? '連線中' : game.online ? '已連線' : '未連線'}
+        </span>
         {r && (
           <span className="workspace-autosave" role="status">
             {game.retry ? '結果待確認' : game.busy ? '處理中…' : '已自動儲存'}
@@ -342,9 +362,11 @@ export function GameApp() {
             aria-expanded={expanded}
             onClick={() => setExpanded(!expanded)}
           >
-            ☰
+            <span aria-hidden="true">
+              <Menu />
+            </span>
           </button>
-          {menu.map(([id, icon, label]) => (
+          {menu.map(([id, Icon, label]) => (
             <button
               key={id}
               title={label}
@@ -352,17 +374,24 @@ export function GameApp() {
               disabled={rolling || (!r && id !== 'settings')}
               onClick={() => setPanel(id)}
             >
-              <span aria-hidden="true">{icon}</span>
+              <span aria-hidden="true">
+                <Icon />
+              </span>
               <span className="nav-label">{label}</span>
             </button>
           ))}
           <button title="帳號" aria-label="帳號" disabled={busy} onClick={() => setPanel('account')}>
-            <span>♙</span>
+            <span aria-hidden="true">
+              <UserRound />
+            </span>
             <span className="nav-label">帳號</span>
           </button>
           {game.session?.user?.roles.includes('CONTENT_ADMIN') && (
-            <button disabled={busy} onClick={() => setPanel('admin')}>
-              管理
+            <button title="內容管理" aria-label="內容管理" disabled={busy} onClick={() => setPanel('admin')}>
+              <span aria-hidden="true">
+                <FolderCog />
+              </span>
+              <span className="nav-label">管理</span>
             </button>
           )}
         </nav>
@@ -372,11 +401,11 @@ export function GameApp() {
               <>
                 <div>
                   <span>可用資金</span>
-                  <strong>{money(r.balances.immediate_liquidity_minor)} 元</strong>
+                  <AnimatedAmount minor={r.balances.immediate_liquidity_minor} format={money} />
                 </div>
                 <div>
                   <span>淨資產</span>
-                  <strong>{money(r.balances.net_worth_minor)} 元</strong>
+                  <AnimatedAmount minor={r.balances.net_worth_minor} format={money} />
                 </div>
                 <div>
                   <span>人生狀態</span>
@@ -385,19 +414,40 @@ export function GameApp() {
               </>
             ) : (
               <p>
-                {game.session?.user
-                  ? game.session.user.email_verified
-                    ? '準備好了，就開始你的新人生。'
-                    : '先完成信箱驗證，即可開始新人生。'
-                  : '登入後恢復進度，或由右上角進入免登入展示。'}
+                {!game.ready
+                  ? '正在連線並恢復你的進度…'
+                  : !game.online && !game.session
+                    ? '尚未連線到伺服器，連線後即可登入並恢復進度。'
+                    : game.session?.user
+                      ? game.session.user.email_verified
+                        ? '準備好了，就開始你的新人生。'
+                        : '先完成信箱驗證，即可開始新人生。'
+                      : '登入後恢復進度，或由右上角進入免登入展示。'}
               </p>
             )}
           </div>
           <div className="workspace-map-viewport">
-            {needsAccount ? (
+            {!game.ready ? (
+              <div className="workspace-welcome">
+                <section className="play-card account-card">
+                  <Skeleton block lines={3} label="正在恢復你的進度…" />
+                </section>
+              </div>
+            ) : needsAccount ? (
               <div className="workspace-welcome">
                 <AccountPanel game={interactionGame} />
-                {!game.online && game.error && <p>請先啟動 8000 後端。</p>}
+                {!game.online && (
+                  <div className="workspace-offline" role="status">
+                    <p>目前無法連線到伺服器。確認網路或服務狀態後，可以重新連線。</p>
+                    <button
+                      className="secondary"
+                      disabled={game.busy}
+                      onClick={() => void game.perform(() => game.refresh(), '已重新連線')}
+                    >
+                      重新連線
+                    </button>
+                  </div>
+                )}
               </div>
             ) : r && !moving && (at || r.scene_id === 'HOME') ? (
               <RoutineScene
@@ -429,14 +479,7 @@ export function GameApp() {
           )}
         </aside>
       </div>
-      {game.notice && !tour.active && !panel && (
-        <div className="workspace-notice" role="status">
-          <span>{game.notice}</span>
-          <button className="quiet" aria-label="關閉提示" onClick={() => game.setNotice('')}>
-            ×
-          </button>
-        </div>
-      )}
+      {!tour.active && !panel && <Toast message={game.notice} onClose={() => game.setNotice('')} />}
       {(game.error || game.retry || game.job?.status === 'FAILED') && (
         <div
           className={`workspace-alert ${game.error ? 'error' : ''}`}
@@ -477,17 +520,13 @@ export function GameApp() {
           drawer={!['review', 'event', 'reports', 'finance', 'hospital'].includes(panel)}
           wide={['review', 'event', 'reports', 'finance', 'hospital'].includes(panel)}
           guide={tutorialGuide}
+          busy={game.busy}
+          overlay={
+            tour.active ? undefined : <Toast message={game.notice} onClose={() => game.setNotice('')} />
+          }
           onClose={tour.active ? () => void finishTutorial() : closePanel}
         >
           <div className="dialog-content">
-            {game.notice && !tour.active && (
-              <div className="dialog-notice" role="status">
-                <span>{game.notice}</span>
-                <button className="quiet" aria-label="關閉提示" onClick={() => game.setNotice('')}>
-                  ×
-                </button>
-              </div>
-            )}
             {game.error && (
               <p role="alert" className="play-banner error">
                 {game.error}

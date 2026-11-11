@@ -1,5 +1,6 @@
 'use client';
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
+import { BusyBar } from '@/components/feedback';
 export function GameDialog({
   title,
   children,
@@ -8,6 +9,8 @@ export function GameDialog({
   wide = false,
   guide,
   coachOnly = false,
+  busy = false,
+  overlay,
 }: {
   title: string;
   children?: ReactNode;
@@ -16,6 +19,9 @@ export function GameDialog({
   wide?: boolean;
   guide?: ReactNode;
   coachOnly?: boolean;
+  busy?: boolean;
+  /** Rendered above the dialog body. A modal dialog hides anything outside itself, so toasts go here. */
+  overlay?: ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null),
     close = useRef(onClose);
@@ -43,6 +49,7 @@ export function GameDialog({
       {!coachOnly && (
         <>
           <header>
+            <BusyBar active={busy} />
             <h2>{title}</h2>
             <button autoFocus={!guide} className="secondary" aria-label={`關閉${title}`} onClick={onClose}>
               關閉 ×
@@ -94,6 +101,7 @@ export function GameDialog({
         </>
       )}
       {guide}
+      {overlay}
     </dialog>
   );
 }

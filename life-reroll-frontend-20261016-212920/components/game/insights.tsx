@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { Skeleton } from '@/components/feedback';
 import { GameApiError, type GameClient, type RequestPlan } from '@/lib/game-client';
 import type { Radar, BranchJob, BranchResult, BranchVariant } from '@/lib/insight-types';
 import { money } from '@/lib/dashboard';
@@ -81,8 +82,10 @@ export function RiskRadar({
             )}
           </details>
         </>
+      ) : error ? (
+        <p role="status">{error}</p>
       ) : (
-        <p role="status">{error || '正在讀取目前收支…'}</p>
+        <Skeleton lines={3} label="正在讀取目前收支…" />
       )}
       <div className="insight-actions">
         {error && (

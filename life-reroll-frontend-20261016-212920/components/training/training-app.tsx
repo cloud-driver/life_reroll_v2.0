@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Skeleton } from '@/components/feedback';
 import { Brand } from '../brand';
 import { GameApiError, type RequestPlan } from '../../lib/game-client';
 import { api, get, plan, type Run, type RunSummary } from '../../lib/training';
@@ -158,7 +159,7 @@ export function TrainingApp({ teacher = false }: { teacher?: boolean }) {
             )}
         </div>
         {!ready ? (
-          <p role="status">正在確認登入狀態…</p>
+          <Skeleton lines={3} label="正在確認登入狀態…" block />
         ) : !session ? (
           <section className="tr-card tr-login">
             <p className="tr-eyebrow">LEARN THROUGH LIFE</p>

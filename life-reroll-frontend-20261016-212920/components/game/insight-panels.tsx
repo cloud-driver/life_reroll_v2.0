@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Skeleton } from '@/components/feedback';
 import { useResource, type GameModel } from './use-game';
 import type { Advance, Event, Claim, Portfolio } from '@/lib/game-types';
 import type { Page } from '@/lib/game-client';
@@ -51,7 +52,7 @@ export function AssetsPanel({ game }: { game: GameModel }) {
       )}
       {tab === 'investments' &&
         (portfolio.loading ? (
-          <p>正在讀取投資組合…</p>
+          <Skeleton lines={4} label="正在讀取投資組合…" />
         ) : (
           <>
             {portfolio.value?.holdings.map(h => (
@@ -118,7 +119,8 @@ export function SettlementPanel({
         </button>
       </div>
     );
-  if (!a || !events.value || !claims.value) return <p role="status">正在整理本次資產與事件…</p>;
+  if (!a || !events.value || !claims.value)
+    return <Skeleton lines={5} label="正在整理本次資產與事件…" block />;
   const waiting = r.status === 'TURN_REVIEW';
   return (
     <>
