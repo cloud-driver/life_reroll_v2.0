@@ -3,6 +3,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { GameClient, GameApiError, receiptRun, type RequestPlan } from '@/lib/game-client';
 import { GameRecovery } from '@/lib/game-recovery';
 import type { Bootstrap, Campaign, RunState, Session, Job } from '@/lib/game-types';
+// The site proxy answers 502/503/504 (BACKEND_UNAVAILABLE) when the API is down, so a
+// reachable proxy must not read as "connected"; only a real API response does.
+export function isUnreachable(e: unknown) {
+  return (
+    e instanceof GameApiError &&
+    (e.status === 0 || e.code === 'BACKEND_UNAVAILABLE' || [502, 503, 504].includes(e.status))
+  );
+}
 export function useGame() {
   const api = useRef(new GameClient()).current;
   const [session, setSession] = useState<Session | null>(null),
@@ -139,7 +147,7 @@ export function useGame() {
       } catch (e) {
         if (!mounted.current) return false;
         setError(e instanceof Error ? e.message : '操作未完成');
-        if (e instanceof GameApiError && e.status === 0) setOnline(false);
+        if (isUnreachable(e)) setOnline(false);
         if (e instanceof GameApiError && [401, 403, 409].includes(e.status))
           try {
             await refresh();
@@ -184,7 +192,16 @@ export function useGame() {
     };
     window.addEventListener('online', reconnect);
     document.addEventListener('visibilitychange', reconnect);
+    // The browser stays "online" when only the server is down, so also retry quietly on a timer.
+    const timer = setInterval(() => {
+      if (document.visibilityState === 'visible' && !locked.current)
+        void refresh().then(
+          () => setError(''),
+          () => undefined,
+        );
+    }, 10000);
     return () => {
+      clearInterval(timer);
       window.removeEventListener('online', reconnect);
       document.removeEventListener('visibilitychange', reconnect);
     };

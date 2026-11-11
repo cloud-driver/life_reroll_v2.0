@@ -10,12 +10,16 @@ import { FinancePanel } from './finance-panel';
 export function EventPanel({ game }: { game: GameModel; onRewind?: () => void }) {
   const r = game.run!,
     params = { run_id: r.id };
-  const [pastEvent, setPastEvent] = useState('');
+  const [pastEvent, setPastEvent] = useState(''),
+    // A choice can cost money, so the first tap only selects it; a second, explicit tap commits.
+    [picked, setPicked] = useState('');
   const activeEvent = r.pending_event_id || pastEvent;
   const history = useResource<Page<Event>>(game, 'D04', params, !r.pending_event_id);
   const event = useResource<Event>(game, 'D05', { ...params, event_id: activeEvent }, !!activeEvent);
   const e = activeEvent ? event.value : history.value?.items.at(-1);
   const choosing = r.status === 'EVENT_PENDING' && e?.id === r.pending_event_id;
+  const pickedChoice = choosing ? e.choices.find(c => c.id === picked && c.enabled) : undefined;
+  const chosen = e?.outcome ? e.choices.find(c => c.id === e.outcome!.choice_id) : undefined;
   async function act(id: string, body: unknown = {}) {
     await game.perform(async () => {
       await game.write(id, { ...params, event_id: r.pending_event_id! }, body, true);
@@ -57,6 +61,13 @@ export function EventPanel({ game }: { game: GameModel; onRewind?: () => void })
             <h2>{e.title}</h2>
             <p>{e.narrative}</p>
             {e.outcome && <p>{e.outcome.summary}</p>}
+            {chosen?.impacts.length ? (
+              <ul className="choice-impacts event-outcome-impacts" aria-label="這個選擇的影響">
+                {chosen.impacts.map(line => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            ) : null}
           </div>
           <div className="event-balance-pair" aria-label="事件前後可用資金">
             <div>
@@ -96,16 +107,18 @@ export function EventPanel({ game }: { game: GameModel; onRewind?: () => void })
         <p role="status">目前沒有事件。</p>
       )}
       {choosing && (
-        <div className="event-choices" aria-label="事件選擇">
+        <div className="event-choices" role="radiogroup" aria-label="事件選擇">
           {e.choices.map(choice => (
             <button
-              className="choice-button"
+              className={`choice-button ${picked === choice.id ? 'selected' : ''}`}
               key={choice.id}
+              role="radio"
+              aria-checked={picked === choice.id}
               disabled={game.busy || !!game.retry || !choice.enabled}
-              onClick={() => void act('D06', { choice_id: choice.id, confirmed: true })}
+              onClick={() => setPicked(choice.id)}
             >
               <strong>{choice.label}</strong>
-              <span>{choice.description}</span>
+              {choice.description && choice.description !== choice.label && <span>{choice.description}</span>}
               {choice.impacts?.length ? (
                 <ul className="choice-impacts">
                   {choice.impacts.map(line => (
@@ -120,6 +133,16 @@ export function EventPanel({ game }: { game: GameModel; onRewind?: () => void })
               {!choice.enabled && choice.disabled_reason && <small>{choice.disabled_reason}</small>}
             </button>
           ))}
+          <div className="event-choice-confirm">
+            <button
+              disabled={game.busy || !!game.retry || !pickedChoice}
+              onClick={() =>
+                void act('D06', { choice_id: pickedChoice!.id, confirmed: true }).then(() => setPicked(''))
+              }
+            >
+              {pickedChoice ? `確認選擇「${pickedChoice.label}」` : '先選擇一個做法'}
+            </button>
+          </div>
         </div>
       )}
       {e?.outcome && r.pending_event_id === e.id && mayClaim(e) && <EventClaims game={game} event={e} />}

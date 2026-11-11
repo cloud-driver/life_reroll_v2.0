@@ -5,6 +5,22 @@ from datetime import datetime, timedelta
 from .engine import uid, now, age, sim_date, ledger, income, spend
 from .content import STOCK_BY_ID, PRODUCT_BY_ID, CONTENT_VERSION, STOCK_TRADE_FEE_BPS
 
+# Player-facing names; the action codes stay internal to the API.
+ACTION_LABELS = {
+    'TRANSFER': '現金與活存轉帳',
+    'TERM_OPEN': '開立定存',
+    'TERM_CLOSE': '定存解約',
+    'STOCK_BUY': '買入股票',
+    'STOCK_SELL': '賣出股票',
+    'LOAN_BORROW': '申請借款',
+    'LOAN_REPAY': '償還借款',
+    'POLICY_BUY': '投保模擬保險',
+    'POLICY_SURRENDER': '保單解約',
+    'POLICY_REINSTATE': '保單復效',
+    'POLICY_PREMIUM_PAY': '補繳保費',
+    'BILL_PAY': '支付帳單',
+}
+
 FIELDS = {
     'TRANSFER': {'amount_minor', 'direction'},
     'TERM_OPEN': {'amount_minor', 'term_months', 'auto_renew', 'source_account'},
@@ -236,7 +252,7 @@ def quote(r, action, params):
         'eligible': not reasons,
         'denial_reasons': reasons,
         'warnings': warnings,
-        'summary': f'{action} 操作確認：請先檢查費用與風險。',
+        'summary': f'{ACTION_LABELS.get(action, "此項操作")}：請先檢查費用與風險，再確認執行。',
         'used': False,
         'expires_at_index': r['month_index'],
     }

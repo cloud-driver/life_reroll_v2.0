@@ -74,6 +74,27 @@ def quality_text(delta):
     return f'生活品質 {delta:+d}' if delta else '生活品質不變'
 
 
+def scaled_impacts(card, multiplier_bps, liquid_minor):
+    """Impact lines for choices that scale the card's effect (engine.choose applies the same math)."""
+    eff = card['effect']
+    delta = eff['cash_delta_minor'] * multiplier_bps // 10000
+    if delta < 0:
+        lines = [f'一次支出 {money_text(delta)}']
+    elif delta > 0:
+        lines = [f'一次收入 {money_text(delta)}']
+    else:
+        lines = ['不需額外支出']
+    monthly = max(0, eff['monthly_cost_delta_minor'] * multiplier_bps // 10000)
+    if monthly:
+        lines.append(f'每月生活支出 {signed(monthly)}')
+    if eff['salary_change_bps']:
+        lines.append(f'月薪 {eff["salary_change_bps"] / 100:+g}%（各選項相同）')
+    lines.append(quality_text(eff['quality_delta'] * multiplier_bps // 10000))
+    if -delta > liquid_minor:
+        lines.append('可用資金不足，差額會形成未付帳單')
+    return lines
+
+
 def news(card, impact):
     return [
         {

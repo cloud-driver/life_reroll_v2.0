@@ -33,8 +33,23 @@
     opacity 0.15s,
     scale 0.1s;
 }
-.play-shell button:hover:not(:disabled) {
-  background: #345b67;
+/* Touch screens keep :hover after a tap, so hover styles only apply to real pointers. */
+@media (hover: hover) {
+  .play-shell button:hover:not(:disabled) {
+    background: #345b67;
+  }
+  .play-shell button.secondary:hover:not(:disabled) {
+    background: #dde9e4;
+    border-color: #a9c2bb;
+    color: #36596a;
+  }
+  .play-shell button.quiet:hover:not(:disabled) {
+    background: #2f5a5214;
+    color: #4d6f76;
+  }
+  .play-shell button.danger:hover:not(:disabled) {
+    background: #8f5c50;
+  }
 }
 /* `scale` is independent of `transform`, so pressed feedback never fights positioned buttons. */
 .play-shell button:active:not(:disabled) {
@@ -443,6 +458,25 @@
 .play-shell .choice-button:hover:not(:disabled) {
   background: #edf4f1;
   border-color: #8ba9a3;
+}
+.play-shell .choice-button.selected,
+.play-shell .choice-button.selected:hover:not(:disabled) {
+  background: #e3efe9;
+  border-color: #4f8672;
+  box-shadow: inset 0 0 0 1px #4f8672;
+}
+/* Sticks to the bottom of the dialog so the commit button never scrolls out of reach. */
+.event-choice-confirm {
+  position: sticky;
+  bottom: 0;
+  padding: 10px 0 2px;
+  background: linear-gradient(#f7f8f100, #f7f8f1 30%);
+}
+.event-choice-confirm button {
+  width: 100%;
+}
+.event-outcome-impacts {
+  margin-top: 8px;
 }
 .choice-button strong {
   font-size: 1rem;

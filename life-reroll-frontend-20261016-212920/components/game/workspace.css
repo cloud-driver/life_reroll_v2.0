@@ -344,3 +344,55 @@
     box-shadow: none;
   }
 }
+
+/* The demo has two control cards. Side by side at fixed width they ran off a phone
+   screen, so stack them: dice in one row, the four destinations in a 2×2 grid. */
+@media (max-width: 700px) {
+  .workspace-body:has(.demo-controls),
+  .nav-expanded .workspace-body:has(.demo-controls) {
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  .workspace-controls.demo-controls {
+    flex-direction: column;
+    overflow: visible;
+    gap: 8px;
+  }
+  .demo-controls > .play-card {
+    flex: none;
+    min-width: 0;
+  }
+  .demo-controls > .play-card:not(.travel-controls) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+  }
+  .demo-controls > .play-card:not(.travel-controls) > button {
+    flex: none;
+    white-space: nowrap;
+  }
+  .demo-controls > .play-card:not(.travel-controls) p {
+    margin: 0;
+    font-size: 0.75rem;
+  }
+  .demo-controls .travel-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .play-shell .demo-controls .travel-controls button {
+    width: auto;
+    min-width: 0;
+    padding: 8px 6px;
+  }
+}
+
+/* Header items never wrap mid-phrase; on narrow phones the demo badge yields its room. */
+.workspace-header > span {
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .workspace-header .demo-badge {
+    display: none;
+  }
+}

@@ -761,3 +761,13 @@
     display: none;
   }
 }
+
+/* On phones a centered dialog re-centers whenever its content changes height (coach
+   answers, tab switches), moving buttons under the player's finger. Pin it to the top
+   instead: growth then only extends it downward and nothing above moves. */
+@media (max-width: 760px) {
+  .game-dialog:not(.game-dialog-coach) {
+    margin-top: 12px;
+    margin-bottom: auto;
+  }
+}

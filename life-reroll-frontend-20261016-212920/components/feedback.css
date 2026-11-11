@@ -67,9 +67,34 @@
   background: #2f5a5214;
   opacity: 1;
 }
+/* Primary actions live at the bottom (scene buttons, sticky confirm bars), so a toast
+   there covers what the player taps next. Dialogs show it under their header, and
+   phones show page toasts at the top. */
 dialog > .toast {
   position: absolute;
-  bottom: 16px;
+  top: 64px;
+  bottom: auto;
+  animation-name: toast-in-top;
+}
+@media (max-width: 760px) {
+  .toast {
+    top: max(12px, env(safe-area-inset-top));
+    bottom: auto;
+    animation-name: toast-in-top;
+  }
+  dialog > .toast {
+    top: 56px;
+  }
+}
+@keyframes toast-in-top {
+  from {
+    opacity: 0;
+    translate: -50% -12px;
+  }
+  to {
+    opacity: 1;
+    translate: -50% 0;
+  }
 }
 @keyframes toast-in {
   from {

@@ -188,7 +188,7 @@ export function MinimalDemo() {
         <span>
           {state.age} 歲 · {state.year} 年
         </span>
-        <span>免登入展示資料</span>
+        <span className="demo-badge">免登入展示資料</span>
         <a href="/full">後端整合版</a>
       </header>
       <div className="workspace-body">
@@ -251,7 +251,7 @@ export function MinimalDemo() {
             {trip ? '車輛正在沿道路行駛。' : '從選單查看資料，在家擲骰或選擇目的地。重新整理後從家恢復。'}
           </p>
         </section>
-        <aside className="workspace-controls">
+        <aside className="workspace-controls demo-controls">
           <section className="play-card">
             <span className="eyebrow">01 · DICE</span>
             <h2>推進人生</h2>

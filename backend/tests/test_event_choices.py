@@ -4,7 +4,7 @@ import copy
 
 import pytest
 
-from app import content, engine, event_choices, wire
+from app import content, engine, event_choices, finance, wire
 
 
 def fire(card_id, *, cash=None, holdings=None, salary=None):
@@ -169,3 +169,31 @@ def test_choice_wire_shape_includes_impacts():
     assert shaped['impacts'] and shaped['estimated_cash_cost_minor'] > 0
     legacy = wire.shape('Choice', {'id': 'X', 'label': 'x', 'effect_multiplier_bps': 10000})
     assert legacy['impacts'] == []
+
+
+def test_scaled_choices_list_impacts_that_match_what_is_applied():
+    r, e = fire('TR01', cash=10_000_000)
+    card = content.EVENT_BY_ID['TR01']
+    for c in e['choices']:
+        assert c['impacts'], c['id']
+        assert any('生活品質' in line for line in c['impacts'])
+    skip = next(c for c in e['choices'] if c['effect_multiplier_bps'] == 0)
+    assert skip['impacts'][0] == '不需額外支出'
+    before = liquid(r)
+    picked = choose(r, e, 'FULL')
+    cost = -card['effect']['cash_delta_minor']
+    assert picked['impacts'][0] == f'一次支出 {cost // 100:,} 元'
+    assert before - liquid(r) == cost
+    assert wire.adapt('Choice', picked)['impacts'] == picked['impacts']
+
+
+def test_scaled_choice_warns_when_cash_cannot_cover_it():
+    r, e = fire('TR01', cash=0, salary=0)
+    assert liquid(r) < 900_000
+    full = next(c for c in e['choices'] if c['id'] == 'FULL')
+    assert '可用資金不足，差額會形成未付帳單' in full['impacts']
+
+
+@pytest.mark.parametrize('action', sorted(finance.FIELDS))
+def test_every_finance_action_has_a_player_facing_label(action):
+    assert finance.ACTION_LABELS[action]

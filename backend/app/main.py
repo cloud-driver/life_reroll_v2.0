@@ -160,10 +160,10 @@ async def read_body(request: Request, limit: int):
     try:
         # NaN and Infinity are not JSON; letting them through would poison stored amounts.
         body = json.loads(raw, parse_constant=reject_constant) if raw.strip() else {}
-    except ValueError as exc:
-        if str(exc) == 'non-finite number':
-            return None, 'VALIDATION_ERROR'
-        body = {}
+    except ValueError:
+        # Covers malformed JSON, bad UTF-8 and NaN/Infinity alike. Treating a broken body as
+        # empty used to surface as a misleading downstream error (e.g. "wrong password").
+        return None, 'VALIDATION_ERROR'
     except RecursionError:
         return None, 'VALIDATION_ERROR'
     if not isinstance(body, dict):

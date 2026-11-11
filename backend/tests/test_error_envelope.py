@@ -63,3 +63,8 @@ def test_escaped_exception_hides_details_behind_the_envelope(game, monkeypatch):
     reply = quiet.get('/api/v1/report-exports/anything/download')
     error_of(reply, 503, 'SERVICE_UNAVAILABLE')
     assert 'secret' not in reply.text
+
+
+@pytest.mark.parametrize('raw', [b'{bad', b'{"email": "a@example.com",}', b'\xff\xfe'])
+def test_malformed_json_is_a_validation_error_not_a_credential_failure(game, raw):
+    error_of(game.client.post('/api/v1/auth/login', content=raw, headers=HEADERS), 422, 'VALIDATION_ERROR')
